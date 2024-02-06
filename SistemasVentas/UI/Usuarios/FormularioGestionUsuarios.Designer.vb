@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class UsuariosOk
+Partial Class FormularioGestionUsuarios
     Inherits System.Windows.Forms.Form
 
     'Form reemplaza a Dispose para limpiar la lista de componentes.
@@ -22,8 +22,8 @@ Partial Class UsuariosOk
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UsuariosOk))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormularioGestionUsuarios))
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnCerrar = New System.Windows.Forms.Button()
@@ -32,8 +32,8 @@ Partial Class UsuariosOk
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.PictureInsertar = New System.Windows.Forms.PictureBox()
-        Me.dgvData = New System.Windows.Forms.DataGridView()
+        Me.pbInsertarUsuario = New System.Windows.Forms.PictureBox()
+        Me.dgvDataUsuario = New System.Windows.Forms.DataGridView()
         Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -60,8 +60,8 @@ Partial Class UsuariosOk
         Me.Panel2.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        CType(Me.PictureInsertar, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvData, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbInsertarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvDataUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
         Me.Panel5.SuspendLayout()
         CType(Me.pbIcon, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -143,7 +143,7 @@ Partial Class UsuariosOk
         '
         'Panel3
         '
-        Me.Panel3.Controls.Add(Me.PictureInsertar)
+        Me.Panel3.Controls.Add(Me.pbInsertarUsuario)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Right
         Me.Panel3.Location = New System.Drawing.Point(959, 129)
         Me.Panel3.Name = "Panel3"
@@ -151,46 +151,46 @@ Partial Class UsuariosOk
         Me.Panel3.Size = New System.Drawing.Size(195, 555)
         Me.Panel3.TabIndex = 2
         '
-        'PictureInsertar
+        'pbInsertarUsuario
         '
-        Me.PictureInsertar.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PictureInsertar.Image = CType(resources.GetObject("PictureInsertar.Image"), System.Drawing.Image)
-        Me.PictureInsertar.Location = New System.Drawing.Point(10, 10)
-        Me.PictureInsertar.Name = "PictureInsertar"
-        Me.PictureInsertar.Size = New System.Drawing.Size(175, 535)
-        Me.PictureInsertar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureInsertar.TabIndex = 0
-        Me.PictureInsertar.TabStop = False
+        Me.pbInsertarUsuario.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pbInsertarUsuario.Image = CType(resources.GetObject("pbInsertarUsuario.Image"), System.Drawing.Image)
+        Me.pbInsertarUsuario.Location = New System.Drawing.Point(10, 10)
+        Me.pbInsertarUsuario.Name = "pbInsertarUsuario"
+        Me.pbInsertarUsuario.Size = New System.Drawing.Size(175, 535)
+        Me.pbInsertarUsuario.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.pbInsertarUsuario.TabIndex = 0
+        Me.pbInsertarUsuario.TabStop = False
         '
-        'dgvData
+        'dgvDataUsuario
         '
-        Me.dgvData.AllowUserToAddRows = False
-        Me.dgvData.AllowUserToDeleteRows = False
-        Me.dgvData.AllowUserToResizeRows = False
-        Me.dgvData.BackgroundColor = System.Drawing.Color.White
-        Me.dgvData.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgvData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvData.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvData.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvData.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvData.EnableHeadersVisualStyles = False
-        Me.dgvData.Location = New System.Drawing.Point(10, 129)
-        Me.dgvData.Margin = New System.Windows.Forms.Padding(10)
-        Me.dgvData.Name = "dgvData"
-        Me.dgvData.ReadOnly = True
-        Me.dgvData.RowHeadersVisible = False
-        Me.dgvData.RowTemplate.Height = 30
-        Me.dgvData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvData.Size = New System.Drawing.Size(949, 555)
-        Me.dgvData.TabIndex = 3
+        Me.dgvDataUsuario.AllowUserToAddRows = False
+        Me.dgvDataUsuario.AllowUserToDeleteRows = False
+        Me.dgvDataUsuario.AllowUserToResizeRows = False
+        Me.dgvDataUsuario.BackgroundColor = System.Drawing.Color.White
+        Me.dgvDataUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgvDataUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDataUsuario.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataUsuario.DefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvDataUsuario.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvDataUsuario.EnableHeadersVisualStyles = False
+        Me.dgvDataUsuario.Location = New System.Drawing.Point(10, 129)
+        Me.dgvDataUsuario.Margin = New System.Windows.Forms.Padding(10)
+        Me.dgvDataUsuario.Name = "dgvDataUsuario"
+        Me.dgvDataUsuario.ReadOnly = True
+        Me.dgvDataUsuario.RowHeadersVisible = False
+        Me.dgvDataUsuario.RowTemplate.Height = 30
+        Me.dgvDataUsuario.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvDataUsuario.Size = New System.Drawing.Size(949, 555)
+        Me.dgvDataUsuario.TabIndex = 3
         '
         'Eli
         '
@@ -204,9 +204,9 @@ Partial Class UsuariosOk
         '
         Me.Panel4.Controls.Add(Me.Panel5)
         Me.Panel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Panel4.Location = New System.Drawing.Point(0, 57)
+        Me.Panel4.Location = New System.Drawing.Point(10, 57)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(1166, 600)
+        Me.Panel4.Size = New System.Drawing.Size(1156, 600)
         Me.Panel4.TabIndex = 4
         '
         'Panel5
@@ -418,20 +418,20 @@ Partial Class UsuariosOk
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Nombre y apellido:"
         '
-        'UsuariosOk
+        'FormularioGestionUsuarios
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1164, 684)
         Me.Controls.Add(Me.Panel4)
-        Me.Controls.Add(Me.dgvData)
+        Me.Controls.Add(Me.dgvDataUsuario)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MainMenuStrip = Me.MenuStrip1
-        Me.Name = "UsuariosOk"
+        Me.Name = "FormularioGestionUsuarios"
         Me.Padding = New System.Windows.Forms.Padding(10, 0, 10, 0)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "UsuariosOk"
@@ -441,8 +441,8 @@ Partial Class UsuariosOk
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.Panel3.ResumeLayout(False)
-        CType(Me.PictureInsertar, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvData, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbInsertarUsuario, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvDataUsuario, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel4.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
@@ -459,8 +459,8 @@ Partial Class UsuariosOk
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents PictureInsertar As PictureBox
-    Friend WithEvents dgvData As DataGridView
+    Friend WithEvents pbInsertarUsuario As PictureBox
+    Friend WithEvents dgvDataUsuario As DataGridView
     Friend WithEvents Eli As DataGridViewImageColumn
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Panel5 As Panel

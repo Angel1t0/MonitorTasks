@@ -70,11 +70,19 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Conexion\CadenaConexion.vb" />
-    <Compile Include="Modulos\UsuariosPermisos\UsuariosOk.Designer.vb">
-      <DependentUpon>UsuariosOk.vb</DependentUpon>
+    <Compile Include="Datos\CadenaConexion.vb" />
+    <Compile Include="Modelos\Usuario.vb" />
+    <Compile Include="Datos\UsuarioData.vb" />
+    <Compile Include="UI\Login\Login.Designer.vb">
+      <DependentUpon>Login.vb</DependentUpon>
     </Compile>
-    <Compile Include="Modulos\UsuariosPermisos\UsuariosOk.vb">
+    <Compile Include="UI\Login\Login.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Usuarios\FormularioGestionUsuarios.Designer.vb">
+      <DependentUpon>FormularioGestionUsuarios.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Usuarios\FormularioGestionUsuarios.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -92,11 +100,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Validaciones\ValidacionEntradaUsuario\Validaciones.vb" />
+    <Compile Include="UI\ValidadorFormularios.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Modulos\UsuariosPermisos\UsuariosOk.resx">
-      <DependentUpon>UsuariosOk.vb</DependentUpon>
+    <EmbeddedResource Include="UI\Login\Login.resx">
+      <DependentUpon>Login.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Usuarios\FormularioGestionUsuarios.resx">
+      <DependentUpon>FormularioGestionUsuarios.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
