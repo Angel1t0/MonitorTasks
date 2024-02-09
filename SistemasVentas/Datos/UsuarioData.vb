@@ -94,18 +94,74 @@ Public Class UsuarioData
         Dim dataTable As New DataTable()
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
-                conexion.Open()
                 Dim comando As New SqlCommand("buscarUsuarios", conexion)
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@textoIngresado", textoIngresado)
                 Dim sqlAdaptador As New SqlDataAdapter(comando)
 
+                conexion.Open()
                 sqlAdaptador.Fill(dataTable)
             End Using
         Catch ex As SqlException
             Throw New ApplicationException("Error al buscar usuarios de la base de datos.", ex)
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado al buscar usuarios.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    ' --- LOGIN ---
+    Public Function ValidarLogin(login As String, pass As String) As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("validarLogin", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Login", login)
+                comando.Parameters.AddWithValue("@Pass", pass)
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al validar el usuario de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al inicio de sesión.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function buscarCorreo(correo As String) As String
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("buscarUsuarioCorreo", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Correo", correo)
+                conexion.Open()
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error en la conexion de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado.", ex)
+        End Try
+    End Function
+
+    Public Function mostrarUsuariosRegistrados() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("mostrarUsuarios", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar usuarios de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado.", ex)
         End Try
         Return dataTable
     End Function

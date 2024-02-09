@@ -73,6 +73,18 @@
     <Compile Include="Datos\CadenaConexion.vb" />
     <Compile Include="Modelos\Usuario.vb" />
     <Compile Include="Datos\UsuarioData.vb" />
+    <Compile Include="UI\Instalacion\InstalarServidor.Designer.vb">
+      <DependentUpon>InstalarServidor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Instalacion\InstalarServidor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Instalacion\Servidor.Designer.vb">
+      <DependentUpon>Servidor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Instalacion\Servidor.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UI\Login\Login.Designer.vb">
       <DependentUpon>Login.vb</DependentUpon>
     </Compile>
@@ -101,8 +113,17 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="UI\ValidadorFormularios.vb" />
+    <Compile Include="UI\Ventas\GestionVentas.Designer.vb">
+      <DependentUpon>GestionVentas.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Ventas\GestionVentas.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\Instalacion\Servidor.resx">
+      <DependentUpon>Servidor.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Login\Login.resx">
       <DependentUpon>Login.vb</DependentUpon>
     </EmbeddedResource>
@@ -114,6 +135,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Ventas\GestionVentas.resx">
+      <DependentUpon>GestionVentas.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

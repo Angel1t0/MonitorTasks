@@ -1,6 +1,8 @@
 ﻿Imports System.Text.RegularExpressions
 
 Module ValidadorFormularios
+
+    ' --- FORMULARIO GESTION USUARIOS ---
     Public Function ValidarCorreo(correo As String) As Boolean
         Return Regex.IsMatch(correo, "[0-9a-zA-Z]([-.w]*[0-9a-zA-Z_+]) *@([0-9a-zA-Z][-w]*[0-9a-zA-Z].)+[a-zA-Z]{2,9}$")
     End Function
@@ -23,6 +25,15 @@ Module ValidadorFormularios
 
         If icono.Visible = True Then
             MessageBox.Show("Elije un icono", "Icono", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return False
+        End If
+        Return True
+    End Function
+
+    ' --- FORMULARIO LOGIN ---
+    Public Function ValidarEntradasLogin(login As String, pass As String) As Boolean
+        If login = "" OrElse pass = "" Then
+            MessageBox.Show("Los campos de usuario y contraseña no pueden estar vacios", "Campos de entrada", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         Return True

@@ -109,6 +109,7 @@ Public Class FormularioGestionUsuarios
 
         Dim usuarioData As New UsuarioData()
         usuarioData.ActualizarUsuario(usuario)
+
         OcultarPanelUsuario()
         MostrarUsuarios()
     End Sub

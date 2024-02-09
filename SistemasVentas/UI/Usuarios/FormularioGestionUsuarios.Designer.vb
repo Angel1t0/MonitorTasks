@@ -23,7 +23,7 @@ Partial Class FormularioGestionUsuarios
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormularioGestionUsuarios))
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnCerrar = New System.Windows.Forms.Button()
@@ -171,15 +171,15 @@ Partial Class FormularioGestionUsuarios
         Me.dgvDataUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvDataUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDataUsuario.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDataUsuario.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataUsuario.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvDataUsuario.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDataUsuario.EnableHeadersVisualStyles = False
         Me.dgvDataUsuario.Location = New System.Drawing.Point(10, 129)
@@ -238,6 +238,7 @@ Partial Class FormularioGestionUsuarios
         'btnActualizar
         '
         Me.btnActualizar.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.btnActualizar.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnActualizar.FlatAppearance.BorderSize = 0
         Me.btnActualizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnActualizar.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -285,6 +286,7 @@ Partial Class FormularioGestionUsuarios
         'lbIcono
         '
         Me.lbIcono.BackColor = System.Drawing.Color.Gray
+        Me.lbIcono.Cursor = System.Windows.Forms.Cursors.Hand
         Me.lbIcono.ForeColor = System.Drawing.Color.White
         Me.lbIcono.Location = New System.Drawing.Point(691, 62)
         Me.lbIcono.Name = "lbIcono"
@@ -296,6 +298,7 @@ Partial Class FormularioGestionUsuarios
         'pbIcon
         '
         Me.pbIcon.BackColor = System.Drawing.Color.White
+        Me.pbIcon.Cursor = System.Windows.Forms.Cursors.Hand
         Me.pbIcon.Location = New System.Drawing.Point(691, 62)
         Me.pbIcon.Name = "pbIcon"
         Me.pbIcon.Size = New System.Drawing.Size(188, 216)
@@ -319,6 +322,7 @@ Partial Class FormularioGestionUsuarios
         'btnGuardar
         '
         Me.btnGuardar.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.btnGuardar.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnGuardar.FlatAppearance.BorderSize = 0
         Me.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnGuardar.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
