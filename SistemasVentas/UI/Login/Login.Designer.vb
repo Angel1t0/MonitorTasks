@@ -22,11 +22,13 @@ Partial Class Login
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Login))
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelLogin = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.dgvMostrarUsuario = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.lbOlvidar = New System.Windows.Forms.Label()
         Me.btnLogin = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -54,24 +56,22 @@ Partial Class Login
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.txtHTML = New System.Windows.Forms.RichTextBox()
-        Me.dgvMostrarUsuario = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.panelLogin.SuspendLayout()
         Me.Panel3.SuspendLayout()
+        CType(Me.dgvMostrarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.dgvRevisar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelRecuperar.SuspendLayout()
         Me.Panel7.SuspendLayout()
         Me.Panel10.SuspendLayout()
-        CType(Me.dgvMostrarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'panelLogin
         '
         Me.panelLogin.Controls.Add(Me.Panel3)
         Me.panelLogin.Controls.Add(Me.Panel2)
-        Me.panelLogin.Location = New System.Drawing.Point(69, 8)
+        Me.panelLogin.Location = New System.Drawing.Point(56, 12)
         Me.panelLogin.Name = "panelLogin"
         Me.panelLogin.Size = New System.Drawing.Size(540, 556)
         Me.panelLogin.TabIndex = 0
@@ -93,6 +93,47 @@ Partial Class Login
         Me.Panel3.Size = New System.Drawing.Size(486, 409)
         Me.Panel3.TabIndex = 1
         '
+        'dgvMostrarUsuario
+        '
+        Me.dgvMostrarUsuario.AllowUserToAddRows = False
+        Me.dgvMostrarUsuario.AllowUserToDeleteRows = False
+        Me.dgvMostrarUsuario.AllowUserToResizeRows = False
+        Me.dgvMostrarUsuario.BackgroundColor = System.Drawing.Color.White
+        Me.dgvMostrarUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgvMostrarUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvMostrarUsuario.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewImageColumn1})
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvMostrarUsuario.DefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvMostrarUsuario.EnableHeadersVisualStyles = False
+        Me.dgvMostrarUsuario.Location = New System.Drawing.Point(32, 257)
+        Me.dgvMostrarUsuario.Margin = New System.Windows.Forms.Padding(10)
+        Me.dgvMostrarUsuario.Name = "dgvMostrarUsuario"
+        Me.dgvMostrarUsuario.ReadOnly = True
+        Me.dgvMostrarUsuario.RowHeadersVisible = False
+        Me.dgvMostrarUsuario.RowHeadersWidth = 51
+        Me.dgvMostrarUsuario.RowTemplate.Height = 30
+        Me.dgvMostrarUsuario.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvMostrarUsuario.Size = New System.Drawing.Size(197, 50)
+        Me.dgvMostrarUsuario.TabIndex = 10
+        Me.dgvMostrarUsuario.Visible = False
+        '
+        'DataGridViewImageColumn1
+        '
+        Me.DataGridViewImageColumn1.HeaderText = ""
+        Me.DataGridViewImageColumn1.Image = CType(resources.GetObject("DataGridViewImageColumn1.Image"), System.Drawing.Image)
+        Me.DataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.DataGridViewImageColumn1.MinimumWidth = 6
+        Me.DataGridViewImageColumn1.Name = "DataGridViewImageColumn1"
+        Me.DataGridViewImageColumn1.ReadOnly = True
+        Me.DataGridViewImageColumn1.Width = 125
+        '
         'lbOlvidar
         '
         Me.lbOlvidar.AutoSize = True
@@ -101,7 +142,7 @@ Partial Class Login
         Me.lbOlvidar.ForeColor = System.Drawing.Color.MediumBlue
         Me.lbOlvidar.Location = New System.Drawing.Point(283, 257)
         Me.lbOlvidar.Name = "lbOlvidar"
-        Me.lbOlvidar.Size = New System.Drawing.Size(173, 17)
+        Me.lbOlvidar.Size = New System.Drawing.Size(162, 16)
         Me.lbOlvidar.TabIndex = 8
         Me.lbOlvidar.Text = "¿Olvidaste la contraseña?"
         '
@@ -164,7 +205,7 @@ Partial Class Login
         Me.Label3.ForeColor = System.Drawing.Color.DimGray
         Me.Label3.Location = New System.Drawing.Point(27, 150)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(103, 16)
+        Me.Label3.Size = New System.Drawing.Size(96, 16)
         Me.Label3.TabIndex = 1
         Me.Label3.Text = "CONTRASEÑA"
         '
@@ -176,7 +217,7 @@ Partial Class Login
         Me.Label2.Location = New System.Drawing.Point(24, 58)
         Me.Label2.Name = "Label2"
         Me.Label2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label2.Size = New System.Drawing.Size(71, 16)
+        Me.Label2.Size = New System.Drawing.Size(66, 16)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "USUARIO"
         '
@@ -243,19 +284,21 @@ Partial Class Login
         Me.dgvRevisar.Name = "dgvRevisar"
         Me.dgvRevisar.ReadOnly = True
         Me.dgvRevisar.RowHeadersVisible = False
+        Me.dgvRevisar.RowHeadersWidth = 51
         Me.dgvRevisar.RowTemplate.Height = 30
         Me.dgvRevisar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvRevisar.Size = New System.Drawing.Size(197, 203)
         Me.dgvRevisar.TabIndex = 4
-        Me.dgvRevisar.Visible = False
         '
         'Eli
         '
         Me.Eli.HeaderText = ""
         Me.Eli.Image = CType(resources.GetObject("Eli.Image"), System.Drawing.Image)
         Me.Eli.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.Eli.MinimumWidth = 6
         Me.Eli.Name = "Eli"
         Me.Eli.ReadOnly = True
+        Me.Eli.Width = 125
         '
         'Label1
         '
@@ -274,7 +317,7 @@ Partial Class Login
         '
         Me.panelRecuperar.Controls.Add(Me.Panel7)
         Me.panelRecuperar.Controls.Add(Me.Panel10)
-        Me.panelRecuperar.Location = New System.Drawing.Point(643, 44)
+        Me.panelRecuperar.Location = New System.Drawing.Point(714, 153)
         Me.panelRecuperar.Name = "panelRecuperar"
         Me.panelRecuperar.Size = New System.Drawing.Size(540, 405)
         Me.panelRecuperar.TabIndex = 1
@@ -298,7 +341,7 @@ Partial Class Login
         Me.labelPass.AutoSize = True
         Me.labelPass.Location = New System.Drawing.Point(46, 251)
         Me.labelPass.Name = "labelPass"
-        Me.labelPass.Size = New System.Drawing.Size(51, 17)
+        Me.labelPass.Size = New System.Drawing.Size(48, 16)
         Me.labelPass.TabIndex = 10
         Me.labelPass.Text = "Label4"
         '
@@ -322,7 +365,7 @@ Partial Class Login
         Me.Label5.ForeColor = System.Drawing.Color.DimGray
         Me.Label5.Location = New System.Drawing.Point(29, 113)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(214, 17)
+        Me.Label5.Size = New System.Drawing.Size(196, 16)
         Me.Label5.TabIndex = 8
         Me.Label5.Text = "Con el que registraste tu cuenta."
         '
@@ -367,7 +410,7 @@ Partial Class Login
         Me.Label6.ForeColor = System.Drawing.Color.DimGray
         Me.Label6.Location = New System.Drawing.Point(29, 44)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(69, 16)
+        Me.Label6.Size = New System.Drawing.Size(62, 16)
         Me.Label6.TabIndex = 1
         Me.Label6.Text = "CORREO"
         '
@@ -395,57 +438,19 @@ Partial Class Login
         '
         'txtHTML
         '
-        Me.txtHTML.Location = New System.Drawing.Point(684, 486)
+        Me.txtHTML.Location = New System.Drawing.Point(604, 82)
         Me.txtHTML.Name = "txtHTML"
         Me.txtHTML.Size = New System.Drawing.Size(224, 96)
         Me.txtHTML.TabIndex = 2
         Me.txtHTML.Text = resources.GetString("txtHTML.Text")
         Me.txtHTML.Visible = False
         '
-        'dgvMostrarUsuario
-        '
-        Me.dgvMostrarUsuario.AllowUserToAddRows = False
-        Me.dgvMostrarUsuario.AllowUserToDeleteRows = False
-        Me.dgvMostrarUsuario.AllowUserToResizeRows = False
-        Me.dgvMostrarUsuario.BackgroundColor = System.Drawing.Color.White
-        Me.dgvMostrarUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgvMostrarUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvMostrarUsuario.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewImageColumn1})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvMostrarUsuario.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvMostrarUsuario.EnableHeadersVisualStyles = False
-        Me.dgvMostrarUsuario.Location = New System.Drawing.Point(32, 257)
-        Me.dgvMostrarUsuario.Margin = New System.Windows.Forms.Padding(10)
-        Me.dgvMostrarUsuario.Name = "dgvMostrarUsuario"
-        Me.dgvMostrarUsuario.ReadOnly = True
-        Me.dgvMostrarUsuario.RowHeadersVisible = False
-        Me.dgvMostrarUsuario.RowTemplate.Height = 30
-        Me.dgvMostrarUsuario.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvMostrarUsuario.Size = New System.Drawing.Size(197, 50)
-        Me.dgvMostrarUsuario.TabIndex = 10
-        Me.dgvMostrarUsuario.Visible = False
-        '
-        'DataGridViewImageColumn1
-        '
-        Me.DataGridViewImageColumn1.HeaderText = ""
-        Me.DataGridViewImageColumn1.Image = CType(resources.GetObject("DataGridViewImageColumn1.Image"), System.Drawing.Image)
-        Me.DataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
-        Me.DataGridViewImageColumn1.Name = "DataGridViewImageColumn1"
-        Me.DataGridViewImageColumn1.ReadOnly = True
-        '
         'Login
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1211, 580)
+        Me.ClientSize = New System.Drawing.Size(1155, 580)
         Me.Controls.Add(Me.txtHTML)
         Me.Controls.Add(Me.panelRecuperar)
         Me.Controls.Add(Me.panelLogin)
@@ -457,6 +462,7 @@ Partial Class Login
         Me.panelLogin.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
+        CType(Me.dgvMostrarUsuario, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
@@ -465,7 +471,6 @@ Partial Class Login
         Me.Panel7.ResumeLayout(False)
         Me.Panel7.PerformLayout()
         Me.Panel10.ResumeLayout(False)
-        CType(Me.dgvMostrarUsuario, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

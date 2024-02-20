@@ -1,15 +1,17 @@
 ﻿Imports System.Net.Mail
 Imports System.Net
+Imports System.Security.Cryptography.X509Certificates
 Public Class Login
+    Public Property idUsuario As String
 
     ' --- MANEJADORES DE EVENTOS UI ---
     Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MostrarPanelLogin(True)
         CentrarPanel(panelLogin)
-        'MostrarUsuarioRegistrado()
+        MostrarUsuarioRegistrado()
 
         If dgvMostrarUsuario.Rows.Count = 0 Then
-            Servidor.ShowDialog()
+            MessageBox.Show("Error")
             Dispose()
         End If
     End Sub
@@ -67,7 +69,7 @@ Public Class Login
             Return
         End If
         labelPass.Text = pass 'PRUEBA
-        'CrearCorreo("decorreo29@gmail.com", "DbNusX6WmM", txtHTML.Text, "Recuperación de Contraseña", "angel01.am73@gmail.com", pass)
+        'CrearCorreo("decorreo29@gmail.com", "DbNusX6WmM", txtHTML.Text, "Recuperación de Contraseña", "decorreo29@gmail.com", pass)
     End Sub
 
     Private Sub MostrarUsuarioRegistrado()
@@ -77,8 +79,9 @@ Public Class Login
 
     ' --- UTILIDADES ---
     Private Sub IniciarSesion()
+        idUsuario = dgvRevisar.SelectedCells.Item(1).Value
+        GestionEventos.ShowDialog()
         Hide()
-        GestionVentas.ShowDialog()
     End Sub
 
     Private Sub CentrarPanel(panel As Panel)

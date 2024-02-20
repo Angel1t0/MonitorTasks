@@ -8,4 +8,5 @@
     Public Property Correo As String
     Public Property Rol As String
     Public Property Estado As String
+
 End Class

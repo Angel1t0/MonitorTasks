@@ -29,8 +29,7 @@ Partial Class FormularioGestionUsuarios
         Me.btnCerrar = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.txtBusca = New System.Windows.Forms.TextBox()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStrip2 = New System.Windows.Forms.MenuStrip()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.pbInsertarUsuario = New System.Windows.Forms.PictureBox()
         Me.dgvDataUsuario = New System.Windows.Forms.DataGridView()
@@ -58,7 +57,6 @@ Partial Class FormularioGestionUsuarios
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
         Me.Panel3.SuspendLayout()
         CType(Me.pbInsertarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvDataUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -74,7 +72,7 @@ Partial Class FormularioGestionUsuarios
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(10, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1144, 57)
+        Me.Panel1.Size = New System.Drawing.Size(1134, 41)
         Me.Panel1.TabIndex = 0
         '
         'Label1
@@ -83,7 +81,7 @@ Partial Class FormularioGestionUsuarios
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(0, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(151, 57)
+        Me.Label1.Size = New System.Drawing.Size(151, 41)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "USUARIOS"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -95,9 +93,9 @@ Partial Class FormularioGestionUsuarios
         Me.btnCerrar.FlatAppearance.BorderSize = 0
         Me.btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCerrar.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCerrar.Location = New System.Drawing.Point(1080, 0)
+        Me.btnCerrar.Location = New System.Drawing.Point(1070, 0)
         Me.btnCerrar.Name = "btnCerrar"
-        Me.btnCerrar.Size = New System.Drawing.Size(64, 57)
+        Me.btnCerrar.Size = New System.Drawing.Size(64, 41)
         Me.btnCerrar.TabIndex = 1
         Me.btnCerrar.Text = "X"
         Me.btnCerrar.UseVisualStyleBackColor = False
@@ -105,11 +103,11 @@ Partial Class FormularioGestionUsuarios
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.txtBusca)
-        Me.Panel2.Controls.Add(Me.MenuStrip1)
+        Me.Panel2.Controls.Add(Me.MenuStrip2)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel2.Location = New System.Drawing.Point(10, 57)
+        Me.Panel2.Location = New System.Drawing.Point(10, 41)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1144, 72)
+        Me.Panel2.Size = New System.Drawing.Size(1134, 51)
         Me.Panel2.TabIndex = 1
         '
         'txtBusca
@@ -121,34 +119,27 @@ Partial Class FormularioGestionUsuarios
         Me.txtBusca.Size = New System.Drawing.Size(500, 30)
         Me.txtBusca.TabIndex = 0
         '
-        'MenuStrip1
+        'MenuStrip2
         '
-        Me.MenuStrip1.AutoSize = False
-        Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.None
-        Me.MenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
-        Me.MenuStrip1.Location = New System.Drawing.Point(286, 16)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(46, 30)
-        Me.MenuStrip1.TabIndex = 1
-        Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'ToolStripMenuItem1
-        '
-        Me.ToolStripMenuItem1.Image = CType(resources.GetObject("ToolStripMenuItem1.Image"), System.Drawing.Image)
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(32, 26)
+        Me.MenuStrip2.AutoSize = False
+        Me.MenuStrip2.BackgroundImage = CType(resources.GetObject("MenuStrip2.BackgroundImage"), System.Drawing.Image)
+        Me.MenuStrip2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.MenuStrip2.Dock = System.Windows.Forms.DockStyle.None
+        Me.MenuStrip2.ImageScalingSize = New System.Drawing.Size(20, 20)
+        Me.MenuStrip2.Location = New System.Drawing.Point(300, 20)
+        Me.MenuStrip2.Name = "MenuStrip2"
+        Me.MenuStrip2.Size = New System.Drawing.Size(35, 22)
+        Me.MenuStrip2.TabIndex = 2
+        Me.MenuStrip2.Text = "MenuStrip2"
         '
         'Panel3
         '
         Me.Panel3.Controls.Add(Me.pbInsertarUsuario)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel3.Location = New System.Drawing.Point(959, 129)
+        Me.Panel3.Location = New System.Drawing.Point(1005, 92)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Padding = New System.Windows.Forms.Padding(10)
-        Me.Panel3.Size = New System.Drawing.Size(195, 555)
+        Me.Panel3.Size = New System.Drawing.Size(139, 592)
         Me.Panel3.TabIndex = 2
         '
         'pbInsertarUsuario
@@ -157,7 +148,7 @@ Partial Class FormularioGestionUsuarios
         Me.pbInsertarUsuario.Image = CType(resources.GetObject("pbInsertarUsuario.Image"), System.Drawing.Image)
         Me.pbInsertarUsuario.Location = New System.Drawing.Point(10, 10)
         Me.pbInsertarUsuario.Name = "pbInsertarUsuario"
-        Me.pbInsertarUsuario.Size = New System.Drawing.Size(175, 535)
+        Me.pbInsertarUsuario.Size = New System.Drawing.Size(119, 572)
         Me.pbInsertarUsuario.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.pbInsertarUsuario.TabIndex = 0
         Me.pbInsertarUsuario.TabStop = False
@@ -182,14 +173,15 @@ Partial Class FormularioGestionUsuarios
         Me.dgvDataUsuario.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvDataUsuario.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDataUsuario.EnableHeadersVisualStyles = False
-        Me.dgvDataUsuario.Location = New System.Drawing.Point(10, 129)
+        Me.dgvDataUsuario.Location = New System.Drawing.Point(10, 92)
         Me.dgvDataUsuario.Margin = New System.Windows.Forms.Padding(10)
         Me.dgvDataUsuario.Name = "dgvDataUsuario"
         Me.dgvDataUsuario.ReadOnly = True
         Me.dgvDataUsuario.RowHeadersVisible = False
+        Me.dgvDataUsuario.RowHeadersWidth = 51
         Me.dgvDataUsuario.RowTemplate.Height = 30
         Me.dgvDataUsuario.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDataUsuario.Size = New System.Drawing.Size(949, 555)
+        Me.dgvDataUsuario.Size = New System.Drawing.Size(995, 592)
         Me.dgvDataUsuario.TabIndex = 3
         '
         'Eli
@@ -197,14 +189,16 @@ Partial Class FormularioGestionUsuarios
         Me.Eli.HeaderText = ""
         Me.Eli.Image = CType(resources.GetObject("Eli.Image"), System.Drawing.Image)
         Me.Eli.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.Eli.MinimumWidth = 6
         Me.Eli.Name = "Eli"
         Me.Eli.ReadOnly = True
+        Me.Eli.Width = 125
         '
         'Panel4
         '
         Me.Panel4.Controls.Add(Me.Panel5)
         Me.Panel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Panel4.Location = New System.Drawing.Point(10, 57)
+        Me.Panel4.Location = New System.Drawing.Point(0, 41)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(1156, 600)
         Me.Panel4.TabIndex = 4
@@ -427,14 +421,13 @@ Partial Class FormularioGestionUsuarios
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1164, 684)
+        Me.ClientSize = New System.Drawing.Size(1154, 684)
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.dgvDataUsuario)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
-        Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "FormularioGestionUsuarios"
         Me.Padding = New System.Windows.Forms.Padding(10, 0, 10, 0)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -442,8 +435,6 @@ Partial Class FormularioGestionUsuarios
         Me.Panel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         CType(Me.pbInsertarUsuario, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvDataUsuario, System.ComponentModel.ISupportInitialize).EndInit()
@@ -460,8 +451,6 @@ Partial Class FormularioGestionUsuarios
     Friend WithEvents btnCerrar As Button
     Friend WithEvents Label1 As Label
     Friend WithEvents txtBusca As TextBox
-    Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents Panel3 As Panel
     Friend WithEvents pbInsertarUsuario As PictureBox
     Friend WithEvents dgvDataUsuario As DataGridView
@@ -487,4 +476,5 @@ Partial Class FormularioGestionUsuarios
     Friend WithEvents pbIcon As PictureBox
     Friend WithEvents Panel9 As Panel
     Friend WithEvents btnActualizar As Button
+    Friend WithEvents MenuStrip2 As MenuStrip
 End Class
