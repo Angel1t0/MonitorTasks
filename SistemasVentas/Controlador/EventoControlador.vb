@@ -1,4 +1,5 @@
-﻿Imports Google.Apis.Calendar.v3
+﻿Imports System.Threading.Tasks
+Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
 
 Public Class EventoControlador
@@ -16,7 +17,15 @@ Public Class EventoControlador
             MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        _datosEvento.InsertarEvento(evento)
+        If GestionEventos.btnCrearEvento.Visible = True Then
+            _datosEvento.InsertarEvento(evento)
+        Else
+            _datosEvento.ActualizarEvento(evento)
+        End If
+    End Sub
+
+    Public Sub EliminarEvento(eventID As String)
+        _datosEvento.EliminarEvento(eventID)
     End Sub
 
     Public Sub CrearRecurrencia(recurrencia As Recurrencia)
@@ -25,7 +34,11 @@ Public Class EventoControlador
             MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        _datosEvento.InsertarRecurrencia(recurrencia)
+        If GestionEventos.btnCrearEvento.Visible = True Then
+            _datosEvento.InsertarRecurrencia(recurrencia)
+        Else
+            _datosEvento.ActualizarRecurrencia(recurrencia)
+        End If
     End Sub
 
     Public Sub InsertarAsistente(asistente As Asistente, isDuplicado As Boolean)
@@ -37,8 +50,20 @@ Public Class EventoControlador
         _datosEvento.InsertarAsistente(asistente)
     End Sub
 
+    Public Sub EliminarAsistente(asistente As Asistente)
+        _datosEvento.EliminarAsistente(asistente)
+    End Sub
+
     Public Sub InsertarNotificacion(notificacion As Notificacion)
         _datosEvento.InsertarNotificacion(notificacion)
+    End Sub
+
+    Public Sub ActualizarNotificacion(notificacion As Notificacion)
+        _datosEvento.ActualizarNotificacion(notificacion)
+    End Sub
+
+    Public Sub EliminarNotificacion(reminderID As Integer)
+        _datosEvento.EliminarNotificacion(reminderID)
     End Sub
 
     Public Sub EnviarEventoAGoogleCalendar(evento As Evento)
@@ -53,22 +78,61 @@ Public Class EventoControlador
 
     Public Async Sub AgregarInformacionEvento(evento As Evento, recurrencia As Recurrencia)
         Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
-        Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, recurrencia, evento)
+        If GestionEventos.btnCrearEvento.Visible = True Then
+            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, recurrencia, evento)
+        Else
+            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GestionEventos.EventoID, recurrencia, evento)
+        End If
+
     End Sub
 
-    ' Método para mostrar eventos por el id del calendario sacado de la base de datos, aún en proceso
-    Public Sub MostrarEventosPorCalendarioID(idCalendario As String)
+    Public Async Function ObtenerEventosAsync() As Task(Of IList(Of [Event]))
         Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
-        Dim events As Events = service.Events.List(idCalendario).Execute()
-        Console.WriteLine("Eventos:")
-        If events.Items IsNot Nothing AndAlso events.Items.Count > 0 Then
-            For Each eventItem As [Event] In events.Items
-                Console.WriteLine(eventItem.Summary)
-            Next
-        Else
-            Console.WriteLine("No se encontraron eventos.")
-        End If
-    End Sub
+
+        Dim eventosGoogle As IList(Of [Event]) = Await _servicioGoogleCalendar.ObtenerEventosGoogleAsync(service, GestionEventos.CalendarioID)
+        Return eventosGoogle
+    End Function
+
+    Public Function ObtenerEventosLocales() As List(Of Evento)
+        Dim eventosTable As DataTable = _datosEvento.MostrarEventos(GestionEventos.CalendarioID)
+        Dim recurencias As List(Of Recurrencia) = _datosEvento.ObtenerTodasRecurrencias()
+        Dim asistentes As List(Of Asistente) = _datosEvento.ObtenerTodosAsistentes()
+        Dim notificaciones As List(Of Notificacion) = _datosEvento.ObtenerTodasNotificaciones()
+
+        Return TransformarAEvento(eventosTable, recurencias, asistentes, notificaciones)
+    End Function
+
+    Public Async Function SincronizarEventosAsync() As Task(Of IList(Of [Event]))
+        Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
+        Dim eventosLocales As List(Of Evento) = ObtenerEventosLocales()
+        Dim eventosGoogle As IList(Of [Event]) = Await ObtenerEventosAsync()
+
+        Await _servicioGoogleCalendar.SincronizarEventosAsync(service, eventosGoogle, eventosLocales)
+    End Function
+
+
+    Public Function TransformarAEvento(eventosTable As DataTable, recurrencias As List(Of Recurrencia), asistentes As List(Of Asistente), notificaciones As List(Of Notificacion)) As List(Of Evento)
+        Dim eventos As New List(Of Evento)
+        For Each row As DataRow In eventosTable.Rows
+            Dim evento As New Evento With {
+                .EventID = row(0).ToString(),
+                .Summary = row(1).ToString(),
+                .Location = row(2).ToString(),
+                .Description = row(3).ToString(),
+                .StartDateTime = row(4).ToString(),
+                .EndDateTime = row(5).ToString(),
+                .Visibility = row(6).ToString(),
+                .Transparency = row(7).ToString(),
+                .LastModified = row(8).ToString()
+            }
+            evento.Recurrence = recurrencias.Where(Function(r) r.EventID.Equals(evento.EventID)).ToList()
+            evento.Attendees = asistentes.Where(Function(a) a.EventID.Equals(evento.EventID)).ToList()
+            evento.Reminders = notificaciones.Where(Function(n) n.EventID.Equals(evento.EventID)).ToList()
+            eventos.Add(evento)
+        Next
+        Return eventos
+
+    End Function
 
     ' MÉTODOS AUXILIARES
     Public Function ConvertirUnidadATiempo(unidad As String, cantidad As Integer) As Integer
@@ -90,10 +154,25 @@ Public Class EventoControlador
         Return _datosEvento.ObtenerCalendarios()
     End Function
 
+    Public Function ObtenerEventos(calendarioID As String) As DataTable
+        Return _datosEvento.MostrarEventos(calendarioID)
+    End Function
+
+    Public Function ObtenerRecurrencia(eventID As String) As String
+        Return _datosEvento.MostrarRecurrencias(eventID)
+    End Function
+
     Public Function ObtenerNombreAsistente(email As String) As String
         Return _datosEvento.ObtenerNombreInvitado(email)
     End Function
 
+    Public Function ObtenerAsistentesInvitados(eventID As String) As List(Of String)
+        Return _datosEvento.MostrarAsistentesInvitados(eventID)
+    End Function
+
+    Public Function ObtenerNotificacionesActivas(eventID As String) As List(Of Notificacion)
+        Return _datosEvento.MostrarNotificacionesActivas(eventID)
+    End Function
     Public Function ObtenerCorreosAsistentesExcepto(email As String) As List(Of String)
         Return _datosEvento.ObtenerCorreosUsuarioExcepto(email)
     End Function

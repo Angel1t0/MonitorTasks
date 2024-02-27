@@ -2,7 +2,6 @@
     Public Property AttendeeID As Integer
     Public Property EventID As String
     Public Property Email As String
-    Public Property DisplayName As String
-    Public Property ResponseStatus As String = "Pendiente"
-
+    Public Property DisplayName As String = "Invitado"
+    Public Property Status As String = "Activo"
 End Class

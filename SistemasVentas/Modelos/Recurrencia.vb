@@ -1,11 +1,12 @@
 ﻿Public Class Recurrencia
     Public Property EventID As String
     Public Property Frecuencia As String
-    Public Property DiasSeleccionados As List(Of String)
+    Public Property DiasSeleccionados As String
     Public Property TipoFinalizacion As String ' "Ocurrencias" o "HastaFecha"
     Public Property NumeroOcurrencias As Integer? ' Nullable para permitir valores no asignados
     Public Property FechaFinal As DateTime?
-    Public Property RRULE As String ' La regla de recurrencia generada
+    Public Property RRULE As String = String.Empty ' La regla de recurrencia generada
+    Public Property Status As String = "Activo"
 
     Public Function GenerarRRULE() As String
         Dim rrule As String = $"RRULE:FREQ={Frecuencia}"
@@ -16,7 +17,7 @@
             rrule &= $";UNTIL={FechaFinal.Value.ToString("yyyyMMddTHHmmssZ")}"
         End If
 
-        If Frecuencia = "Semanal" Or Frecuencia = "Mensual" AndAlso DiasSeleccionados IsNot Nothing AndAlso DiasSeleccionados.Count > 0 Then
+        If Frecuencia = "WEEKLY" Or Frecuencia = "MONTHLY" AndAlso DiasSeleccionados IsNot Nothing AndAlso DiasSeleccionados.Count > 0 Then
             Dim diasFormateados As String = String.Join(",", DiasSeleccionados)
             rrule &= $";BYDAY={diasFormateados}"
         End If
