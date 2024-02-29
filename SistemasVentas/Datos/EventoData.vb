@@ -95,32 +95,16 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@Description", evento.Description)
                 comando.Parameters.AddWithValue("@StartDateTime", evento.StartDateTime)
                 comando.Parameters.AddWithValue("@EndDateTime", evento.EndDateTime)
+                comando.Parameters.AddWithValue("@RRULE", evento.RRULE)
                 comando.Parameters.AddWithValue("@Visibility", evento.Visibility)
                 comando.Parameters.AddWithValue("@Transparency", evento.Transparency)
-                comando.Parameters.AddWithValue("@LastModified", DateTime.Now)
+                comando.Parameters.AddWithValue("@LastModified", evento.LastModified)
                 comando.ExecuteNonQuery()
             End Using
         Catch ex As SqlException
             Throw New ApplicationException("Error al insertar el evento en la base de datos.", ex)
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado al insertar el evento.", ex)
-        End Try
-    End Sub
-
-    Public Sub InsertarRecurrencia(recurrencia As Recurrencia)
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                Dim comando As New SqlCommand("insertarRecurrencia", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@EventID", recurrencia.EventID)
-                comando.Parameters.AddWithValue("@RRULE", recurrencia.RRULE)
-                conexion.Open()
-                comando.ExecuteNonQuery()
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al insertar la recurrencia en la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al insertar la recurrencia.", ex)
         End Try
     End Sub
 
@@ -182,21 +166,6 @@ Public Class EventoData
         Return dataTable
     End Function
 
-    Public Function MostrarRecurrencias(eventID As String) As String
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                conexion.Open()
-                Dim comando As New SqlCommand("obtenerRecurrenciasPorEvento", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@EventID", eventID)
-                Return comando.ExecuteScalar()
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al mostrar recurrencias de la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al mostrar recurrencias.", ex)
-        End Try
-    End Function
 
     Public Function MostrarAsistentesInvitados(eventID As String) As List(Of String)
         Dim asistentes As New List(Of String)
@@ -288,32 +257,16 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@Description", evento.Description)
                 comando.Parameters.AddWithValue("@StartDateTime", evento.StartDateTime)
                 comando.Parameters.AddWithValue("@EndDateTime", evento.EndDateTime)
+                comando.Parameters.AddWithValue("@RRULE", evento.RRULE)
                 comando.Parameters.AddWithValue("@Visibility", evento.Visibility)
                 comando.Parameters.AddWithValue("@Transparency", evento.Transparency)
-                comando.Parameters.AddWithValue("@LastModified", DateTime.Now)
+                comando.Parameters.AddWithValue("@LastModified", evento.LastModified)
                 comando.ExecuteNonQuery()
             End Using
         Catch ex As SqlException
             Throw New ApplicationException("Error al actualizar el evento en la base de datos.", ex)
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado al actualizar el evento.", ex)
-        End Try
-    End Sub
-
-    Public Sub ActualizarRecurrencia(recurrencia As Recurrencia)
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                Dim comando As New SqlCommand("editarRecurrencia", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@EventID", recurrencia.EventID)
-                comando.Parameters.AddWithValue("@RRULE", recurrencia.RRULE)
-                conexion.Open()
-                comando.ExecuteNonQuery()
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al actualizar la recurrencia en la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al actualizar la recurrencia.", ex)
         End Try
     End Sub
 
@@ -351,29 +304,6 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al eliminar el evento.", ex)
         End Try
     End Sub
-
-    Public Function ObtenerTodasRecurrencias() As List(Of Recurrencia)
-        Dim recurrencias As New List(Of Recurrencia)
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                conexion.Open()
-                Dim comando As New SqlCommand("SELECT * FROM Recurrencias", conexion)
-                'comando.CommandType = CommandType.StoredProcedure
-                Dim reader As SqlDataReader = comando.ExecuteReader
-                While (reader.Read())
-                    Dim recurrencia As New Recurrencia()
-                    recurrencia.EventID = reader(1)
-                    recurrencia.RRULE = reader(2)
-                    recurrencias.Add(recurrencia)
-                End While
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al obtener recurrencias de la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al obtener recurrencias.", ex)
-        End Try
-        Return recurrencias
-    End Function
 
     Public Function ObtenerTodosAsistentes() As List(Of Asistente)
         Dim asistentes As New List(Of Asistente)

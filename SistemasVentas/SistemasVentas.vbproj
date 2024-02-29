@@ -52,6 +52,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
       <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="FontAwesome.Sharp, Version=5.8.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.Sharp.5.8.3\lib\net40\FontAwesome.Sharp.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.10.0\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
@@ -85,6 +88,8 @@
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -112,10 +117,12 @@
       <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase" />
     <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, PublicKeyToken=431cba815f6a8b5b, processorArchitecture=MSIL">
       <HintPath>..\packages\Zlib.Portable.Signed.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
     </Reference>
@@ -149,8 +156,21 @@
     <Compile Include="UI\Eventos\GestionEventos.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Login\Login.Designer.vb">
+    <Compile Include="UI\FormularioPrincipal.Designer.vb">
+      <DependentUpon>FormularioPrincipal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormularioPrincipal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Eventos\FormularioSeleccionarCalendario.Designer.vb">
+      <DependentUpon>FormularioSeleccionarCalendario.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Eventos\FormularioSeleccionarCalendario.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Login\.Designer.vb">
       <DependentUpon>Login.vb</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\Login\Login.vb">
       <SubType>Form</SubType>
@@ -182,6 +202,12 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\Eventos\GestionEventos.resx">
       <DependentUpon>GestionEventos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormularioPrincipal.resx">
+      <DependentUpon>FormularioPrincipal.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Eventos\FormularioSeleccionarCalendario.resx">
+      <DependentUpon>FormularioSeleccionarCalendario.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Login\Login.resx">
       <DependentUpon>Login.vb</DependentUpon>

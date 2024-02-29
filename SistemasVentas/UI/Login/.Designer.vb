@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Login
     Inherits System.Windows.Forms.Form
 
     'Form reemplaza a Dispose para limpiar la lista de componentes.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,15 +20,16 @@ Partial Class Login
     'NOTA: el Diseñador de Windows Forms necesita el siguiente procedimiento
     'Se puede modificar usando el Diseñador de Windows Forms.  
     'No lo modifique con el editor de código.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Login))
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.PanelTitulo = New System.Windows.Forms.Panel()
+        Me.BtnCerrar = New FontAwesome.Sharp.IconPictureBox()
+        Me.BtnMaximizar = New FontAwesome.Sharp.IconPictureBox()
+        Me.BtnMinimizar = New FontAwesome.Sharp.IconPictureBox()
         Me.panelLogin = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.dgvMostrarUsuario = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.lbOlvidar = New System.Windows.Forms.Label()
         Me.btnLogin = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -46,7 +47,6 @@ Partial Class Login
         Me.Label1 = New System.Windows.Forms.Label()
         Me.panelRecuperar = New System.Windows.Forms.Panel()
         Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.labelPass = New System.Windows.Forms.Label()
         Me.lbVolver = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.btnEnviar = New System.Windows.Forms.Button()
@@ -55,10 +55,12 @@ Partial Class Login
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.txtHTML = New System.Windows.Forms.RichTextBox()
+        Me.PanelTitulo.SuspendLayout()
+        CType(Me.BtnCerrar, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BtnMaximizar, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BtnMinimizar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelLogin.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        CType(Me.dgvMostrarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.dgvRevisar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -67,18 +69,72 @@ Partial Class Login
         Me.Panel10.SuspendLayout()
         Me.SuspendLayout()
         '
+        'PanelTitulo
+        '
+        Me.PanelTitulo.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.PanelTitulo.Controls.Add(Me.BtnCerrar)
+        Me.PanelTitulo.Controls.Add(Me.BtnMaximizar)
+        Me.PanelTitulo.Controls.Add(Me.BtnMinimizar)
+        Me.PanelTitulo.Dock = System.Windows.Forms.DockStyle.Top
+        Me.PanelTitulo.Location = New System.Drawing.Point(0, 0)
+        Me.PanelTitulo.Name = "PanelTitulo"
+        Me.PanelTitulo.Size = New System.Drawing.Size(562, 46)
+        Me.PanelTitulo.TabIndex = 0
+        '
+        'BtnCerrar
+        '
+        Me.BtnCerrar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtnCerrar.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.BtnCerrar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.WindowClose
+        Me.BtnCerrar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnCerrar.IconSize = 30
+        Me.BtnCerrar.Location = New System.Drawing.Point(516, 8)
+        Me.BtnCerrar.Name = "BtnCerrar"
+        Me.BtnCerrar.Size = New System.Drawing.Size(30, 30)
+        Me.BtnCerrar.TabIndex = 7
+        Me.BtnCerrar.TabStop = False
+        '
+        'BtnMaximizar
+        '
+        Me.BtnMaximizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtnMaximizar.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.BtnMaximizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMaximizar.IconChar = FontAwesome.Sharp.IconChar.WindowMaximize
+        Me.BtnMaximizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMaximizar.IconSize = 30
+        Me.BtnMaximizar.Location = New System.Drawing.Point(466, 8)
+        Me.BtnMaximizar.Name = "BtnMaximizar"
+        Me.BtnMaximizar.Size = New System.Drawing.Size(30, 30)
+        Me.BtnMaximizar.TabIndex = 6
+        Me.BtnMaximizar.TabStop = False
+        '
+        'BtnMinimizar
+        '
+        Me.BtnMinimizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtnMinimizar.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.BtnMinimizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMinimizar.IconChar = FontAwesome.Sharp.IconChar.WindowMinimize
+        Me.BtnMinimizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMinimizar.IconSize = 30
+        Me.BtnMinimizar.Location = New System.Drawing.Point(415, 8)
+        Me.BtnMinimizar.Name = "BtnMinimizar"
+        Me.BtnMinimizar.Size = New System.Drawing.Size(30, 30)
+        Me.BtnMinimizar.TabIndex = 5
+        Me.BtnMinimizar.TabStop = False
+        '
         'panelLogin
         '
+        Me.panelLogin.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.panelLogin.Controls.Add(Me.Panel3)
         Me.panelLogin.Controls.Add(Me.Panel2)
-        Me.panelLogin.Location = New System.Drawing.Point(56, 12)
+        Me.panelLogin.Location = New System.Drawing.Point(14, 66)
         Me.panelLogin.Name = "panelLogin"
         Me.panelLogin.Size = New System.Drawing.Size(540, 556)
-        Me.panelLogin.TabIndex = 0
+        Me.panelLogin.TabIndex = 1
         '
         'Panel3
         '
-        Me.Panel3.Controls.Add(Me.dgvMostrarUsuario)
         Me.Panel3.Controls.Add(Me.lbOlvidar)
         Me.Panel3.Controls.Add(Me.btnLogin)
         Me.Panel3.Controls.Add(Me.Panel5)
@@ -92,47 +148,6 @@ Partial Class Login
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(486, 409)
         Me.Panel3.TabIndex = 1
-        '
-        'dgvMostrarUsuario
-        '
-        Me.dgvMostrarUsuario.AllowUserToAddRows = False
-        Me.dgvMostrarUsuario.AllowUserToDeleteRows = False
-        Me.dgvMostrarUsuario.AllowUserToResizeRows = False
-        Me.dgvMostrarUsuario.BackgroundColor = System.Drawing.Color.White
-        Me.dgvMostrarUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgvMostrarUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvMostrarUsuario.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewImageColumn1})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvMostrarUsuario.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvMostrarUsuario.EnableHeadersVisualStyles = False
-        Me.dgvMostrarUsuario.Location = New System.Drawing.Point(32, 257)
-        Me.dgvMostrarUsuario.Margin = New System.Windows.Forms.Padding(10)
-        Me.dgvMostrarUsuario.Name = "dgvMostrarUsuario"
-        Me.dgvMostrarUsuario.ReadOnly = True
-        Me.dgvMostrarUsuario.RowHeadersVisible = False
-        Me.dgvMostrarUsuario.RowHeadersWidth = 51
-        Me.dgvMostrarUsuario.RowTemplate.Height = 30
-        Me.dgvMostrarUsuario.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvMostrarUsuario.Size = New System.Drawing.Size(197, 50)
-        Me.dgvMostrarUsuario.TabIndex = 10
-        Me.dgvMostrarUsuario.Visible = False
-        '
-        'DataGridViewImageColumn1
-        '
-        Me.DataGridViewImageColumn1.HeaderText = ""
-        Me.DataGridViewImageColumn1.Image = CType(resources.GetObject("DataGridViewImageColumn1.Image"), System.Drawing.Image)
-        Me.DataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
-        Me.DataGridViewImageColumn1.MinimumWidth = 6
-        Me.DataGridViewImageColumn1.Name = "DataGridViewImageColumn1"
-        Me.DataGridViewImageColumn1.ReadOnly = True
-        Me.DataGridViewImageColumn1.Width = 125
         '
         'lbOlvidar
         '
@@ -148,7 +163,7 @@ Partial Class Login
         '
         'btnLogin
         '
-        Me.btnLogin.BackColor = System.Drawing.Color.DodgerBlue
+        Me.btnLogin.BackColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(82, Byte), Integer))
         Me.btnLogin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnLogin.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnLogin.FlatAppearance.BorderSize = 0
@@ -173,6 +188,7 @@ Partial Class Login
         '
         'txtPass
         '
+        Me.txtPass.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.txtPass.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtPass.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtPass.Location = New System.Drawing.Point(32, 185)
@@ -191,6 +207,7 @@ Partial Class Login
         '
         'txtLogin
         '
+        Me.txtLogin.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.txtLogin.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtLogin.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtLogin.Location = New System.Drawing.Point(28, 91)
@@ -252,8 +269,8 @@ Partial Class Login
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.dgvRevisar)
         Me.Panel2.Controls.Add(Me.Label1)
+        Me.Panel2.Controls.Add(Me.dgvRevisar)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
@@ -304,7 +321,7 @@ Partial Class Login
         '
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Left
         Me.Label1.Font = New System.Drawing.Font("Arial", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(82, Byte), Integer))
         Me.Label1.Location = New System.Drawing.Point(0, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Padding = New System.Windows.Forms.Padding(40, 20, 0, 0)
@@ -315,16 +332,16 @@ Partial Class Login
         '
         'panelRecuperar
         '
+        Me.panelRecuperar.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.panelRecuperar.Controls.Add(Me.Panel7)
         Me.panelRecuperar.Controls.Add(Me.Panel10)
-        Me.panelRecuperar.Location = New System.Drawing.Point(714, 153)
+        Me.panelRecuperar.Location = New System.Drawing.Point(11, 99)
         Me.panelRecuperar.Name = "panelRecuperar"
         Me.panelRecuperar.Size = New System.Drawing.Size(540, 405)
-        Me.panelRecuperar.TabIndex = 1
+        Me.panelRecuperar.TabIndex = 2
         '
         'Panel7
         '
-        Me.Panel7.Controls.Add(Me.labelPass)
         Me.Panel7.Controls.Add(Me.lbVolver)
         Me.Panel7.Controls.Add(Me.Label5)
         Me.Panel7.Controls.Add(Me.btnEnviar)
@@ -335,15 +352,6 @@ Partial Class Login
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(486, 304)
         Me.Panel7.TabIndex = 1
-        '
-        'labelPass
-        '
-        Me.labelPass.AutoSize = True
-        Me.labelPass.Location = New System.Drawing.Point(46, 251)
-        Me.labelPass.Name = "labelPass"
-        Me.labelPass.Size = New System.Drawing.Size(48, 16)
-        Me.labelPass.TabIndex = 10
-        Me.labelPass.Text = "Label4"
         '
         'lbVolver
         '
@@ -371,7 +379,7 @@ Partial Class Login
         '
         'btnEnviar
         '
-        Me.btnEnviar.BackColor = System.Drawing.Color.DodgerBlue
+        Me.btnEnviar.BackColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(82, Byte), Integer))
         Me.btnEnviar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnEnviar.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnEnviar.FlatAppearance.BorderSize = 0
@@ -396,6 +404,7 @@ Partial Class Login
         '
         'txtRecuperacion
         '
+        Me.txtRecuperacion.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.txtRecuperacion.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtRecuperacion.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRecuperacion.Location = New System.Drawing.Point(32, 76)
@@ -427,7 +436,7 @@ Partial Class Login
         '
         Me.Label8.Dock = System.Windows.Forms.DockStyle.Left
         Me.Label8.Font = New System.Drawing.Font("Arial", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(82, Byte), Integer))
         Me.Label8.Location = New System.Drawing.Point(0, 0)
         Me.Label8.Name = "Label8"
         Me.Label8.Padding = New System.Windows.Forms.Padding(40, 20, 0, 0)
@@ -436,33 +445,26 @@ Partial Class Login
         Me.Label8.Text = "RECUPERACIÓN"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'txtHTML
-        '
-        Me.txtHTML.Location = New System.Drawing.Point(604, 82)
-        Me.txtHTML.Name = "txtHTML"
-        Me.txtHTML.Size = New System.Drawing.Size(224, 96)
-        Me.txtHTML.TabIndex = 2
-        Me.txtHTML.Text = resources.GetString("txtHTML.Text")
-        Me.txtHTML.Visible = False
-        '
         'Login
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1155, 580)
-        Me.Controls.Add(Me.txtHTML)
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(562, 633)
         Me.Controls.Add(Me.panelRecuperar)
         Me.Controls.Add(Me.panelLogin)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.MainMenuStrip = Me.MenuStrip1
+        Me.Controls.Add(Me.PanelTitulo)
+        Me.MinimumSize = New System.Drawing.Size(580, 680)
         Me.Name = "Login"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Login"
+        Me.Text = "FormularioLogin"
+        Me.PanelTitulo.ResumeLayout(False)
+        CType(Me.BtnCerrar, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BtnMaximizar, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BtnMinimizar, System.ComponentModel.ISupportInitialize).EndInit()
         Me.panelLogin.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        CType(Me.dgvMostrarUsuario, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
@@ -475,35 +477,35 @@ Partial Class Login
 
     End Sub
 
+    Friend WithEvents PanelTitulo As Panel
+    Friend WithEvents BtnCerrar As FontAwesome.Sharp.IconPictureBox
+    Friend WithEvents BtnMaximizar As FontAwesome.Sharp.IconPictureBox
+    Friend WithEvents BtnMinimizar As FontAwesome.Sharp.IconPictureBox
     Friend WithEvents panelLogin As Panel
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents Label1 As Label
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents txtLogin As TextBox
-    Friend WithEvents Panel4 As Panel
+    Friend WithEvents lbOlvidar As Label
+    Friend WithEvents btnLogin As Button
     Friend WithEvents Panel5 As Panel
     Friend WithEvents txtPass As TextBox
-    Friend WithEvents btnLogin As Button
-    Friend WithEvents lbOlvidar As Label
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents txtLogin As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents btnVer As ToolStripMenuItem
+    Friend WithEvents btnNoVer As ToolStripMenuItem
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents dgvRevisar As DataGridView
+    Friend WithEvents Eli As DataGridViewImageColumn
+    Friend WithEvents Label1 As Label
     Friend WithEvents panelRecuperar As Panel
     Friend WithEvents Panel7 As Panel
+    Friend WithEvents lbVolver As Label
+    Friend WithEvents Label5 As Label
     Friend WithEvents btnEnviar As Button
     Friend WithEvents Panel8 As Panel
     Friend WithEvents txtRecuperacion As TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Panel10 As Panel
     Friend WithEvents Label8 As Label
-    Friend WithEvents Label5 As Label
-    Friend WithEvents lbVolver As Label
-    Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents btnVer As ToolStripMenuItem
-    Friend WithEvents btnNoVer As ToolStripMenuItem
-    Friend WithEvents dgvRevisar As DataGridView
-    Friend WithEvents Eli As DataGridViewImageColumn
-    Friend WithEvents txtHTML As RichTextBox
-    Friend WithEvents labelPass As Label
-    Friend WithEvents dgvMostrarUsuario As DataGridView
-    Friend WithEvents DataGridViewImageColumn1 As DataGridViewImageColumn
 End Class

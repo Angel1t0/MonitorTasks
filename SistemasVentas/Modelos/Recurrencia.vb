@@ -1,12 +1,10 @@
 ﻿Public Class Recurrencia
-    Public Property EventID As String
     Public Property Frecuencia As String
     Public Property DiasSeleccionados As String
     Public Property TipoFinalizacion As String ' "Ocurrencias" o "HastaFecha"
     Public Property NumeroOcurrencias As Integer? ' Nullable para permitir valores no asignados
     Public Property FechaFinal As DateTime?
     Public Property RRULE As String = String.Empty ' La regla de recurrencia generada
-    Public Property Status As String = "Activo"
 
     Public Function GenerarRRULE() As String
         Dim rrule As String = $"RRULE:FREQ={Frecuencia}"
@@ -35,7 +33,7 @@
         ' Validar la frecuencia
         If String.IsNullOrWhiteSpace(Frecuencia) Then
             errores.Add("La frecuencia de recurrencia es requerida.")
-        ElseIf Frecuencia = "Semanal" Or Frecuencia = "Mensual" Then
+        ElseIf Frecuencia = "WEEKLY" Or Frecuencia = "MONTHLY" Then
             ' Asegurar que se hayan seleccionado días para frecuencias semanales o mensuales
             If DiasSeleccionados Is Nothing OrElse DiasSeleccionados.Count = 0 Then
                 errores.Add("Debe seleccionar al menos un día para la recurrencia " & Frecuencia.ToLower() & ".")

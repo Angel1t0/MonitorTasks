@@ -6,7 +6,7 @@
     Public Property Description As String = String.Empty ' Valor por defecto vacío, asumiendo que puede ser opcional
     Public Property StartDateTime As DateTime = DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ssZ") ' Valor por defecto, necesitas decidir un valor razonable
     Public Property EndDateTime As DateTime? = DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ssZ") ' Valor por defecto, necesitas decidir un valor razonable
-    Public Property Recurrence As List(Of Recurrencia) ' Valor por defecto vacío
+    Public Property RRULE As String = String.Empty ' Valor por defecto vacío
     Public Property Attendees As List(Of Asistente) ' Valor por defecto vacío
     Public Property Reminders As List(Of Notificacion) ' Valor por defecto vacío
     Public Property Visibility As String = "default"

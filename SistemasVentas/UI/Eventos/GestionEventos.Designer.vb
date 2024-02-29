@@ -23,7 +23,7 @@ Partial Class GestionEventos
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(GestionEventos))
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelCrearEvento = New System.Windows.Forms.Panel()
         Me.btnActualizarNotificacion = New System.Windows.Forms.Button()
         Me.btnEliminarNotificaciones = New System.Windows.Forms.Button()
@@ -80,6 +80,7 @@ Partial Class GestionEventos
         Me.dgvDataEventos = New System.Windows.Forms.DataGridView()
         Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
         Me.panelEventos = New System.Windows.Forms.Panel()
+        Me.btnSincronizar = New System.Windows.Forms.Button()
         Me.labelCalendarioID = New System.Windows.Forms.Label()
         Me.pbInsertarEvento = New System.Windows.Forms.PictureBox()
         Me.panelCalendarios = New System.Windows.Forms.Panel()
@@ -87,7 +88,6 @@ Partial Class GestionEventos
         Me.labelUsuarioId = New System.Windows.Forms.Label()
         Me.comboCalendario = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btnSincronizar = New System.Windows.Forms.Button()
         Me.panelCrearEvento.SuspendLayout()
         CType(Me.txtOcurrencias, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericUpCantidad, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -150,7 +150,7 @@ Partial Class GestionEventos
         Me.panelCrearEvento.Controls.Add(Me.Label3)
         Me.panelCrearEvento.Controls.Add(Me.Label2)
         Me.panelCrearEvento.Controls.Add(Me.ToolStripMenu)
-        Me.panelCrearEvento.Location = New System.Drawing.Point(2, 3)
+        Me.panelCrearEvento.Location = New System.Drawing.Point(29, 379)
         Me.panelCrearEvento.Name = "panelCrearEvento"
         Me.panelCrearEvento.Size = New System.Drawing.Size(1158, 606)
         Me.panelCrearEvento.TabIndex = 8
@@ -232,7 +232,7 @@ Partial Class GestionEventos
         Me.btnVolver.FlatAppearance.BorderSize = 0
         Me.btnVolver.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnVolver.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnVolver.Location = New System.Drawing.Point(813, 527)
+        Me.btnVolver.Location = New System.Drawing.Point(853, 532)
         Me.btnVolver.Name = "btnVolver"
         Me.btnVolver.Size = New System.Drawing.Size(121, 57)
         Me.btnVolver.TabIndex = 100
@@ -430,7 +430,7 @@ Partial Class GestionEventos
         '
         Me.comboFrecuencia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.comboFrecuencia.FormattingEnabled = True
-        Me.comboFrecuencia.Items.AddRange(New Object() {"Diariamente", "Semanalmente", "Mensualmente", "Anualmente"})
+        Me.comboFrecuencia.Items.AddRange(New Object() {"No repetir", "Diariamente", "Semanalmente", "Mensualmente", "Anualmente"})
         Me.comboFrecuencia.Location = New System.Drawing.Point(537, 79)
         Me.comboFrecuencia.Name = "comboFrecuencia"
         Me.comboFrecuencia.Size = New System.Drawing.Size(121, 24)
@@ -642,15 +642,15 @@ Partial Class GestionEventos
         Me.dgvDataEventos.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvDataEventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDataEventos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDataEventos.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataEventos.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvDataEventos.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDataEventos.EnableHeadersVisualStyles = False
         Me.dgvDataEventos.Location = New System.Drawing.Point(0, 0)
@@ -677,6 +677,7 @@ Partial Class GestionEventos
         'panelEventos
         '
         Me.panelEventos.Controls.Add(Me.btnSincronizar)
+        Me.panelEventos.Controls.Add(Me.panelCrearEvento)
         Me.panelEventos.Controls.Add(Me.labelCalendarioID)
         Me.panelEventos.Controls.Add(Me.dgvDataEventos)
         Me.panelEventos.Controls.Add(Me.pbInsertarEvento)
@@ -684,6 +685,15 @@ Partial Class GestionEventos
         Me.panelEventos.Name = "panelEventos"
         Me.panelEventos.Size = New System.Drawing.Size(1162, 575)
         Me.panelEventos.TabIndex = 9
+        '
+        'btnSincronizar
+        '
+        Me.btnSincronizar.Location = New System.Drawing.Point(189, 532)
+        Me.btnSincronizar.Name = "btnSincronizar"
+        Me.btnSincronizar.Size = New System.Drawing.Size(106, 48)
+        Me.btnSincronizar.TabIndex = 103
+        Me.btnSincronizar.Text = "ACTUALIZAR"
+        Me.btnSincronizar.UseVisualStyleBackColor = True
         '
         'labelCalendarioID
         '
@@ -752,23 +762,13 @@ Partial Class GestionEventos
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Seleccionar Calendario"
         '
-        'btnSincronizar
-        '
-        Me.btnSincronizar.Location = New System.Drawing.Point(189, 532)
-        Me.btnSincronizar.Name = "btnSincronizar"
-        Me.btnSincronizar.Size = New System.Drawing.Size(106, 48)
-        Me.btnSincronizar.TabIndex = 103
-        Me.btnSincronizar.Text = "ACTUALIZAR"
-        Me.btnSincronizar.UseVisualStyleBackColor = True
-        '
         'GestionEventos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1435, 616)
+        Me.ClientSize = New System.Drawing.Size(1551, 637)
         Me.Controls.Add(Me.panelCalendarios)
-        Me.Controls.Add(Me.panelCrearEvento)
         Me.Controls.Add(Me.panelEventos)
         Me.Name = "GestionEventos"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

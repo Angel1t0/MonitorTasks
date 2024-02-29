@@ -45,10 +45,15 @@ Public Class GestionEventos
         evento.Transparency = FormatoComboDisponibilidad()
     End Sub
 
-    Private Sub CrearRecurrencia()
-        Dim listaFrecuencia As New List(Of String) From {"DAILY", "WEEKLY", "MONTHLY", "YEARLY"}
+    Private Function CrearRecurrencia() As Boolean
+        Dim listaFrecuencia As New List(Of String) From {"DONT REPEAT", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"}
         Dim diasDeLaSemana As New List(Of String) From {"MO", "TU", "WE", "TH", "FR", "SA", "SU"}
         Dim indexFrecuencia As Integer = comboFrecuencia.SelectedIndex
+
+        If indexFrecuencia = 0 Then
+            evento.RRULE = ""
+            Return True
+        End If
 
         Dim diasSeleccionados As List(Of String) = listDias.CheckedItems.Cast(Of String)().ToList()
         Dim tipoFinalizacion As String = If(rbtnConteo.Checked, "Ocurrencias", "HastaFecha")
@@ -56,16 +61,21 @@ Public Class GestionEventos
         Dim hastaFecha As DateTime? = If(rbtnFecha.Checked, dateRecuFinal.Value, Nothing)
         Dim diasSeleccionadosFormateado As String = String.Join(",", diasSeleccionados.Select(Function(dia) diasDeLaSemana(listDias.Items.IndexOf(dia))))
 
-        recurrencia.EventID = EventoID
         recurrencia.Frecuencia = listaFrecuencia(indexFrecuencia)
         recurrencia.DiasSeleccionados = diasSeleccionadosFormateado
         recurrencia.TipoFinalizacion = tipoFinalizacion
         recurrencia.NumeroOcurrencias = ocurrencias
         recurrencia.FechaFinal = hastaFecha
-        recurrencia.RRULE = recurrencia.GenerarRRULE()
 
-        _controlador.CrearRecurrencia(recurrencia)
-    End Sub
+        Dim errores As List(Of String) = recurrencia.ValidarCampos()
+        If errores.Count > 0 Then
+            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
+        End If
+        MessageBox.Show(recurrencia.RRULE)
+        evento.RRULE = recurrencia.GenerarRRULE()
+        Return True
+    End Function
 
     Private Sub CrearAsistente()
         Dim asistente As New Asistente() With {
@@ -179,6 +189,7 @@ Public Class GestionEventos
             End If
             Dim eventoID As String = dgvDataEventos.Rows(e.RowIndex).Cells(1).Value.ToString()
             _controlador.EliminarEvento(eventoID)
+
             MessageBox.Show("Evento eliminado correctamente")
             CargarEventosEnDataGridView()
         End If
@@ -232,17 +243,21 @@ Public Class GestionEventos
 
     Private Sub btnCrearEvento_Click(sender As Object, e As EventArgs) Handles btnCrearEvento.Click
         LlenarCamposEventos()
+        If Not CrearRecurrencia() Then
+            Return
+        End If
         _controlador.EnviarEventoAGoogleCalendar(evento)
         EventoID = _controlador.GoogleEventID
         CrearEvento()
-        CrearRecurrencia()
         CargarEventosEnDataGridView()
     End Sub
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
         LlenarCamposEventos()
+        If Not CrearRecurrencia() Then
+            Return
+        End If
         CrearEvento()
-        CrearRecurrencia()
         CargarEventosEnDataGridView()
     End Sub
 
@@ -270,16 +285,38 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnEnviarAPI_Click(sender As Object, e As EventArgs) Handles btnEnviarAPI.Click
-        _controlador.AgregarInformacionEvento(evento, recurrencia)
+        _controlador.AgregarInformacionEvento(evento)
 
         MessageBox.Show("Evento creado exitosamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
     Private Sub comboFrecuencia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboFrecuencia.SelectedIndexChanged
-        If comboFrecuencia.SelectedItem = "Semanalmente" Or comboFrecuencia.SelectedItem = "Mensualmente" Then
+        If comboFrecuencia.SelectedItem = "No repetir" Then
+            listDias.Enabled = False
+            rbtnConteo.Enabled = False
+            rbtnFecha.Enabled = False
+            txtOcurrencias.Enabled = False
+            dateRecuFinal.Enabled = False
+        ElseIf comboFrecuencia.SelectedItem = "Semanalmente" Or comboFrecuencia.SelectedItem = "Mensualmente" Then
             listDias.Enabled = True
+            rbtnConteo.Enabled = True
+            rbtnFecha.Enabled = True
+            If rbtnConteo.Checked Then
+                dateRecuFinal.Enabled = False
+                txtOcurrencias.Enabled = True
+            Else
+                dateRecuFinal.Enabled = True
+            End If
         Else
             listDias.Enabled = False
+            rbtnConteo.Enabled = True
+            rbtnFecha.Enabled = True
+            If rbtnConteo.Checked Then
+                dateRecuFinal.Enabled = False
+                txtOcurrencias.Enabled = True
+            Else
+                dateRecuFinal.Enabled = True
+            End If
         End If
     End Sub
 
@@ -360,7 +397,6 @@ Public Class GestionEventos
     Private Sub SeleccionarCalendario()
         VisibilidadPanelCalendario(False)
         guardarCalendarioID(CargarCalendarios())
-        labelCalendarioID.Text = CalendarioID
         CargarEventosEnDataGridView()
 
     End Sub
@@ -470,14 +506,15 @@ Public Class GestionEventos
     Private Sub EstilizarTabla()
         dgvDataEventos.Columns(0).Width = 40
         dgvDataEventos.Columns(1).Visible = False
-        dgvDataEventos.Columns(8).Visible = False
+        dgvDataEventos.Columns(9).Visible = False
         dgvDataEventos.Columns(2).Width = 150
         dgvDataEventos.Columns(3).Width = 150
         dgvDataEventos.Columns(4).Width = 200
         dgvDataEventos.Columns(5).Width = 200
         dgvDataEventos.Columns(6).Width = 200
         dgvDataEventos.Columns(7).Width = 100
-        dgvDataEventos.Columns(9).Width = 150
+        dgvDataEventos.Columns(8).Width = 100
+        dgvDataEventos.Columns(10).Width = 150
 
         dgvDataEventos.EnableHeadersVisualStyles = False
         Dim styleCabeceras As New DataGridViewCellStyle()
@@ -490,16 +527,15 @@ Public Class GestionEventos
     Private Sub PrepararActualizarEvento()
         EventoID = dgvDataEventos.SelectedCells.Item(1).Value.ToString()
 
-        txtEventName.Text = dgvDataEventos.SelectedCells.Item(2).Value
-        txtEventUbicacion.Text = dgvDataEventos.SelectedCells.Item(3).Value
-        txtEventDescrip.Text = dgvDataEventos.SelectedCells.Item(4).Value
-        eventFechaInicio.Value = dgvDataEventos.SelectedCells.Item(5).Value
+        txtEventName.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(2).Value), "", dgvDataEventos.SelectedCells.Item(2).Value)
+        txtEventUbicacion.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
+        txtEventDescrip.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
         eventFechaFinal.Value = dgvDataEventos.SelectedCells.Item(6).Value
-        comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(7).Value
-        comboEventDispo.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
+        comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
+        comboEventDispo.SelectedItem = dgvDataEventos.SelectedCells.Item(9).Value
 
         'RECURRENCIA
-        Dim rrule = _controlador.ObtenerRecurrencia(EventoID)
+        Dim rrule = dgvDataEventos.SelectedCells.Item(7).Value.ToString()
         CargarRecurrenciaDesdeRRULE(rrule)
 
         'ASITENTES
@@ -530,6 +566,10 @@ Public Class GestionEventos
     End Function
 
     Public Sub CargarRecurrenciaDesdeRRULE(rrule As String)
+        If rrule = "" Then
+            comboFrecuencia.SelectedIndex = 0
+            Return
+        End If
         Dim diasDeLaSemana As New List(Of String) From {"MO", "TU", "WE", "TH", "FR", "SA", "SU"}
         ' Dividir la cadena RRULE en sus componentes
         Dim partes As String() = rrule.Split(";"c)
@@ -563,14 +603,14 @@ Public Class GestionEventos
         ' Por ejemplo:
         Select Case frecuencia.ToUpper()
             Case "DAILY"
-                comboFrecuencia.SelectedIndex = 0
-            Case "WEEKLY"
                 comboFrecuencia.SelectedIndex = 1
+            Case "WEEKLY"
+                comboFrecuencia.SelectedIndex = 2
             ' Asegúrate de marcar los días correspondientes en tu control de días (listDias).
             Case "MONTHLY"
-                comboFrecuencia.SelectedIndex = 2
-            Case "YEARLY"
                 comboFrecuencia.SelectedIndex = 3
+            Case "YEARLY"
+                comboFrecuencia.SelectedIndex = 4
         End Select
 
         ' Establecer los valores de ocurrencias o hasta fecha según corresponda
@@ -617,16 +657,6 @@ Public Class GestionEventos
             Case "Semanas"
                 comboUnidades.SelectedIndex = comboUnidades.FindStringExact("Semanas")
         End Select
-    End Sub
-
-    ' CARGAR EVENTOS DESDE GOOGLE CALENDAR
-    Private Async Sub CargarEventosEnDataGridViewAsync()
-        Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
-        Dim eventos As IList(Of Evento) = Await _servicioGoogleCalendar.ConvertirEventosGoogle(service, "primary")
-        Dim dataTable As DataTable = ConvertirEventosADataTable(eventos)
-
-        ' Mostrar los eventos por medio de la API en el DataGridView 
-        dgvDataEventos.Invoke(Sub() dgvDataEventos.DataSource = dataTable)
     End Sub
 
 

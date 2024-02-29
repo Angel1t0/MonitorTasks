@@ -24,21 +24,18 @@ Public Class EventoControlador
         End If
     End Sub
 
-    Public Sub EliminarEvento(eventID As String)
-        _datosEvento.EliminarEvento(eventID)
-    End Sub
-
-    Public Sub CrearRecurrencia(recurrencia As Recurrencia)
+    Public Function CrearRecurrencia(recurrencia As Recurrencia) As Boolean
         Dim errores As List(Of String) = recurrencia.ValidarCampos()
         If errores.Count > 0 Then
             MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
+            Return False
         End If
-        If GestionEventos.btnCrearEvento.Visible = True Then
-            _datosEvento.InsertarRecurrencia(recurrencia)
-        Else
-            _datosEvento.ActualizarRecurrencia(recurrencia)
-        End If
+        Return True
+    End Function
+
+    Public Sub EliminarEvento(eventID As String)
+        _datosEvento.EliminarEvento(eventID)
+        _servicioGoogleCalendar.EliminarEventoGoogle(eventID)
     End Sub
 
     Public Sub InsertarAsistente(asistente As Asistente, isDuplicado As Boolean)
@@ -76,12 +73,12 @@ Public Class EventoControlador
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
     End Sub
 
-    Public Async Sub AgregarInformacionEvento(evento As Evento, recurrencia As Recurrencia)
+    Public Async Sub AgregarInformacionEvento(evento As Evento)
         Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
         If GestionEventos.btnCrearEvento.Visible = True Then
-            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, recurrencia, evento)
+            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)
         Else
-            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GestionEventos.EventoID, recurrencia, evento)
+            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GestionEventos.EventoID, evento)
         End If
 
     End Sub
@@ -95,11 +92,10 @@ Public Class EventoControlador
 
     Public Function ObtenerEventosLocales() As List(Of Evento)
         Dim eventosTable As DataTable = _datosEvento.MostrarEventos(GestionEventos.CalendarioID)
-        Dim recurencias As List(Of Recurrencia) = _datosEvento.ObtenerTodasRecurrencias()
         Dim asistentes As List(Of Asistente) = _datosEvento.ObtenerTodosAsistentes()
         Dim notificaciones As List(Of Notificacion) = _datosEvento.ObtenerTodasNotificaciones()
 
-        Return TransformarAEvento(eventosTable, recurencias, asistentes, notificaciones)
+        Return TransformarAEvento(eventosTable, asistentes, notificaciones)
     End Function
 
     Public Async Function SincronizarEventosAsync() As Task(Of IList(Of [Event]))
@@ -107,11 +103,11 @@ Public Class EventoControlador
         Dim eventosLocales As List(Of Evento) = ObtenerEventosLocales()
         Dim eventosGoogle As IList(Of [Event]) = Await ObtenerEventosAsync()
 
-        Await _servicioGoogleCalendar.SincronizarEventosAsync(service, eventosGoogle, eventosLocales)
+        Await _servicioGoogleCalendar.SincronizarEventosAsync(eventosGoogle, eventosLocales)
     End Function
 
 
-    Public Function TransformarAEvento(eventosTable As DataTable, recurrencias As List(Of Recurrencia), asistentes As List(Of Asistente), notificaciones As List(Of Notificacion)) As List(Of Evento)
+    Public Function TransformarAEvento(eventosTable As DataTable, asistentes As List(Of Asistente), notificaciones As List(Of Notificacion)) As List(Of Evento)
         Dim eventos As New List(Of Evento)
         For Each row As DataRow In eventosTable.Rows
             Dim evento As New Evento With {
@@ -121,11 +117,11 @@ Public Class EventoControlador
                 .Description = row(3).ToString(),
                 .StartDateTime = row(4).ToString(),
                 .EndDateTime = row(5).ToString(),
-                .Visibility = row(6).ToString(),
-                .Transparency = row(7).ToString(),
-                .LastModified = row(8).ToString()
+                .RRULE = row(6).ToString(),
+                .Visibility = row(7).ToString(),
+                .Transparency = row(8).ToString(),
+                .LastModified = row(9).ToString()
             }
-            evento.Recurrence = recurrencias.Where(Function(r) r.EventID.Equals(evento.EventID)).ToList()
             evento.Attendees = asistentes.Where(Function(a) a.EventID.Equals(evento.EventID)).ToList()
             evento.Reminders = notificaciones.Where(Function(n) n.EventID.Equals(evento.EventID)).ToList()
             eventos.Add(evento)
@@ -156,10 +152,6 @@ Public Class EventoControlador
 
     Public Function ObtenerEventos(calendarioID As String) As DataTable
         Return _datosEvento.MostrarEventos(calendarioID)
-    End Function
-
-    Public Function ObtenerRecurrencia(eventID As String) As String
-        Return _datosEvento.MostrarRecurrencias(eventID)
     End Function
 
     Public Function ObtenerNombreAsistente(email As String) As String
