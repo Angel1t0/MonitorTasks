@@ -6,11 +6,11 @@ Imports Google.Apis.Util.Store
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports System.Windows.Forms.VisualStyles
 
 ' Clase para manejar la autenticación y creación del servicio de Google Calendar.
 Public Class GoogleCalendarService
     Private _datosEvento As EventoData
+    Public Property CalendarioID As String = "angel01.am73@gmail.com"
     Public Sub New()
         _datosEvento = New EventoData()
     End Sub
@@ -107,12 +107,13 @@ Public Class GoogleCalendarService
         End Try
     End Function
 
-    Public Function SincronizarEventosAsync(eventosGoogle As IList(Of [Event]), eventosLocales As List(Of Evento)) As Task
+    Public Async Function SincronizarEventosAsync(eventosGoogle As IList(Of [Event]), eventosLocales As List(Of Evento)) As Task
         Try
             ' Insertar o actualizar eventos basado en Google Calendar
             For Each eventoGoogle In eventosGoogle
                 Dim eventoLocal As Evento = eventosLocales.FirstOrDefault(Function(e) e.EventID = eventoGoogle.Id)
                 Dim eventoGoogleConvertido As Evento = ConvertirDeGoogleEventoAEventoLocal(eventoGoogle)
+                Dim tolerancia As TimeSpan = TimeSpan.FromSeconds(1)
                 If eventoLocal Is Nothing Then
                     ' Insertar nuevo evento
                     _datosEvento.InsertarEvento(eventoGoogleConvertido)
@@ -130,59 +131,58 @@ Public Class GoogleCalendarService
                             _datosEvento.InsertarNotificacion(New Notificacion With {.EventID = eventoGoogleConvertido.EventID, .Method = recordatorioGoogle.Method, .Minutes = recordatorioGoogle.Minutes})
                         Next
                     End If
-                ElseIf eventoGoogle.Updated.HasValue AndAlso eventoGoogle.Updated.Value > eventoLocal.LastModified Then
+                ElseIf eventoGoogle.Updated.HasValue AndAlso (eventoGoogle.Updated.Value - eventoLocal.LastModified) > tolerancia Then
                     ' Actualizar evento existente
                     _datosEvento.ActualizarEvento(eventoGoogleConvertido)
 
                     ' Actualizar asistentes
-                    If eventoGoogle.Attendees IsNot Nothing AndAlso eventoLocal.Attendees IsNot Nothing Then
+                    ' Primero, manejar el caso donde el evento de Google no tiene asistentes
+                    If eventoGoogle.Attendees Is Nothing Then
+                        If eventoLocal.Attendees IsNot Nothing AndAlso eventoLocal.Attendees.Count > 0 Then
+                            ' Eliminar todos los asistentes locales ya que el evento de Google ya no tiene asistentes
+                            For Each asistenteLocal In eventoLocal.Attendees
+                                _datosEvento.EliminarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteLocal.Email})
+                            Next
+                        End If
+                        ' Si el evento de Google tiene asistentes
+                    Else
                         Dim googleAttendeesEmails = eventoGoogle.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
-                        Dim localAttendeesEmails = eventoLocal.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
 
-                        ' Identificar y agregar nuevos asistentes
-                        For Each email In googleAttendeesEmails.Except(localAttendeesEmails)
-                            _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
-                        Next
+                        ' Si el evento local no tiene asistentes
+                        If eventoLocal.Attendees Is Nothing OrElse eventoLocal.Attendees.Count = 0 Then
+                            ' Agregar todos los asistentes de Google al evento local
+                            For Each email In googleAttendeesEmails
+                                _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
+                            Next
+                        Else
+                            Dim localAttendeesEmails = eventoLocal.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
 
-                        ' Identificar y eliminar asistentes que ya no están en Google
-                        For Each email In localAttendeesEmails.Except(googleAttendeesEmails)
-                            _datosEvento.EliminarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
-                        Next
+                            ' Identificar y agregar nuevos asistentes
+                            For Each email In googleAttendeesEmails.Except(localAttendeesEmails)
+                                _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
+                            Next
+
+                            ' Identificar y eliminar asistentes que ya no están en Google
+                            For Each email In localAttendeesEmails.Except(googleAttendeesEmails)
+                                _datosEvento.EliminarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
+                            Next
+                        End If
                     End If
 
+
                     ' Actualizar notificaciones
-                    If eventoGoogle.Reminders IsNot Nothing AndAlso eventoGoogle.Reminders.Overrides IsNot Nothing AndAlso eventoLocal.Reminders IsNot Nothing Then
-                        Dim recordatoriosLocales As List(Of Notificacion) = eventoLocal.Reminders
-                        Dim recordatoriosGoogle As List(Of EventReminder) = eventoGoogle.Reminders.Overrides.ToList()
+                    ' Limpiar y reconstruir notificaciones
+                    ' Eliminar todas las notificaciones existentes para este evento
+                    _datosEvento.EliminarTodasNotificacionesPorEvento(eventoGoogleConvertido.EventID)
 
-                        ' Para agregar nuevos recordatorios de Google que no existen en local
-                        For Each recordatorioGoogle In recordatoriosGoogle
-                            If Not recordatoriosLocales.Any(Function(r) r.Method = recordatorioGoogle.Method AndAlso r.Minutes = recordatorioGoogle.Minutes) Then
-                                ' Este recordatorio es nuevo y debe ser agregado
-                                _datosEvento.InsertarNotificacion(New Notificacion With {
-                                        .EventID = eventoGoogleConvertido.EventID,
-                                        .Method = recordatorioGoogle.Method,
-                                        .Minutes = recordatorioGoogle.Minutes
-                                    })
-                            End If
-                        Next
-
-                        ' Para identificar y eliminar los recordatorios locales que ya no existen en Google
-                        For Each recordatorioLocal In recordatoriosLocales
-                            If Not recordatoriosGoogle.Any(Function(r) r.Method.ToLower() = recordatorioLocal.Method.ToLower() AndAlso r.Minutes = recordatorioLocal.Minutes) Then
-                                ' Este recordatorio ha sido eliminado en Google, marcarlo como eliminado o eliminarlo en local
-                                _datosEvento.EliminarNotificacion(recordatorioLocal.ReminderID)
-                            End If
-                        Next
-
-                        ' Para identificar y actualizar los recordatorios existentes que han cambiado
-                        For Each recordatorioLocal In recordatoriosLocales
-                            Dim recordatorioGoogleCorrespondiente = recordatoriosGoogle.FirstOrDefault(Function(r) r.Method = recordatorioLocal.Method)
-
-                            If recordatorioGoogleCorrespondiente IsNot Nothing AndAlso recordatorioGoogleCorrespondiente.Minutes <> recordatorioLocal.Minutes Then
-                                ' Actualizar el recordatorio local con la nueva información de Google
-                                _datosEvento.ActualizarNotificacion(New Notificacion With {.ReminderID = recordatorioLocal.ReminderID, .Method = recordatorioLocal.Method, .Minutes = recordatorioGoogleCorrespondiente.Minutes})
-                            End If
+                    ' Reconstruir notificaciones basadas en la información actual de Google
+                    If eventoGoogle.Reminders IsNot Nothing AndAlso eventoGoogle.Reminders.Overrides IsNot Nothing Then
+                        For Each recordatorioGoogle In eventoGoogle.Reminders.Overrides
+                            _datosEvento.InsertarNotificacion(New Notificacion With {
+                            .EventID = eventoGoogleConvertido.EventID,
+                            .Method = recordatorioGoogle.Method,
+                            .Minutes = recordatorioGoogle.Minutes
+                        })
                         Next
                     End If
                 End If
@@ -208,7 +208,7 @@ Public Class GoogleCalendarService
         Try
             Dim evento As New Evento With {
             .EventID = eventoGoogle.Id,
-            .CalendarID = GestionEventos.CalendarioID,
+            .CalendarID = CalendarioID,
             .Summary = If(eventoGoogle.Summary Is Nothing, "No Title", eventoGoogle.Summary),
             .Location = eventoGoogle.Location,
             .Description = eventoGoogle.Description,
@@ -259,7 +259,6 @@ Public Class GoogleCalendarService
 
             ' Filtrar los eventos para excluir aquellos con el estado "cancelled"
             Dim eventosFiltrados As List(Of [Event]) = events.Items.Where(Function(e) e.Status <> "cancelled").ToList()
-
             Return eventosFiltrados
         Catch ex As Exception
             Console.WriteLine($"Error al obtener eventos de Google: {ex.Message}")
@@ -267,12 +266,12 @@ Public Class GoogleCalendarService
         End Try
     End Function
 
-    Public Function EliminarEventoGoogle(eventID As String)
+    Public Sub EliminarEventoGoogle(eventID As String)
         Try
             Dim service As CalendarService = Authenticate()
-            service.Events.Delete(GestionEventos.CalendarioID, eventID).ExecuteAsync()
+            service.Events.Delete(CalendarioID, eventID).ExecuteAsync()
         Catch ex As Exception
             Console.WriteLine($"Error al eliminar evento de Google: {ex.Message}")
         End Try
-    End Function
+    End Sub
 End Class

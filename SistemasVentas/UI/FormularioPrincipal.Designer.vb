@@ -66,7 +66,7 @@ Partial Class FormularioPrincipal
         Me.PanelMenu.Dock = System.Windows.Forms.DockStyle.Left
         Me.PanelMenu.Location = New System.Drawing.Point(0, 0)
         Me.PanelMenu.Name = "PanelMenu"
-        Me.PanelMenu.Size = New System.Drawing.Size(262, 703)
+        Me.PanelMenu.Size = New System.Drawing.Size(262, 735)
         Me.PanelMenu.TabIndex = 0
         '
         'BtnConfiguracion
@@ -270,7 +270,7 @@ Partial Class FormularioPrincipal
         Me.PanelTitulo.Dock = System.Windows.Forms.DockStyle.Top
         Me.PanelTitulo.Location = New System.Drawing.Point(262, 0)
         Me.PanelTitulo.Name = "PanelTitulo"
-        Me.PanelTitulo.Size = New System.Drawing.Size(1020, 60)
+        Me.PanelTitulo.Size = New System.Drawing.Size(1150, 60)
         Me.PanelTitulo.TabIndex = 1
         '
         'BtnCerrar
@@ -281,7 +281,7 @@ Partial Class FormularioPrincipal
         Me.BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.WindowClose
         Me.BtnCerrar.IconColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.BtnCerrar.IconSize = 30
-        Me.BtnCerrar.Location = New System.Drawing.Point(976, 15)
+        Me.BtnCerrar.Location = New System.Drawing.Point(1106, 15)
         Me.BtnCerrar.Name = "BtnCerrar"
         Me.BtnCerrar.Size = New System.Drawing.Size(30, 30)
         Me.BtnCerrar.TabIndex = 4
@@ -295,7 +295,7 @@ Partial Class FormularioPrincipal
         Me.BtnMaximizar.IconChar = FontAwesome.Sharp.IconChar.WindowMaximize
         Me.BtnMaximizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.BtnMaximizar.IconSize = 30
-        Me.BtnMaximizar.Location = New System.Drawing.Point(926, 15)
+        Me.BtnMaximizar.Location = New System.Drawing.Point(1056, 15)
         Me.BtnMaximizar.Name = "BtnMaximizar"
         Me.BtnMaximizar.Size = New System.Drawing.Size(30, 30)
         Me.BtnMaximizar.TabIndex = 3
@@ -309,7 +309,7 @@ Partial Class FormularioPrincipal
         Me.BtnMinimizar.IconChar = FontAwesome.Sharp.IconChar.WindowMinimize
         Me.BtnMinimizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.BtnMinimizar.IconSize = 30
-        Me.BtnMinimizar.Location = New System.Drawing.Point(875, 15)
+        Me.BtnMinimizar.Location = New System.Drawing.Point(1005, 15)
         Me.BtnMinimizar.Name = "BtnMinimizar"
         Me.BtnMinimizar.Size = New System.Drawing.Size(30, 30)
         Me.BtnMinimizar.TabIndex = 2
@@ -346,14 +346,14 @@ Partial Class FormularioPrincipal
         Me.PanelEscritorio.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelEscritorio.Location = New System.Drawing.Point(262, 60)
         Me.PanelEscritorio.Name = "PanelEscritorio"
-        Me.PanelEscritorio.Size = New System.Drawing.Size(1020, 643)
+        Me.PanelEscritorio.Size = New System.Drawing.Size(1150, 675)
         Me.PanelEscritorio.TabIndex = 2
         '
         'Panel1
         '
         Me.Panel1.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.Panel1.Location = New System.Drawing.Point(335, 325)
+        Me.Panel1.Location = New System.Drawing.Point(400, 341)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(396, 2)
         Me.Panel1.TabIndex = 3
@@ -364,7 +364,7 @@ Partial Class FormularioPrincipal
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("HelveticaNowText Light", 25.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(324, 266)
+        Me.Label1.Location = New System.Drawing.Point(389, 282)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(420, 62)
         Me.Label1.TabIndex = 2
@@ -374,7 +374,7 @@ Partial Class FormularioPrincipal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1282, 703)
+        Me.ClientSize = New System.Drawing.Size(1412, 735)
         Me.Controls.Add(Me.PanelEscritorio)
         Me.Controls.Add(Me.PanelTitulo)
         Me.Controls.Add(Me.PanelMenu)

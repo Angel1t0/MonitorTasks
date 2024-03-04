@@ -3,7 +3,7 @@ Imports System.Diagnostics.Eventing.Reader
 Imports log4net
 
 Public Class EventoData
-    Public Function ObtenerCalendarios() As List(Of List(Of String))
+    Public Function ObtenerCalendarios(idUsuario As String) As List(Of List(Of String))
         Dim calendarios As New List(Of List(Of String))
         Dim calendariosName As New List(Of String)
         Dim calendariosID As New List(Of String)
@@ -12,7 +12,7 @@ Public Class EventoData
                 conexion.Open()
                 Dim comando As New SqlCommand("mostrarCalendariosID", conexion)
                 comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@UsuarioID", Login.idUsuario)
+                comando.Parameters.AddWithValue("@UsuarioID", idUsuario)
                 Dim reader As SqlDataReader = comando.ExecuteReader
                 While (reader.Read())
                     calendariosID.Add(reader(0))
@@ -375,4 +375,20 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al obtener el ID del recordatorio.", ex)
         End Try
     End Function
+
+    Public Sub EliminarTodasNotificacionesPorEvento(eventID As String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("eliminarNotificacionesEvento", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@EventID", eventID)
+                conexion.Open()
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al eliminar todas las notificaciones de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al eliminar todas las notificaciones.", ex)
+        End Try
+    End Sub
 End Class

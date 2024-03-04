@@ -47,7 +47,7 @@
                     errores.Add("Debe especificar un número válido de ocurrencias.")
                 End If
             Case "HastaFecha"
-                If Not FechaFinal.HasValue OrElse FechaFinal.Value < DateTime.Now.Date Then
+                If Not FechaFinal.HasValue Then
                     errores.Add("Debe especificar una fecha final válida para la recurrencia.")
                 End If
         End Select

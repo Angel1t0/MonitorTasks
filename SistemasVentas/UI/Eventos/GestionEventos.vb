@@ -6,10 +6,10 @@ Imports Google.Apis.Calendar.v3.Data
 Public Class GestionEventos
     ' Controlador para manejar la lógica de negocio y la comunicación con Google Calendar.
     Private _controlador As New EventoControlador()
-    Private _servicioGoogleCalendar As New GoogleCalendarService
+    Private _servicioGoogleCalendar As New GoogleCalendarService()
 
     ' Propiedades para almacenar información relevante del evento y el ID del calendario seleccionado.
-    Public Property CalendarioID As String
+    Public Property _CalendarioID As String
     Public Property EventoID As String
     Public Property ReminderID As New List(Of Integer)
 
@@ -18,24 +18,25 @@ Public Class GestionEventos
     Private recurrencia As New Recurrencia()
 
     Private Sub GestionEventos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        panelCrearEvento.Visible = False
-        panelEventos.Visible = False
-        CentrarPanel(panelCalendarios)
-        VisibilidadPanelCalendario(True)
-        CargarCalendarios()
+        CargarEventosEnDataGridView()
+        PanelDatosBasicos.Visible = False
+        PanelAsistentes.Visible = False
+        PanelNotificaciones.Visible = False
         CargarAsistentes()
         ConfigurarComponentes()
+        _controlador.GoogleCalendarID = _CalendarioID
+        _servicioGoogleCalendar.CalendarioID = _CalendarioID
     End Sub
 
     ' Manejadores de Eventos
-    Private Sub CrearEvento()
+    Private Sub CrearEvento(isVisible As Boolean)
         evento.EventID = EventoID
 
-        _controlador.CrearEvento(evento)
+        _controlador.CrearEvento(evento, isVisible)
     End Sub
 
     Private Sub LlenarCamposEventos()
-        evento.CalendarID = CalendarioID
+        evento.CalendarID = _CalendarioID
         evento.Summary = txtEventName.Text
         evento.Location = txtEventUbicacion.Text
         evento.Description = txtEventDescrip.Text
@@ -92,8 +93,9 @@ Public Class GestionEventos
                 Return
             End If
             _controlador.InsertarAsistente(asistente, False)
-            evento.Attendees.Add(asistente)
             MessageBox.Show("Asistente agregado correctamente")
+            evento.Attendees.Add(asistente)
+
         End If
 
     End Sub
@@ -143,7 +145,7 @@ Public Class GestionEventos
     End Sub
 
     Public Sub CargarEventosEnDataGridView()
-        dgvDataEventos.DataSource = _controlador.ObtenerEventos(CalendarioID)
+        dgvDataEventos.DataSource = _controlador.ObtenerEventos(_CalendarioID)
         EstilizarTabla()
     End Sub
 
@@ -228,14 +230,6 @@ Public Class GestionEventos
     End Sub
 
     ' Manejadores de Eventos UI
-    Private Async Sub btnSeleccionarCalendario_Click_1(sender As Object, e As EventArgs) Handles btnSeleccionarCalendario.Click
-        SeleccionarCalendario()
-        guardarCalendarioID(_controlador.ObtenerCalendarios()(0))
-        panelEventos.Visible = True
-        CentrarPanel(panelEventos)
-        'Await _controlador.SincronizarEventosAsync()
-    End Sub
-
     Private Async Sub btnSincronizar_Click(sender As Object, e As EventArgs) Handles btnSincronizar.Click
         Await _controlador.SincronizarEventosAsync()
         CargarEventosEnDataGridView()
@@ -248,7 +242,14 @@ Public Class GestionEventos
         End If
         _controlador.EnviarEventoAGoogleCalendar(evento)
         EventoID = _controlador.GoogleEventID
-        CrearEvento()
+        MessageBox.Show(btnCrearEvento.Visible)
+        CrearEvento(True)
+
+        PanelDatosBasicos.Visible = False
+        PanelAsistentes.Visible = True
+        PanelAsistentes.BringToFront()
+        CentrarPanel(PanelAsistentes)
+
         CargarEventosEnDataGridView()
     End Sub
 
@@ -257,7 +258,9 @@ Public Class GestionEventos
         If Not CrearRecurrencia() Then
             Return
         End If
-        CrearEvento()
+        CrearEvento(False)
+        _controlador.AgregarInformacionEvento(evento)
+        MessageBox.Show("Evento actualizado correctamente")
         CargarEventosEnDataGridView()
     End Sub
 
@@ -357,9 +360,13 @@ Public Class GestionEventos
 
     Private Sub dgvDataEventos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventos.CellDoubleClick
         btnActualizarEvento.Visible = True
+        btnContinuarActualizar.Visible = True
         btnCrearEvento.Visible = False
-        panelCrearEvento.Visible = True
-        CentrarPanel(panelCrearEvento)
+        btnEnviarAPI.Visible = False
+        PanelDatosBasicos.Visible = True
+        PanelDatosBasicos.BringToFront()
+        panelEventos.Visible = False
+        CentrarPanel(PanelDatosBasicos)
         PrepararActualizarEvento()
     End Sub
 
@@ -368,38 +375,21 @@ Public Class GestionEventos
     End Sub
 
     Private Sub pbInsertarEvento_Click_1(sender As Object, e As EventArgs) Handles pbInsertarEvento.Click
-        panelCrearEvento.Visible = True
+        PanelDatosBasicos.Visible = True
+        panelEventos.Visible = False
         btnActualizarEvento.Visible = False
-        CentrarPanel(panelCrearEvento)
+        btnContinuarActualizar.Visible = False
+        btnEnviarAPI.Visible = True
+        CentrarPanel(PanelDatosBasicos)
     End Sub
 
     Private Sub btnVolver_Click(sender As Object, e As EventArgs) Handles btnVolver.Click
-        panelCrearEvento.Visible = False
+        PanelDatosBasicos.Visible = False
+        panelEventos.Visible = True
     End Sub
 
 
     ' Métodos Auxiliares
-
-    Private Function CargarCalendarios() As List(Of String)
-        Dim calendarios As List(Of List(Of String)) = _controlador.ObtenerCalendarios()
-
-        AgregarCalendariosACombo(calendarios)
-        labelUsuarioId.Text = Login.idUsuario
-        Return calendarios(0)
-    End Function
-
-    Private Sub guardarCalendarioID(listCalendariosID As List(Of String))
-        Dim indexSeleccionado = comboCalendario.SelectedIndex
-        CalendarioID = listCalendariosID(indexSeleccionado)
-    End Sub
-    ' Lógica de creación y configuración de eventos
-
-    Private Sub SeleccionarCalendario()
-        VisibilidadPanelCalendario(False)
-        guardarCalendarioID(CargarCalendarios())
-        CargarEventosEnDataGridView()
-
-    End Sub
 
     Private Sub CargarAsistentes()
         Dim listaCorreos As List(Of String) = _controlador.ObtenerCorreosAsistentesExcepto(_controlador.ObtenerCorreoUsuario)
@@ -411,7 +401,6 @@ Public Class GestionEventos
 
     Private Sub ConfigurarComponentes()
         ' Configuración del ComboBox
-        comboCalendario.SelectedIndex = 0 ' Selecciona "Minutos" por defecto
         comboEventDispo.SelectedIndex = 0 ' Selecciona "Ocupado" por defecto
         comboEventVisibilidad.SelectedIndex = 0 ' Selecciona "Público" por defecto
         comboFrecuencia.SelectedIndex = 0 ' Selecciona "Diariamente" por defecto
@@ -462,19 +451,8 @@ Public Class GestionEventos
         Return "email"
     End Function
 
-    Private Sub AgregarCalendariosACombo(calendarios As List(Of List(Of String)))
-        Dim calendariosName As List(Of String) = calendarios(1)
-        For Each calendario In calendariosName
-            comboCalendario.Items.Add(calendario)
-        Next
-    End Sub
-
     Private Sub CentrarPanel(panel As Panel)
-        panel.Location = New Point((Width - panel.Width) / 2, (Height - panel.Height) / 2)
-    End Sub
-
-    Private Sub VisibilidadPanelCalendario(isVisible As Boolean)
-        panelCalendarios.Visible = isVisible
+        panel.Location = New Point((Me.Width - panel.Width) / 2, (Me.Height - panel.Height) / 2)
     End Sub
 
     Private Function ConvertirEventosADataTable(eventos As IList(Of Evento)) As DataTable
@@ -526,10 +504,12 @@ Public Class GestionEventos
 
     Private Sub PrepararActualizarEvento()
         EventoID = dgvDataEventos.SelectedCells.Item(1).Value.ToString()
+        _controlador.GoogleEventID = EventoID
 
         txtEventName.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(2).Value), "", dgvDataEventos.SelectedCells.Item(2).Value)
         txtEventUbicacion.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
         txtEventDescrip.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
+        eventFechaInicio.Value = dgvDataEventos.SelectedCells.Item(5).Value
         eventFechaFinal.Value = dgvDataEventos.SelectedCells.Item(6).Value
         comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
         comboEventDispo.SelectedItem = dgvDataEventos.SelectedCells.Item(9).Value
@@ -659,6 +639,34 @@ Public Class GestionEventos
         End Select
     End Sub
 
+    ' Nuevos
+    Private Sub btnContinuar_Click(sender As Object, e As EventArgs) Handles btnContinuar.Click
+        PanelAsistentes.Visible = False
+        PanelNotificaciones.BringToFront()
+        PanelNotificaciones.Visible = True
 
+        CentrarPanel(PanelNotificaciones)
+    End Sub
+
+    Private Sub btnVolverEvento_Click(sender As Object, e As EventArgs) Handles btnVolverEvento.Click
+        PanelAsistentes.Visible = False
+        PanelAsistentes.SendToBack()
+        PanelDatosBasicos.Visible = True
+        CentrarPanel(PanelDatosBasicos)
+    End Sub
+
+    Private Sub btnVolverAsistente_Click(sender As Object, e As EventArgs) Handles btnVolverAsistente.Click
+        PanelNotificaciones.Visible = False
+        PanelNotificaciones.SendToBack()
+        PanelAsistentes.Visible = True
+        CentrarPanel(PanelAsistentes)
+    End Sub
+
+    Private Sub btnContinuarActualizar_Click(sender As Object, e As EventArgs) Handles btnContinuarActualizar.Click
+        PanelDatosBasicos.Visible = False
+        PanelAsistentes.Visible = True
+        PanelAsistentes.BringToFront()
+        CentrarPanel(PanelAsistentes)
+    End Sub
 End Class
 

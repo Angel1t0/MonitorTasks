@@ -198,7 +198,7 @@ Partial Class FormularioGestionUsuarios
         '
         Me.Panel4.Controls.Add(Me.Panel5)
         Me.Panel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Panel4.Location = New System.Drawing.Point(266, 243)
+        Me.Panel4.Location = New System.Drawing.Point(10, 61)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(1156, 600)
         Me.Panel4.TabIndex = 4

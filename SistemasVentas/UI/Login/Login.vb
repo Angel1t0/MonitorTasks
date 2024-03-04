@@ -75,13 +75,12 @@ Public Class Login
 
     ' --- UTILIDADES ---
     Private Sub IniciarSesion()
-        Try
-            idUsuario = dgvRevisar.SelectedCells.Item(1).Value
-            GestionEventos.ShowDialog()
-            Hide()
-        Catch ex As Exception
-            MessageBox.Show("Error al iniciar sesión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        idUsuario = dgvRevisar.SelectedCells.Item(1).Value
+        ' Abrir formulario de selección de calendario y cerrar este formulario
+        Dim seleccionarCalendario As New FormularioSeleccionarCalendario()
+        seleccionarCalendario.UsuarioID = idUsuario
+        seleccionarCalendario.Show()
+        Me.Hide()
     End Sub
 
     Private Sub CentrarPanel(panel As Panel)

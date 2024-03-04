@@ -6,6 +6,8 @@ Public Class FormularioPrincipal
     Private leftBorderBtn As Panel
     Private currentChildForm As Form
 
+    Public Property _CalendarioID As String
+
     Public Sub New()
         InitializeComponent()
         leftBorderBtn = New Panel()
@@ -84,7 +86,7 @@ Public Class FormularioPrincipal
     End Sub
     Private Sub BtnEventos_Click(sender As Object, e As EventArgs) Handles BtnEventos.Click
         ActivateButton(sender, Color.FromArgb(34, 209, 98))
-        OpenChildForm(New GestionEventos)
+        OpenChildForm(New GestionEventos With {._CalendarioID = _CalendarioID})
     End Sub
     Private Sub BtnImportar_Click(sender As Object, e As EventArgs) Handles BtnImportar.Click
         ActivateButton(sender, Color.FromArgb(211, 130, 101))

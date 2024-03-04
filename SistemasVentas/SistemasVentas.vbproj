@@ -150,10 +150,28 @@
     <Compile Include="Modelos\Recurrencia.vb" />
     <Compile Include="Modelos\Usuario.vb" />
     <Compile Include="Datos\UsuarioData.vb" />
+    <Compile Include="UI\Eventos\AcomodarFormularios.Designer.vb">
+      <DependentUpon>AcomodarFormularios.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Eventos\AcomodarFormularios.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Eventos\Controles.Designer.vb">
+      <DependentUpon>Controles.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Eventos\Controles.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\Eventos\GestionEventos.Designer.vb">
       <DependentUpon>GestionEventos.vb</DependentUpon>
     </Compile>
     <Compile Include="UI\Eventos\GestionEventos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Eventos\Prueba.Designer.vb">
+      <DependentUpon>Prueba.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Eventos\Prueba.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\FormularioPrincipal.Designer.vb">
@@ -200,8 +218,17 @@
     <Compile Include="UI\ValidadorFormularios.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\Eventos\AcomodarFormularios.resx">
+      <DependentUpon>AcomodarFormularios.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Eventos\Controles.resx">
+      <DependentUpon>Controles.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Eventos\GestionEventos.resx">
       <DependentUpon>GestionEventos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Eventos\Prueba.resx">
+      <DependentUpon>Prueba.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormularioPrincipal.resx">
       <DependentUpon>FormularioPrincipal.vb</DependentUpon>

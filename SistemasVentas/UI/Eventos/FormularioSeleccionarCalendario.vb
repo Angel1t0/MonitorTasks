@@ -1,6 +1,43 @@
 ﻿Imports System.Runtime.InteropServices
 
 Public Class FormularioSeleccionarCalendario
+    Private _controlador As New EventoControlador()
+    Public Property CalendarioID As String
+    Public Property UsuarioID As String = Login.idUsuario
+
+    Private Function CargarCalendarios() As List(Of String)
+        Dim calendarios As List(Of List(Of String)) = _controlador.ObtenerCalendarios(UsuarioID)
+
+        AgregarCalendariosACombo(calendarios)
+        Return calendarios(0)
+    End Function
+
+    Private Sub guardarCalendarioID(listCalendariosID As List(Of String))
+        Dim indexSeleccionado = ComboCalendario.SelectedIndex
+        CalendarioID = listCalendariosID(indexSeleccionado)
+    End Sub
+
+    Private Sub SeleccionarCalendario()
+        guardarCalendarioID(CargarCalendarios())
+    End Sub
+
+    Private Sub AgregarCalendariosACombo(calendarios As List(Of List(Of String)))
+        Dim calendariosName As List(Of String) = calendarios(1)
+        For Each calendario In calendariosName
+            ComboCalendario.Items.Add(calendario)
+        Next
+    End Sub
+
+    Private Sub BtnSeleccionarCalendario_Click_1(sender As Object, e As EventArgs) Handles BtnSeleccionarCalendario.Click
+        SeleccionarCalendario()
+        guardarCalendarioID(_controlador.ObtenerCalendarios(UsuarioID)(0))
+        ' Mostrar formulario de gestión de eventos y cerrar este formulario
+        Dim formularioPrincipal As New FormularioPrincipal()
+        formularioPrincipal._CalendarioID = CalendarioID
+        formularioPrincipal.Show()
+        Me.Close()
+    End Sub
+
     'Form'
     Public Sub New()
         InitializeComponent()
@@ -9,6 +46,9 @@ Public Class FormularioSeleccionarCalendario
         Me.DoubleBuffered = True
         Me.MaximizedBounds = Screen.PrimaryScreen.WorkingArea
     End Sub
+
+
+
     <DllImport("user32.DLL", EntryPoint:="ReleaseCapture")>
     Private Shared Sub ReleaseCapture()
     End Sub
@@ -40,5 +80,14 @@ Public Class FormularioSeleccionarCalendario
         Else
             FormBorderStyle = FormBorderStyle.Sizable
         End If
+    End Sub
+
+    Private Sub FormularioSeleccionarCalendario_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        CargarCalendarios()
+        If ComboCalendario.Items.Count = 0 Then
+            BtnSeleccionarCalendario.Enabled = False
+            Return
+        End If
+        ComboCalendario.SelectedIndex = 0
     End Sub
 End Class

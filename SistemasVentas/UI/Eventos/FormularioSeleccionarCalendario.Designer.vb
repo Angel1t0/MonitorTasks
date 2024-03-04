@@ -27,8 +27,8 @@ Partial Class FormularioSeleccionarCalendario
         Me.BtnCerrar = New FontAwesome.Sharp.IconPictureBox()
         Me.BtnMaximizar = New FontAwesome.Sharp.IconPictureBox()
         Me.BtnMinimizar = New FontAwesome.Sharp.IconPictureBox()
-        Me.btnSeleccionarCalendario = New System.Windows.Forms.Button()
-        Me.comboCalendario = New System.Windows.Forms.ComboBox()
+        Me.BtnSeleccionarCalendario = New System.Windows.Forms.Button()
+        Me.ComboCalendario = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.panelCalendarios.SuspendLayout()
         Me.PanelTitulo.SuspendLayout()
@@ -41,8 +41,8 @@ Partial Class FormularioSeleccionarCalendario
         '
         Me.panelCalendarios.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.panelCalendarios.Controls.Add(Me.PanelTitulo)
-        Me.panelCalendarios.Controls.Add(Me.btnSeleccionarCalendario)
-        Me.panelCalendarios.Controls.Add(Me.comboCalendario)
+        Me.panelCalendarios.Controls.Add(Me.BtnSeleccionarCalendario)
+        Me.panelCalendarios.Controls.Add(Me.ComboCalendario)
         Me.panelCalendarios.Controls.Add(Me.Label1)
         Me.panelCalendarios.Dock = System.Windows.Forms.DockStyle.Fill
         Me.panelCalendarios.Location = New System.Drawing.Point(0, 0)
@@ -104,30 +104,30 @@ Partial Class FormularioSeleccionarCalendario
         Me.BtnMinimizar.TabIndex = 5
         Me.BtnMinimizar.TabStop = False
         '
-        'btnSeleccionarCalendario
+        'BtnSeleccionarCalendario
         '
-        Me.btnSeleccionarCalendario.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnSeleccionarCalendario.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnSeleccionarCalendario.FlatAppearance.BorderSize = 0
-        Me.btnSeleccionarCalendario.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnSeleccionarCalendario.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.btnSeleccionarCalendario.Location = New System.Drawing.Point(177, 263)
-        Me.btnSeleccionarCalendario.Name = "btnSeleccionarCalendario"
-        Me.btnSeleccionarCalendario.Size = New System.Drawing.Size(113, 55)
-        Me.btnSeleccionarCalendario.TabIndex = 45
-        Me.btnSeleccionarCalendario.Text = "Seleccionar"
-        Me.btnSeleccionarCalendario.UseVisualStyleBackColor = False
+        Me.BtnSeleccionarCalendario.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnSeleccionarCalendario.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.BtnSeleccionarCalendario.FlatAppearance.BorderSize = 0
+        Me.BtnSeleccionarCalendario.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.BtnSeleccionarCalendario.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.BtnSeleccionarCalendario.Location = New System.Drawing.Point(177, 263)
+        Me.BtnSeleccionarCalendario.Name = "BtnSeleccionarCalendario"
+        Me.BtnSeleccionarCalendario.Size = New System.Drawing.Size(113, 55)
+        Me.BtnSeleccionarCalendario.TabIndex = 45
+        Me.BtnSeleccionarCalendario.Text = "Seleccionar"
+        Me.BtnSeleccionarCalendario.UseVisualStyleBackColor = False
         '
-        'comboCalendario
+        'ComboCalendario
         '
-        Me.comboCalendario.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.comboCalendario.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.comboCalendario.Font = New System.Drawing.Font("Century Gothic", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.comboCalendario.FormattingEnabled = True
-        Me.comboCalendario.Location = New System.Drawing.Point(95, 189)
-        Me.comboCalendario.Name = "comboCalendario"
-        Me.comboCalendario.Size = New System.Drawing.Size(280, 31)
-        Me.comboCalendario.TabIndex = 1
+        Me.ComboCalendario.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.ComboCalendario.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboCalendario.Font = New System.Drawing.Font("Century Gothic", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboCalendario.FormattingEnabled = True
+        Me.ComboCalendario.Location = New System.Drawing.Point(95, 189)
+        Me.ComboCalendario.Name = "ComboCalendario"
+        Me.ComboCalendario.Size = New System.Drawing.Size(280, 31)
+        Me.ComboCalendario.TabIndex = 1
         '
         'Label1
         '
@@ -146,6 +146,7 @@ Partial Class FormularioSeleccionarCalendario
         Me.ClientSize = New System.Drawing.Size(466, 450)
         Me.Controls.Add(Me.panelCalendarios)
         Me.Name = "FormularioSeleccionarCalendario"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "FormularioSeleccionarCalendario"
         Me.panelCalendarios.ResumeLayout(False)
         Me.panelCalendarios.PerformLayout()
@@ -158,8 +159,8 @@ Partial Class FormularioSeleccionarCalendario
     End Sub
 
     Friend WithEvents panelCalendarios As Panel
-    Friend WithEvents btnSeleccionarCalendario As Button
-    Friend WithEvents comboCalendario As ComboBox
+    Friend WithEvents BtnSeleccionarCalendario As Button
+    Friend WithEvents ComboCalendario As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents PanelTitulo As Panel
     Friend WithEvents BtnCerrar As FontAwesome.Sharp.IconPictureBox

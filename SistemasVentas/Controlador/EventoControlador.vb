@@ -6,18 +6,20 @@ Public Class EventoControlador
     Private _servicioGoogleCalendar As GoogleCalendarService
     Private _datosEvento As EventoData
     Public Property GoogleEventID As String = String.Empty
+    Public Property GoogleCalendarID As String
+
     Public Sub New()
         _servicioGoogleCalendar = New GoogleCalendarService()
         _datosEvento = New EventoData()
     End Sub
 
-    Public Sub CrearEvento(evento As Evento)
+    Public Sub CrearEvento(evento As Evento, isVisible As Boolean)
         Dim errores As List(Of String) = evento.ValidarCampos()
         If errores.Count > 0 Then
             MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        If GestionEventos.btnCrearEvento.Visible = True Then
+        If isVisible = True Then
             _datosEvento.InsertarEvento(evento)
         Else
             _datosEvento.ActualizarEvento(evento)
@@ -67,7 +69,7 @@ Public Class EventoControlador
         Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
         Dim eventoGoogle As [Event] = _servicioGoogleCalendar.ConvertirAModeloGoogleCalendar(evento)
 
-        Dim calendarId As String = GestionEventos.CalendarioID
+        Dim calendarId As String = GoogleCalendarID
         Dim createdEvent As [Event] = service.Events.Insert(eventoGoogle, calendarId).Execute()
         GoogleEventID = createdEvent.Id
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
@@ -75,23 +77,18 @@ Public Class EventoControlador
 
     Public Async Sub AgregarInformacionEvento(evento As Evento)
         Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
-        If GestionEventos.btnCrearEvento.Visible = True Then
-            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)
-        Else
-            Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GestionEventos.EventoID, evento)
-        End If
-
+        Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)
     End Sub
 
     Public Async Function ObtenerEventosAsync() As Task(Of IList(Of [Event]))
         Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
 
-        Dim eventosGoogle As IList(Of [Event]) = Await _servicioGoogleCalendar.ObtenerEventosGoogleAsync(service, GestionEventos.CalendarioID)
+        Dim eventosGoogle As IList(Of [Event]) = Await _servicioGoogleCalendar.ObtenerEventosGoogleAsync(service, GoogleCalendarID)
         Return eventosGoogle
     End Function
 
     Public Function ObtenerEventosLocales() As List(Of Evento)
-        Dim eventosTable As DataTable = _datosEvento.MostrarEventos(GestionEventos.CalendarioID)
+        Dim eventosTable As DataTable = _datosEvento.MostrarEventos(GoogleCalendarID)
         Dim asistentes As List(Of Asistente) = _datosEvento.ObtenerTodosAsistentes()
         Dim notificaciones As List(Of Notificacion) = _datosEvento.ObtenerTodasNotificaciones()
 
@@ -146,8 +143,8 @@ Public Class EventoControlador
         End Select
     End Function
 
-    Public Function ObtenerCalendarios() As List(Of List(Of String))
-        Return _datosEvento.ObtenerCalendarios()
+    Public Function ObtenerCalendarios(idUsuario As String) As List(Of List(Of String))
+        Return _datosEvento.ObtenerCalendarios(idUsuario)
     End Function
 
     Public Function ObtenerEventos(calendarioID As String) As DataTable
