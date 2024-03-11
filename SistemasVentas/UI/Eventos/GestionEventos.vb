@@ -16,10 +16,12 @@ Public Class GestionEventos
     ' Instancias de los modelos para manejar la información del evento y su recurrencia.
     Private evento As New Evento()
     Private recurrencia As New Recurrencia()
+    Private mensaje As New Mensaje()
 
     Private Sub GestionEventos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CargarEventosEnDataGridView()
         PanelDatosBasicos.Visible = False
+        PanelDatosRecurrencia.Visible = False
         PanelAsistentes.Visible = False
         PanelNotificaciones.Visible = False
         CargarAsistentes()
@@ -37,13 +39,21 @@ Public Class GestionEventos
 
     Private Sub LlenarCamposEventos()
         evento.CalendarID = _CalendarioID
-        evento.Summary = txtEventName.Text
-        evento.Location = txtEventUbicacion.Text
-        evento.Description = txtEventDescrip.Text
+        evento.Summary = txtEventName.TextBox1.Text
+        evento.Location = txtEventUbicacion.TextBox1.Text
+        evento.Description = txtEventDescrip.TextBox1.Text
         evento.StartDateTime = eventFechaInicio.Value.ToString("yyyy-MM-ddTHH:mm:ssZ")
         evento.EndDateTime = eventFechaFinal.Value.ToString("yyyy-MM-ddTHH:mm:ssZ")
         evento.Visibility = FormatoComboVisibilidad()
         evento.Transparency = FormatoComboDisponibilidad()
+
+        mensaje.EventID = EventoID
+        mensaje.Title = evento.Summary
+        mensaje.Description = evento.Description
+        mensaje.StartDateTime = evento.StartDateTime
+        mensaje.EndDateTime = evento.EndDateTime
+        mensaje.Status = "Activo"
+        mensaje.MessageType = "Evento"
     End Sub
 
     Private Function CrearRecurrencia() As Boolean
@@ -73,8 +83,8 @@ Public Class GestionEventos
             MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
-        MessageBox.Show(recurrencia.RRULE)
         evento.RRULE = recurrencia.GenerarRRULE()
+        mensaje.RRULE = evento.RRULE
         Return True
     End Function
 
@@ -95,7 +105,6 @@ Public Class GestionEventos
             _controlador.InsertarAsistente(asistente, False)
             MessageBox.Show("Asistente agregado correctamente")
             evento.Attendees.Add(asistente)
-
         End If
 
     End Sub
@@ -146,6 +155,7 @@ Public Class GestionEventos
 
     Public Sub CargarEventosEnDataGridView()
         dgvDataEventos.DataSource = _controlador.ObtenerEventos(_CalendarioID)
+        labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventos.Rows.Count}"
         EstilizarTabla()
     End Sub
 
@@ -235,14 +245,24 @@ Public Class GestionEventos
         CargarEventosEnDataGridView()
     End Sub
 
+    Private Sub btnInsertarEvento_Click(sender As Object, e As EventArgs) Handles btnInsertarEvento.Click
+        LimpiarCampos()
+        PanelDatosBasicos.Visible = True
+        panelEventos.Visible = False
+        btnActualizarEvento.Visible = False
+        btnContinuarActualizar.Visible = False
+        btnCrearEvento.Visible = True
+        btnEnviarAPI.Visible = True
+        CentrarPanel(PanelDatosBasicos)
+    End Sub
+
     Private Sub btnCrearEvento_Click(sender As Object, e As EventArgs) Handles btnCrearEvento.Click
         LlenarCamposEventos()
-        If Not CrearRecurrencia() Then
+        If Not DeterminarRecurrencia() Then
             Return
         End If
         _controlador.EnviarEventoAGoogleCalendar(evento)
         EventoID = _controlador.GoogleEventID
-        MessageBox.Show(btnCrearEvento.Visible)
         CrearEvento(True)
 
         PanelDatosBasicos.Visible = False
@@ -255,7 +275,7 @@ Public Class GestionEventos
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
         LlenarCamposEventos()
-        If Not CrearRecurrencia() Then
+        If Not DeterminarRecurrencia() Then
             Return
         End If
         CrearEvento(False)
@@ -359,6 +379,7 @@ Public Class GestionEventos
     End Sub
 
     Private Sub dgvDataEventos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventos.CellDoubleClick
+        LimpiarCampos()
         btnActualizarEvento.Visible = True
         btnContinuarActualizar.Visible = True
         btnCrearEvento.Visible = False
@@ -372,15 +393,6 @@ Public Class GestionEventos
 
     Private Sub dgvDataEventos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventos.CellClick
         EliminarEvento(e)
-    End Sub
-
-    Private Sub pbInsertarEvento_Click_1(sender As Object, e As EventArgs) Handles pbInsertarEvento.Click
-        PanelDatosBasicos.Visible = True
-        panelEventos.Visible = False
-        btnActualizarEvento.Visible = False
-        btnContinuarActualizar.Visible = False
-        btnEnviarAPI.Visible = True
-        CentrarPanel(PanelDatosBasicos)
     End Sub
 
     Private Sub btnVolver_Click(sender As Object, e As EventArgs) Handles btnVolver.Click
@@ -403,7 +415,8 @@ Public Class GestionEventos
         ' Configuración del ComboBox
         comboEventDispo.SelectedIndex = 0 ' Selecciona "Ocupado" por defecto
         comboEventVisibilidad.SelectedIndex = 0 ' Selecciona "Público" por defecto
-        comboFrecuencia.SelectedIndex = 0 ' Selecciona "Diariamente" por defecto
+        comboRecurrencia.SelectedIndex = 0 ' Selecciona "No repetir" por defecto
+        comboFrecuencia.SelectedIndex = 0 ' Selecciona "No repetir" por defecto
         comboInvitados.SelectedIndex = 0 ' Selecciona el primer correo por defecto
         comboMetodoRecordar.SelectedIndex = 0 ' Selecciona "Correo electrónico" por defecto
         comboUnidades.SelectedIndex = 0 ' Selecciona "Minutos" por defecto
@@ -495,20 +508,15 @@ Public Class GestionEventos
         dgvDataEventos.Columns(10).Width = 150
 
         dgvDataEventos.EnableHeadersVisualStyles = False
-        Dim styleCabeceras As New DataGridViewCellStyle()
-        styleCabeceras.BackColor = Color.White
-        styleCabeceras.ForeColor = Color.Black
-        styleCabeceras.Font = New Font("Segoe UI", 10, FontStyle.Regular Or FontStyle.Bold)
-        dgvDataEventos.ColumnHeadersDefaultCellStyle = styleCabeceras
     End Sub
 
     Private Sub PrepararActualizarEvento()
         EventoID = dgvDataEventos.SelectedCells.Item(1).Value.ToString()
         _controlador.GoogleEventID = EventoID
 
-        txtEventName.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(2).Value), "", dgvDataEventos.SelectedCells.Item(2).Value)
-        txtEventUbicacion.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
-        txtEventDescrip.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
+        txtEventName.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(2).Value), "", dgvDataEventos.SelectedCells.Item(2).Value)
+        txtEventUbicacion.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
+        txtEventDescrip.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
         eventFechaInicio.Value = dgvDataEventos.SelectedCells.Item(5).Value
         eventFechaFinal.Value = dgvDataEventos.SelectedCells.Item(6).Value
         comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
@@ -668,5 +676,82 @@ Public Class GestionEventos
         PanelAsistentes.BringToFront()
         CentrarPanel(PanelAsistentes)
     End Sub
+
+    Private Sub LimpiarCampos()
+        txtEventName.TextBox1.Text = ""
+        txtEventUbicacion.TextBox1.Text = ""
+        txtEventDescrip.TextBox1.Text = ""
+        eventFechaInicio.Value = DateTime.Now
+        eventFechaFinal.Value = DateTime.Now
+        comboEventVisibilidad.SelectedIndex = 0
+        comboEventDispo.SelectedIndex = 0
+        comboFrecuencia.SelectedIndex = 0
+        comboRecurrencia.SelectedIndex = 0
+        listDias.ClearSelected()
+        rbtnConteo.Checked = False
+        rbtnFecha.Checked = False
+        txtOcurrencias.Value = 1
+        dateRecuFinal.Value = DateTime.Now
+        comboInvitados.SelectedIndex = 0
+        comboMetodoRecordar.SelectedIndex = 0
+        comboUnidades.SelectedIndex = 0
+        numericUpCantidad.Value = 1
+    End Sub
+    Private Function DeterminarRecurrencia() As Boolean
+        Dim indexSeleccionado As Integer = comboRecurrencia.SelectedIndex
+        Select Case indexSeleccionado
+            Case 0
+                evento.RRULE = ""
+                mensaje.RRULE = ""
+                Return True
+            Case 1
+                evento.RRULE = "RRULE:FREQ=DAILY"
+                mensaje.RRULE = "RRULE:FREQ=DAILY"
+                Return True
+            Case 2
+                evento.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
+                mensaje.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
+                Return True
+            Case 3
+                Return CrearRecurrencia()
+            Case Else
+                evento.RRULE = ""
+                mensaje.RRULE = ""
+                Return True
+        End Select
+    End Function
+
+    Private Sub comboRecurrencia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboRecurrencia.SelectedIndexChanged
+        Dim indexSeleccionado As Integer = comboRecurrencia.SelectedIndex
+        If indexSeleccionado = 3 Then
+            PanelDatosRecurrencia.Visible = True
+            PanelDatosRecurrencia.BringToFront()
+            CentrarPanel(PanelDatosRecurrencia)
+
+            PanelDatosBasicos.Visible = False
+        End If
+    End Sub
+
+    Private Sub btnListoRecurrencia_Click(sender As Object, e As EventArgs) Handles btnListoRecurrencia.Click
+        PanelDatosRecurrencia.Visible = False
+        PanelDatosBasicos.Visible = True
+        CentrarPanel(PanelDatosBasicos)
+    End Sub
+
+    Private Sub btnCancelarRecurrencia_Click(sender As Object, e As EventArgs) Handles btnCancelarRecurrencia.Click
+        PanelDatosRecurrencia.Visible = False
+        PanelDatosBasicos.Visible = True
+        CentrarPanel(PanelDatosBasicos)
+
+        comboFrecuencia.SelectedIndex = 0
+        listDias.ClearSelected()
+        rbtnConteo.Checked = False
+        rbtnFecha.Checked = False
+        txtOcurrencias.Value = 1
+        dateRecuFinal.Value = DateTime.Now
+        comboRecurrencia.SelectedIndex = 0
+    End Sub
+
+
 End Class
 

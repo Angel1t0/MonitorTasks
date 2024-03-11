@@ -143,24 +143,28 @@
     <Compile Include="Controlador\EventoControlador.vb" />
     <Compile Include="Datos\CadenaConexion.vb" />
     <Compile Include="Datos\EventoData.vb" />
+    <Compile Include="Modelos\Mensaje.vb" />
     <Compile Include="Servicios\GoogleCalendarService.vb" />
-    <Compile Include="Modelos\Asistente.vb" />
-    <Compile Include="Modelos\Evento.vb" />
-    <Compile Include="Modelos\Notificacion.vb" />
-    <Compile Include="Modelos\Recurrencia.vb" />
+    <Compile Include="Modelos\Eventos\Asistente.vb" />
+    <Compile Include="Modelos\Eventos\Evento.vb" />
+    <Compile Include="Modelos\Eventos\Notificacion.vb" />
+    <Compile Include="Modelos\Eventos\Recurrencia.vb" />
     <Compile Include="Modelos\Usuario.vb" />
     <Compile Include="Datos\UsuarioData.vb" />
+    <Compile Include="UI\Controles\ControlPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Controles\ControlTextBox.Designer.vb">
+      <DependentUpon>ControlTextBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controles\ControlTextBox.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\Eventos\AcomodarFormularios.Designer.vb">
       <DependentUpon>AcomodarFormularios.vb</DependentUpon>
     </Compile>
     <Compile Include="UI\Eventos\AcomodarFormularios.vb">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Eventos\Controles.Designer.vb">
-      <DependentUpon>Controles.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Eventos\Controles.vb">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\Eventos\GestionEventos.Designer.vb">
       <DependentUpon>GestionEventos.vb</DependentUpon>
@@ -193,6 +197,12 @@
     <Compile Include="UI\Login\Login.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI\Notificaciones\GestionMensajes.Designer.vb">
+      <DependentUpon>GestionMensajes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Notificaciones\GestionMensajes.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UI\Usuarios\FormularioGestionUsuarios.Designer.vb">
       <DependentUpon>FormularioGestionUsuarios.vb</DependentUpon>
     </Compile>
@@ -218,11 +228,11 @@
     <Compile Include="UI\ValidadorFormularios.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\Controles\ControlTextBox.resx">
+      <DependentUpon>ControlTextBox.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Eventos\AcomodarFormularios.resx">
       <DependentUpon>AcomodarFormularios.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Eventos\Controles.resx">
-      <DependentUpon>Controles.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Eventos\GestionEventos.resx">
       <DependentUpon>GestionEventos.vb</DependentUpon>
@@ -238,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Login\Login.resx">
       <DependentUpon>Login.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Notificaciones\GestionMensajes.resx">
+      <DependentUpon>GestionMensajes.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Usuarios\FormularioGestionUsuarios.resx">
       <DependentUpon>FormularioGestionUsuarios.vb</DependentUpon>

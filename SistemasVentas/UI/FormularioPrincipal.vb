@@ -70,7 +70,7 @@ Public Class FormularioPrincipal
         PanelEscritorio.Tag = childForm
         childForm.BringToFront()
         childForm.Show()
-        LbTituloForm.Text = childForm.Text
+        LbTituloForm.Text = currentBtn.Text
     End Sub
 
     ' Events

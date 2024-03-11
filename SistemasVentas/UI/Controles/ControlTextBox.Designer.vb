@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Controles
+Partial Class ControlTextBox
     Inherits System.Windows.Forms.UserControl
 
     'UserControl reemplaza a Dispose para limpiar la lista de componentes.
@@ -31,18 +31,19 @@ Partial Class Controles
         Me.TextBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TextBox1.Location = New System.Drawing.Point(7, 7)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(236, 19)
+        Me.TextBox1.Size = New System.Drawing.Size(186, 19)
         Me.TextBox1.TabIndex = 0
         '
-        'Controles
+        'ControlTextBox
         '
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.Controls.Add(Me.TextBox1)
         Me.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(4)
-        Me.Name = "Controles"
+        Me.Name = "ControlTextBox"
         Me.Padding = New System.Windows.Forms.Padding(7)
-        Me.Size = New System.Drawing.Size(250, 30)
+        Me.Size = New System.Drawing.Size(200, 30)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

@@ -82,9 +82,14 @@ Public Class GoogleCalendarService
             eventoGoogle.Description = evento.Description
             eventoGoogle.Start = New EventDateTime() With {.DateTime = evento.StartDateTime, .TimeZone = "America/Mexico_City"}
             eventoGoogle.End = New EventDateTime() With {.DateTime = evento.EndDateTime, .TimeZone = "America/Mexico_City"}
-            eventoGoogle.Recurrence = New List(Of String) From {evento.RRULE}
             eventoGoogle.Visibility = evento.Visibility
             eventoGoogle.Transparency = evento.Transparency
+
+            If evento.RRULE = "" Then
+                eventoGoogle.Recurrence = Nothing
+            Else
+                eventoGoogle.Recurrence = New List(Of String) From {evento.RRULE}
+            End If
 
             eventoGoogle.Attendees = evento.Attendees.Select(Function(a) New EventAttendee() With {.Email = a.Email}).ToList()
             ' Configurar asistentes
@@ -101,13 +106,13 @@ Public Class GoogleCalendarService
             End If
 
             ' Actualizar el evento en Google Calendar
-            Dim updatedEvent As [Event] = Await service.Events.Update(eventoGoogle, "primary", googleEventId).ExecuteAsync()
+            Dim updatedEvent As [Event] = Await service.Events.Update(eventoGoogle, CalendarioID, googleEventId).ExecuteAsync()
         Catch ex As Exception
             Console.WriteLine($"Error al actualizar eventos: {ex.Message}")
         End Try
     End Function
 
-    Public Async Function SincronizarEventosAsync(eventosGoogle As IList(Of [Event]), eventosLocales As List(Of Evento)) As Task
+    Public Sub SincronizarEventos(eventosGoogle As IList(Of [Event]), eventosLocales As List(Of Evento))
         Try
             ' Insertar o actualizar eventos basado en Google Calendar
             For Each eventoGoogle In eventosGoogle
@@ -202,7 +207,7 @@ Public Class GoogleCalendarService
             Console.WriteLine($"Error al sincronizar eventos: {ex.Message}")
         End Try
 
-    End Function
+    End Sub
 
     Public Function ConvertirDeGoogleEventoAEventoLocal(eventoGoogle As [Event]) As Evento
         Try

@@ -100,7 +100,7 @@ Public Class EventoControlador
         Dim eventosLocales As List(Of Evento) = ObtenerEventosLocales()
         Dim eventosGoogle As IList(Of [Event]) = Await ObtenerEventosAsync()
 
-        Await _servicioGoogleCalendar.SincronizarEventosAsync(eventosGoogle, eventosLocales)
+        _servicioGoogleCalendar.SincronizarEventos(eventosGoogle, eventosLocales)
     End Function
 
 
