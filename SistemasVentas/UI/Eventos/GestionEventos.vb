@@ -10,8 +10,10 @@ Public Class GestionEventos
 
     ' Propiedades para almacenar información relevante del evento y el ID del calendario seleccionado.
     Public Property _CalendarioID As String
+    Public Property _UsuarioID As String
     Public Property EventoID As String
     Public Property ReminderID As New List(Of Integer)
+    Public Property AsistenteID As Integer
 
     ' Instancias de los modelos para manejar la información del evento y su recurrencia.
     Private evento As New Evento()
@@ -33,12 +35,14 @@ Public Class GestionEventos
     ' Manejadores de Eventos
     Private Sub CrearEvento(isVisible As Boolean)
         evento.EventID = EventoID
+        mensaje.EventID = EventoID
 
         _controlador.CrearEvento(evento, isVisible)
     End Sub
 
-    Private Sub LlenarCamposEventos()
+    Private Sub LlenarCamposEventos(messageType As String)
         evento.CalendarID = _CalendarioID
+        evento.UserID = _UsuarioID
         evento.Summary = txtEventName.TextBox1.Text
         evento.Location = txtEventUbicacion.TextBox1.Text
         evento.Description = txtEventDescrip.TextBox1.Text
@@ -47,13 +51,12 @@ Public Class GestionEventos
         evento.Visibility = FormatoComboVisibilidad()
         evento.Transparency = FormatoComboDisponibilidad()
 
-        mensaje.EventID = EventoID
         mensaje.Title = evento.Summary
         mensaje.Description = evento.Description
         mensaje.StartDateTime = evento.StartDateTime
         mensaje.EndDateTime = evento.EndDateTime
         mensaje.Status = "Activo"
-        mensaje.MessageType = "Evento"
+        mensaje.MessageType = messageType
     End Sub
 
     Private Function CrearRecurrencia() As Boolean
@@ -63,6 +66,7 @@ Public Class GestionEventos
 
         If indexFrecuencia = 0 Then
             evento.RRULE = ""
+            mensaje.RRULE = ""
             Return True
         End If
 
@@ -94,19 +98,16 @@ Public Class GestionEventos
             .Email = comboInvitados.Text,
             .DisplayName = labelAsistente.Text
         }
-        If btnCrearEvento.Visible = True Then
-            _controlador.InsertarAsistente(asistente, evento.HayAsistentesDuplicados(asistente))
-        Else
-            Dim indice As Integer = comboListaInvitados.FindString(asistente.Email)
-            If indice >= 0 Then
-                MessageBox.Show("El asistente ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
-            _controlador.InsertarAsistente(asistente, False)
-            MessageBox.Show("Asistente agregado correctamente")
-            evento.Attendees.Add(asistente)
+        Dim indice As Integer = comboListaInvitados.FindString(asistente.Email)
+        If indice >= 0 Then
+            MessageBox.Show("El asistente ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
         End If
-
+        _controlador.InsertarAsistente(asistente, Me)
+        mensaje.AttendeeID = AsistenteID
+        evento.Attendees.Add(asistente)
+        mensaje.Attendees.Add(asistente.Email)
+        MessageBox.Show("Asistente agregado correctamente")
     End Sub
 
     Public Sub AgregarListaInvitado()
@@ -162,6 +163,7 @@ Public Class GestionEventos
     Public Sub CargarListaInvitados(eventID As String)
         comboListaInvitados.Items.Clear()
         evento.Attendees.Clear()
+        mensaje.Attendees.Clear()
         Dim listaInvitados As List(Of String) = _controlador.ObtenerAsistentesInvitados(eventID)
         For Each invitado In listaInvitados
             Dim asistente As New Asistente() With {
@@ -169,6 +171,8 @@ Public Class GestionEventos
             }
             comboListaInvitados.Items.Add(invitado)
             evento.Attendees.Add(asistente)
+            mensaje.Attendees.Add(invitado)
+            mensaje.AttendeeID = _controlador.BuscarUserID(invitado)
         Next
     End Sub
 
@@ -220,6 +224,7 @@ Public Class GestionEventos
         _controlador.EliminarAsistente(asistente)
         If evento.Attendees.Count > 0 Then
             evento.Attendees.RemoveAll(Function(a) a.Email.Equals(correo, StringComparison.OrdinalIgnoreCase))
+            mensaje.Attendees.RemoveAll(Function(a) a.Equals(correo, StringComparison.OrdinalIgnoreCase))
         End If
         comboListaInvitados.Items.Remove(correo)
         MessageBox.Show("Asistente eliminado correctamente")
@@ -257,7 +262,7 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnCrearEvento_Click(sender As Object, e As EventArgs) Handles btnCrearEvento.Click
-        LlenarCamposEventos()
+        LlenarCamposEventos("Nuevo evento")
         If Not DeterminarRecurrencia() Then
             Return
         End If
@@ -274,12 +279,16 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
-        LlenarCamposEventos()
+        LlenarCamposEventos("Actualización")
         If Not DeterminarRecurrencia() Then
             Return
         End If
         CrearEvento(False)
-        _controlador.AgregarInformacionEvento(evento)
+
+        ' ACTUALIZAR MENSAJE EN BD
+
+        evento.Message = mensaje
+        _controlador.AgregarInformacionEvento(evento, False)
         MessageBox.Show("Evento actualizado correctamente")
         CargarEventosEnDataGridView()
     End Sub
@@ -287,6 +296,7 @@ Public Class GestionEventos
     Private Sub btnAgregarAsistentes_Click(sender As Object, e As EventArgs) Handles btnAgregarAsistentes.Click
         CrearAsistente()
         AgregarListaInvitado()
+        evento.Message = mensaje
     End Sub
 
     Private Sub btnEliminarAsistentes_Click(sender As Object, e As EventArgs) Handles btnEliminarAsistentes.Click
@@ -308,7 +318,7 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnEnviarAPI_Click(sender As Object, e As EventArgs) Handles btnEnviarAPI.Click
-        _controlador.AgregarInformacionEvento(evento)
+        _controlador.AgregarInformacionEvento(evento, True)
 
         MessageBox.Show("Evento creado exitosamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
@@ -751,7 +761,5 @@ Public Class GestionEventos
         dateRecuFinal.Value = DateTime.Now
         comboRecurrencia.SelectedIndex = 0
     End Sub
-
-
 End Class
 

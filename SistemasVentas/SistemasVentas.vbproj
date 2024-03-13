@@ -70,6 +70,9 @@
     <Reference Include="Google.Apis.Core, Version=1.10.0.25331, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.Core.1.10.0\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis.Gmail.v1, Version=1.38.0.1543, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Gmail.v1.1.38.0.1543\lib\net40\Google.Apis.Gmail.v1.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis.PlatformServices, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.10.0\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
@@ -144,6 +147,7 @@
     <Compile Include="Datos\CadenaConexion.vb" />
     <Compile Include="Datos\EventoData.vb" />
     <Compile Include="Modelos\Mensaje.vb" />
+    <Compile Include="Servicios\GoogleServicesAuthenticator.vb" />
     <Compile Include="Servicios\GoogleCalendarService.vb" />
     <Compile Include="Modelos\Eventos\Asistente.vb" />
     <Compile Include="Modelos\Eventos\Evento.vb" />
@@ -151,6 +155,7 @@
     <Compile Include="Modelos\Eventos\Recurrencia.vb" />
     <Compile Include="Modelos\Usuario.vb" />
     <Compile Include="Datos\UsuarioData.vb" />
+    <Compile Include="Servicios\GoogleGmailService.vb" />
     <Compile Include="UI\Controles\ControlPanel.vb">
       <SubType>Component</SubType>
     </Compile>

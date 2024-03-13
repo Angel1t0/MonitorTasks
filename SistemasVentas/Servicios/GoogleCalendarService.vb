@@ -1,6 +1,7 @@
 ﻿Imports Google.Apis.Auth.OAuth2
 Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
+Imports Google.Apis.Gmail.v1
 Imports Google.Apis.Services
 Imports Google.Apis.Util.Store
 Imports System.IO
@@ -15,43 +16,18 @@ Public Class GoogleCalendarService
         _datosEvento = New EventoData()
     End Sub
 
-    ' Scopes define el nivel de acceso que necesitas sobre la cuenta de Google del usuario.
-    Private Scopes As String() = {CalendarService.Scope.Calendar}
-
     ' ApplicationName es el nombre de tu aplicación. Este nombre se muestra durante el proceso de autenticación.
     Private ApplicationName As String = "Monitor task - Prueba"
 
     ' Método que maneja la autenticación y crea un servicio de Google Calendar.
     Public Function Authenticate() As CalendarService
-        Dim credential As UserCredential
+        Dim authenticator As New GoogleServicesAuthenticator()
+        Dim credential As UserCredential = authenticator.AuthenticateGoogleServices()
 
-        ' Carga el archivo de credenciales descargado de Google Cloud Console.
-        Using stream As New FileStream("D:\angel\Downloads\client_secret_904108627701-bc7vsuctjhehlpou2tjof9g6c483s9n6.apps.googleusercontent.com.json", FileMode.Open, FileAccess.Read)
-            ' El camino donde el token de acceso será guardado.
-            Dim credPath As String = "D:\angel\Documentos\Residencias\SistemasVentas\SistemasVentas\Recursos\token.json"
-
-            ' Solicita la autenticación del usuario. Si el token ya existe y es válido, no se solicitará autenticación.
-            ' De lo contrario, abrirá una ventana del navegador para que el usuario inicie sesión en su cuenta de Google y autorice el acceso.
-            Try
-                ' Solicita la autenticación del usuario. Si el token ya existe, reutiliza ese token.
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    New FileDataStore(credPath, True)).Result
-
-                Console.WriteLine("Credential file saved to: " & credPath)
-            Catch ex As Exception
-                Throw New ApplicationException("Error al autenticar con Google Calendar.", ex)
-            End Try
-        End Using
-
-        ' Crea el servicio de Google Calendar usando las credenciales autenticadas.
-        ' Este servicio es el que utilizarás para realizar llamadas a la API de Google Calendar.
-        Dim service As New CalendarService(New BaseClientService.Initializer() With {
-            .HttpClientInitializer = credential, ' Inicializa el cliente HTTP con las credenciales autenticadas.
-            .ApplicationName = ApplicationName ' Establece el nombre de la aplicación.
+        ' Inicializar el servicio de Google Calendar
+        Dim service = New CalendarService(New BaseClientService.Initializer() With {
+            .HttpClientInitializer = credential,
+            .ApplicationName = ApplicationName
         })
 
         Return service ' Devuelve el servicio autenticado para ser usado en otras partes de tu aplicación.
@@ -214,6 +190,7 @@ Public Class GoogleCalendarService
             Dim evento As New Evento With {
             .EventID = eventoGoogle.Id,
             .CalendarID = CalendarioID,
+            .UserID = _datosEvento.BuscarUserID(eventoGoogle.Creator.Email.ToString()),
             .Summary = If(eventoGoogle.Summary Is Nothing, "No Title", eventoGoogle.Summary),
             .Location = eventoGoogle.Location,
             .Description = eventoGoogle.Description,

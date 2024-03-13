@@ -1,15 +1,20 @@
 ﻿Imports System.Threading.Tasks
 Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
+Imports Google.Apis.Gmail.v1
 
 Public Class EventoControlador
+    Private _googleServicesAuthenticator As GoogleServicesAuthenticator
     Private _servicioGoogleCalendar As GoogleCalendarService
+    Private _servicioGoogleGmail As GoogleGmailService
     Private _datosEvento As EventoData
     Public Property GoogleEventID As String = String.Empty
     Public Property GoogleCalendarID As String
 
     Public Sub New()
+        _googleServicesAuthenticator = New GoogleServicesAuthenticator()
         _servicioGoogleCalendar = New GoogleCalendarService()
+        _servicioGoogleGmail = New GoogleGmailService()
         _datosEvento = New EventoData()
     End Sub
 
@@ -21,9 +26,21 @@ Public Class EventoControlador
         End If
         If isVisible = True Then
             _datosEvento.InsertarEvento(evento)
+
         Else
+            ' FALTA IMPLEMENTAR CUANDO SE ACTUALIZA UN EVENTO Y CAMBIAN LOS CAMPOS DE TITULO, DESCRIPCIÓN, ETC. PARA EL MENSAJE
             _datosEvento.ActualizarEvento(evento)
         End If
+    End Sub
+
+    Public Sub CrearMensaje(mensaje As Mensaje)
+        _datosEvento.InsertarMensaje(mensaje)
+        EnviarEmail(mensaje)
+    End Sub
+
+    Public Sub ActualizarMensaje(mensaje As Mensaje)
+        _datosEvento.ActualizarMensaje(mensaje)
+        EnviarEmail(mensaje)
     End Sub
 
     Public Function CrearRecurrencia(recurrencia As Recurrencia) As Boolean
@@ -40,13 +57,8 @@ Public Class EventoControlador
         _servicioGoogleCalendar.EliminarEventoGoogle(eventID)
     End Sub
 
-    Public Sub InsertarAsistente(asistente As Asistente, isDuplicado As Boolean)
-        Dim err As Boolean = isDuplicado
-        If err Then
-            MessageBox.Show("El asistente ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-        _datosEvento.InsertarAsistente(asistente)
+    Public Sub InsertarAsistente(asistente As Asistente, gestionEventos As GestionEventos)
+        gestionEventos.AsistenteID = _datosEvento.InsertarAsistente(asistente)
     End Sub
 
     Public Sub EliminarAsistente(asistente As Asistente)
@@ -66,7 +78,7 @@ Public Class EventoControlador
     End Sub
 
     Public Sub EnviarEventoAGoogleCalendar(evento As Evento)
-        Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
+        Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
         Dim eventoGoogle As [Event] = _servicioGoogleCalendar.ConvertirAModeloGoogleCalendar(evento)
 
         Dim calendarId As String = GoogleCalendarID
@@ -75,13 +87,23 @@ Public Class EventoControlador
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
     End Sub
 
-    Public Async Sub AgregarInformacionEvento(evento As Evento)
-        Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
+    Public Async Sub AgregarInformacionEvento(evento As Evento, IsNew As Boolean)
+        Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
+        If IsNew Then
+            CrearMensaje(evento.Message)
+        Else
+            ActualizarMensaje(evento.Message)
+        End If
         Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)
     End Sub
 
+    Public Sub EnviarEmail(mensaje As Mensaje)
+        Dim service As GmailService = _googleServicesAuthenticator.ObtenerServicioGmail()
+        _servicioGoogleGmail.EnviarMensajeMail(service, mensaje)
+    End Sub
+
     Public Async Function ObtenerEventosAsync() As Task(Of IList(Of [Event]))
-        Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
+        Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
 
         Dim eventosGoogle As IList(Of [Event]) = Await _servicioGoogleCalendar.ObtenerEventosGoogleAsync(service, GoogleCalendarID)
         Return eventosGoogle
@@ -96,7 +118,7 @@ Public Class EventoControlador
     End Function
 
     Public Async Function SincronizarEventosAsync() As Task(Of IList(Of [Event]))
-        Dim service As CalendarService = _servicioGoogleCalendar.Authenticate()
+        Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
         Dim eventosLocales As List(Of Evento) = ObtenerEventosLocales()
         Dim eventosGoogle As IList(Of [Event]) = Await ObtenerEventosAsync()
 
@@ -168,5 +190,9 @@ Public Class EventoControlador
 
     Public Function ObtenerCorreoUsuario() As String
         Return _datosEvento.ObtenerCorreoUsuario()
+    End Function
+
+    Public Function BuscarUserID(invitado As String) As Integer
+        Return _datosEvento.BuscarUserID(invitado)
     End Function
 End Class

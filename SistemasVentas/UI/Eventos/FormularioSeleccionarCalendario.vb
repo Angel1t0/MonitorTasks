@@ -34,6 +34,7 @@ Public Class FormularioSeleccionarCalendario
         ' Mostrar formulario de gestión de eventos y cerrar este formulario
         Dim formularioPrincipal As New FormularioPrincipal()
         formularioPrincipal._CalendarioID = CalendarioID
+        formularioPrincipal._UsuarioID = UsuarioID
         formularioPrincipal.Show()
         Me.Close()
     End Sub

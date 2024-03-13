@@ -6,12 +6,13 @@
     Public Property Description As String
     Public Property StartDateTime As DateTime
     Public Property EndDateTime As DateTime
-    Public Property EmailSent As Boolean
-    Public Property WhatsAppSent As Boolean
-    Public Property DesktopSent As Boolean
-    Public Property SentTime As DateTime
+    Public Property EmailSent As Boolean = 0
+    Public Property WhatsAppSent As Boolean = 0
+    Public Property DesktopSent As Boolean = 0
+    Public Property SentTime As DateTime = DateTime.Now
     Public Property Status As String
-    Public Property MessageType As String
+    Public Property MessageType As String = "Recordatorio"
     Public Property RRULE As String = String.Empty
-
+    Public Property Attendees As New List(Of String)
+    Public Property Creator As String
 End Class

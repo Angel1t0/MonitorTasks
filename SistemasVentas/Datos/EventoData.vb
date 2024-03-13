@@ -90,6 +90,7 @@ Public Class EventoData
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@EventID", evento.EventID)
                 comando.Parameters.AddWithValue("@CalendarID", evento.CalendarID)
+                comando.Parameters.AddWithValue("@UserID", evento.UserID)
                 comando.Parameters.AddWithValue("@Summary", evento.Summary)
                 comando.Parameters.AddWithValue("@Location", evento.Location)
                 comando.Parameters.AddWithValue("@Description", evento.Description)
@@ -108,7 +109,8 @@ Public Class EventoData
         End Try
     End Sub
 
-    Public Sub InsertarAsistente(asistente As Asistente)
+    Public Function InsertarAsistente(asistente As Asistente) As Integer
+        Dim attendeeId As Integer = 0
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
@@ -118,14 +120,45 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@Email", asistente.Email)
                 comando.Parameters.AddWithValue("@DisplayName", asistente.DisplayName)
                 comando.Parameters.AddWithValue("@Status", asistente.Status)
-                comando.ExecuteNonQuery()
+
+                ' Ejecuta el comando y captura el AttendeeID generado
+                Dim result As Object = comando.ExecuteScalar()
+                If result IsNot Nothing Then
+                    attendeeId = Convert.ToInt32(result)
+                End If
             End Using
         Catch ex As SqlException
             Throw New ApplicationException("Error al insertar el asistente en la base de datos.", ex)
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado al insertar el asistente.", ex)
         End Try
+        Return attendeeId
+    End Function
+
+    Public Sub InsertarMensaje(mensaje As Mensaje)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarMensaje", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@EventID", mensaje.EventID)
+                comando.Parameters.AddWithValue("@AttendeeID", mensaje.AttendeeID)
+                comando.Parameters.AddWithValue("@EmailSent", mensaje.EmailSent)
+                comando.Parameters.AddWithValue("@WhatsAppSent", mensaje.WhatsAppSent)
+                comando.Parameters.AddWithValue("@DesktopSent", mensaje.DesktopSent)
+                comando.Parameters.AddWithValue("@SentTime", mensaje.SentTime)
+                comando.Parameters.AddWithValue("@Status", mensaje.Status)
+                comando.Parameters.AddWithValue("@MessageType", mensaje.MessageType)
+                comando.Parameters.AddWithValue("@RRULE", mensaje.RRULE)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar el mensaje en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar el mensaje.", ex)
+        End Try
     End Sub
+
 
     Public Sub InsertarNotificacion(notificacion As Notificacion)
         Try
@@ -270,6 +303,29 @@ Public Class EventoData
         End Try
     End Sub
 
+    Public Sub ActualizarMensaje(mensaje As Mensaje)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("editarMensaje", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@EventID", mensaje.EventID)
+                comando.Parameters.AddWithValue("@EmailSent", mensaje.EmailSent)
+                comando.Parameters.AddWithValue("@WhatsAppSent", mensaje.WhatsAppSent)
+                comando.Parameters.AddWithValue("@DesktopSent", mensaje.DesktopSent)
+                comando.Parameters.AddWithValue("@SentTime", mensaje.SentTime)
+                comando.Parameters.AddWithValue("@Status", mensaje.Status)
+                comando.Parameters.AddWithValue("@MessageType", mensaje.MessageType)
+                comando.Parameters.AddWithValue("@RRULE", mensaje.RRULE)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al actualizar el mensaje en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al actualizar el mensaje.", ex)
+        End Try
+    End Sub
+
     Public Sub ActualizarNotificacion(notificacion As Notificacion)
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
@@ -391,4 +447,22 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al eliminar todas las notificaciones.", ex)
         End Try
     End Sub
+
+    Public Function BuscarUserID(correo As String) As Integer
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("buscarUserIDPorCorreo", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", correo)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al buscar el ID del usuario.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al buscar el ID del usuario.", ex)
+        End Try
+    End Function
+
+
 End Class
