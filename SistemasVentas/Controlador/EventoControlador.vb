@@ -34,12 +34,18 @@ Public Class EventoControlador
     End Sub
 
     Public Sub CrearMensaje(mensaje As Mensaje)
-        _datosEvento.InsertarMensaje(mensaje)
+        For Each attendee In mensaje.Attendees
+            mensaje.AttendeeID = BuscarUserID(attendee)
+            _datosEvento.InsertarMensaje(mensaje)
+        Next
         EnviarEmail(mensaje)
     End Sub
 
     Public Sub ActualizarMensaje(mensaje As Mensaje)
-        _datosEvento.ActualizarMensaje(mensaje)
+        For Each attendee In mensaje.Attendees
+            mensaje.AttendeeID = BuscarUserID(attendee)
+            _datosEvento.ActualizarMensaje(mensaje)
+        Next
         EnviarEmail(mensaje)
     End Sub
 
@@ -89,9 +95,9 @@ Public Class EventoControlador
 
     Public Async Sub AgregarInformacionEvento(evento As Evento, IsNew As Boolean)
         Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
-        If IsNew Then
+        If IsNew And evento.Attendees.Count > 0 Then
             CrearMensaje(evento.Message)
-        Else
+        ElseIf Not IsNew And evento.Attendees.Count > 0 Then
             ActualizarMensaje(evento.Message)
         End If
         Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)

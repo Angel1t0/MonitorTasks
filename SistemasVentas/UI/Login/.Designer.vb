@@ -42,9 +42,9 @@ Partial Class Login
         Me.btnVer = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnNoVer = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvRevisar = New System.Windows.Forms.DataGridView()
         Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.panelRecuperar = New System.Windows.Forms.Panel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.lbVolver = New System.Windows.Forms.Label()
@@ -86,8 +86,9 @@ Partial Class Login
         Me.BtnCerrar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnCerrar.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.BtnCerrar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.WindowClose
+        Me.BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.TimesRectangle
         Me.BtnCerrar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnCerrar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnCerrar.IconSize = 30
         Me.BtnCerrar.Location = New System.Drawing.Point(516, 8)
         Me.BtnCerrar.Name = "BtnCerrar"
@@ -102,6 +103,7 @@ Partial Class Login
         Me.BtnMaximizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.BtnMaximizar.IconChar = FontAwesome.Sharp.IconChar.WindowMaximize
         Me.BtnMaximizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMaximizar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnMaximizar.IconSize = 30
         Me.BtnMaximizar.Location = New System.Drawing.Point(466, 8)
         Me.BtnMaximizar.Name = "BtnMaximizar"
@@ -116,6 +118,7 @@ Partial Class Login
         Me.BtnMinimizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.BtnMinimizar.IconChar = FontAwesome.Sharp.IconChar.WindowMinimize
         Me.BtnMinimizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMinimizar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnMinimizar.IconSize = 30
         Me.BtnMinimizar.Location = New System.Drawing.Point(415, 8)
         Me.BtnMinimizar.Name = "BtnMinimizar"
@@ -190,11 +193,11 @@ Partial Class Login
         '
         Me.txtPass.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.txtPass.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtPass.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPass.Location = New System.Drawing.Point(32, 185)
+        Me.txtPass.Font = New System.Drawing.Font("Arial", 13.0!)
+        Me.txtPass.Location = New System.Drawing.Point(32, 182)
         Me.txtPass.Name = "txtPass"
         Me.txtPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPass.Size = New System.Drawing.Size(366, 23)
+        Me.txtPass.Size = New System.Drawing.Size(366, 25)
         Me.txtPass.TabIndex = 5
         '
         'Panel4
@@ -209,10 +212,10 @@ Partial Class Login
         '
         Me.txtLogin.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.txtLogin.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtLogin.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLogin.Location = New System.Drawing.Point(28, 91)
+        Me.txtLogin.Font = New System.Drawing.Font("Arial", 13.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtLogin.Location = New System.Drawing.Point(28, 87)
         Me.txtLogin.Name = "txtLogin"
-        Me.txtLogin.Size = New System.Drawing.Size(423, 23)
+        Me.txtLogin.Size = New System.Drawing.Size(423, 26)
         Me.txtLogin.TabIndex = 2
         '
         'Label3
@@ -277,6 +280,19 @@ Partial Class Login
         Me.Panel2.Size = New System.Drawing.Size(540, 95)
         Me.Panel2.TabIndex = 0
         '
+        'Label1
+        '
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Left
+        Me.Label1.Font = New System.Drawing.Font("Arial", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(82, Byte), Integer))
+        Me.Label1.Location = New System.Drawing.Point(0, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Padding = New System.Windows.Forms.Padding(40, 20, 0, 0)
+        Me.Label1.Size = New System.Drawing.Size(540, 95)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "INICIO DE SESIÓN"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'dgvRevisar
         '
         Me.dgvRevisar.AllowUserToAddRows = False
@@ -317,25 +333,12 @@ Partial Class Login
         Me.Eli.ReadOnly = True
         Me.Eli.Width = 125
         '
-        'Label1
-        '
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.Label1.Font = New System.Drawing.Font("Arial", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(82, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(0, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Padding = New System.Windows.Forms.Padding(40, 20, 0, 0)
-        Me.Label1.Size = New System.Drawing.Size(540, 95)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "INICIO DE SESIÓN"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
         'panelRecuperar
         '
         Me.panelRecuperar.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.panelRecuperar.Controls.Add(Me.Panel7)
         Me.panelRecuperar.Controls.Add(Me.Panel10)
-        Me.panelRecuperar.Location = New System.Drawing.Point(11, 99)
+        Me.panelRecuperar.Location = New System.Drawing.Point(10, 136)
         Me.panelRecuperar.Name = "panelRecuperar"
         Me.panelRecuperar.Size = New System.Drawing.Size(540, 405)
         Me.panelRecuperar.TabIndex = 2
@@ -406,10 +409,10 @@ Partial Class Login
         '
         Me.txtRecuperacion.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.txtRecuperacion.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtRecuperacion.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtRecuperacion.Font = New System.Drawing.Font("Arial", 13.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRecuperacion.Location = New System.Drawing.Point(32, 76)
         Me.txtRecuperacion.Name = "txtRecuperacion"
-        Me.txtRecuperacion.Size = New System.Drawing.Size(423, 23)
+        Me.txtRecuperacion.Size = New System.Drawing.Size(423, 26)
         Me.txtRecuperacion.TabIndex = 5
         '
         'Label6

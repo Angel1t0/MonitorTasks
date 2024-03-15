@@ -20,7 +20,7 @@ Public Class GoogleServicesAuthenticator
         Using stream As New FileStream(ClientSecretPath, FileMode.Open, FileAccess.Read)
             Try
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
+                    GoogleClientSecrets.FromStream(stream).Secrets,
                     Scopes,
                     "user",
                     CancellationToken.None,

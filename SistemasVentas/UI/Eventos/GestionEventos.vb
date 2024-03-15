@@ -1,16 +1,12 @@
-﻿Imports System.Windows.Forms.Design
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement
-Imports Google.Apis.Calendar.v3
-Imports Google.Apis.Calendar.v3.Data
-
+﻿
 Public Class GestionEventos
     ' Controlador para manejar la lógica de negocio y la comunicación con Google Calendar.
     Private _controlador As New EventoControlador()
     Private _servicioGoogleCalendar As New GoogleCalendarService()
 
     ' Propiedades para almacenar información relevante del evento y el ID del calendario seleccionado.
-    Public Property _CalendarioID As String
-    Public Property _UsuarioID As String
+    Public Property CalendarioID As String
+    Public Property UsuarioID As String
     Public Property EventoID As String
     Public Property ReminderID As New List(Of Integer)
     Public Property AsistenteID As Integer
@@ -21,6 +17,8 @@ Public Class GestionEventos
     Private mensaje As New Mensaje()
 
     Private Sub GestionEventos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'Dim determinarRecurrencia As New DeterminarRecurrencia()
+        'determinarRecurrencia.ParsearRRULE()
         CargarEventosEnDataGridView()
         PanelDatosBasicos.Visible = False
         PanelDatosRecurrencia.Visible = False
@@ -28,8 +26,8 @@ Public Class GestionEventos
         PanelNotificaciones.Visible = False
         CargarAsistentes()
         ConfigurarComponentes()
-        _controlador.GoogleCalendarID = _CalendarioID
-        _servicioGoogleCalendar.CalendarioID = _CalendarioID
+        _controlador.GoogleCalendarID = CalendarioID
+        _servicioGoogleCalendar.CalendarioID = CalendarioID
     End Sub
 
     ' Manejadores de Eventos
@@ -41,8 +39,8 @@ Public Class GestionEventos
     End Sub
 
     Private Sub LlenarCamposEventos(messageType As String)
-        evento.CalendarID = _CalendarioID
-        evento.UserID = _UsuarioID
+        evento.CalendarID = CalendarioID
+        evento.UserID = UsuarioID
         evento.Summary = txtEventName.TextBox1.Text
         evento.Location = txtEventUbicacion.TextBox1.Text
         evento.Description = txtEventDescrip.TextBox1.Text
@@ -155,7 +153,7 @@ Public Class GestionEventos
     End Sub
 
     Public Sub CargarEventosEnDataGridView()
-        dgvDataEventos.DataSource = _controlador.ObtenerEventos(_CalendarioID)
+        dgvDataEventos.DataSource = _controlador.ObtenerEventos(CalendarioID)
         labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventos.Rows.Count}"
         EstilizarTabla()
     End Sub
@@ -172,7 +170,6 @@ Public Class GestionEventos
             comboListaInvitados.Items.Add(invitado)
             evento.Attendees.Add(asistente)
             mensaje.Attendees.Add(invitado)
-            mensaje.AttendeeID = _controlador.BuscarUserID(invitado)
         Next
     End Sub
 
@@ -285,18 +282,16 @@ Public Class GestionEventos
         End If
         CrearEvento(False)
 
-        ' ACTUALIZAR MENSAJE EN BD
-
         evento.Message = mensaje
         _controlador.AgregarInformacionEvento(evento, False)
         MessageBox.Show("Evento actualizado correctamente")
+        CerrarVentanas()
         CargarEventosEnDataGridView()
     End Sub
 
     Private Sub btnAgregarAsistentes_Click(sender As Object, e As EventArgs) Handles btnAgregarAsistentes.Click
         CrearAsistente()
         AgregarListaInvitado()
-        evento.Message = mensaje
     End Sub
 
     Private Sub btnEliminarAsistentes_Click(sender As Object, e As EventArgs) Handles btnEliminarAsistentes.Click
@@ -318,9 +313,12 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnEnviarAPI_Click(sender As Object, e As EventArgs) Handles btnEnviarAPI.Click
+        evento.Message = mensaje
         _controlador.AgregarInformacionEvento(evento, True)
 
         MessageBox.Show("Evento creado exitosamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        CerrarVentanas()
+        CargarEventosEnDataGridView()
     End Sub
 
     Private Sub comboFrecuencia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboFrecuencia.SelectedIndexChanged
@@ -703,6 +701,7 @@ Public Class GestionEventos
         txtOcurrencias.Value = 1
         dateRecuFinal.Value = DateTime.Now
         comboInvitados.SelectedIndex = 0
+        comboListaInvitados.Items.Clear()
         comboMetodoRecordar.SelectedIndex = 0
         comboUnidades.SelectedIndex = 0
         numericUpCantidad.Value = 1
@@ -760,6 +759,13 @@ Public Class GestionEventos
         txtOcurrencias.Value = 1
         dateRecuFinal.Value = DateTime.Now
         comboRecurrencia.SelectedIndex = 0
+    End Sub
+
+    Private Sub CerrarVentanas()
+        PanelDatosBasicos.Visible = False
+        PanelAsistentes.Visible = False
+        PanelNotificaciones.Visible = False
+        panelEventos.Visible = True
     End Sub
 End Class
 

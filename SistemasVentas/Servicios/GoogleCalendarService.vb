@@ -1,11 +1,7 @@
 ﻿Imports Google.Apis.Auth.OAuth2
 Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
-Imports Google.Apis.Gmail.v1
 Imports Google.Apis.Services
-Imports Google.Apis.Util.Store
-Imports System.IO
-Imports System.Threading
 Imports System.Threading.Tasks
 
 ' Clase para manejar la autenticación y creación del servicio de Google Calendar.
@@ -232,9 +228,10 @@ Public Class GoogleCalendarService
         Try
             Dim request As EventsResource.ListRequest = service.Events.List(calendarId)
 
+
             request.ShowDeleted = False
             request.SingleEvents = False
-            request.TimeMin = "2024-01-01T00:00:00Z"
+            request.TimeMinDateTimeOffset = New DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             request.OrderBy = EventsResource.ListRequest.OrderByEnum.Updated
 
             Dim events As Events = Await request.ExecuteAsync()

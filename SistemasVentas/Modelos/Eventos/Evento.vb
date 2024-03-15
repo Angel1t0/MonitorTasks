@@ -41,12 +41,4 @@
         End If
         Return errores
     End Function
-
-    Public Function HayAsistentesDuplicados(asistente As Asistente) As Boolean
-        If Attendees.Any(Function(a) a.Email.Equals(asistente.Email, StringComparison.OrdinalIgnoreCase)) Then
-            Return True
-        End If
-        Attendees.Add(asistente)
-        Return False
-    End Function
 End Class
