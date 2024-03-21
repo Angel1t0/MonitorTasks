@@ -22,6 +22,11 @@ Public Class FormularioPrincipal
         Me.MaximizedBounds = Screen.PrimaryScreen.WorkingArea
     End Sub
 
+    Private Sub FormularioPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim gestionRecurrenciaMensajes As New GestionRecurrenciaMensajes(_CalendarioID)
+        gestionRecurrenciaMensajes.Iniciar()
+    End Sub
+
     ' Este metodo se encarga de resaltar el boton que se ha seleccionado
     Private Sub ActivateButton(senderBtn As Object, customColor As Color)
         If senderBtn IsNot Nothing Then
@@ -147,5 +152,6 @@ Public Class FormularioPrincipal
             FormBorderStyle = FormBorderStyle.Sizable
         End If
     End Sub
+
 
 End Class

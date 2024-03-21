@@ -146,7 +146,7 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@EmailSent", mensaje.EmailSent)
                 comando.Parameters.AddWithValue("@WhatsAppSent", mensaje.WhatsAppSent)
                 comando.Parameters.AddWithValue("@DesktopSent", mensaje.DesktopSent)
-                comando.Parameters.AddWithValue("@SentTime", mensaje.SentTime)
+                comando.Parameters.AddWithValue("@SentTime", DateTime.Now)
                 comando.Parameters.AddWithValue("@Status", mensaje.Status)
                 comando.Parameters.AddWithValue("@MessageType", mensaje.MessageType)
                 comando.Parameters.AddWithValue("@RRULE", mensaje.RRULE)
@@ -313,7 +313,6 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@EmailSent", mensaje.EmailSent)
                 comando.Parameters.AddWithValue("@WhatsAppSent", mensaje.WhatsAppSent)
                 comando.Parameters.AddWithValue("@DesktopSent", mensaje.DesktopSent)
-                comando.Parameters.AddWithValue("@SentTime", mensaje.SentTime)
                 comando.Parameters.AddWithValue("@Status", mensaje.Status)
                 comando.Parameters.AddWithValue("@MessageType", mensaje.MessageType)
                 comando.Parameters.AddWithValue("@RRULE", mensaje.RRULE)
@@ -366,7 +365,7 @@ Public Class EventoData
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
-                Dim comando As New SqlCommand("SELECT * FROM Asistentes", conexion)
+                Dim comando As New SqlCommand("SELECT * FROM Asistentes WHERE Status <> 'Eliminado'", conexion)
                 'comando.CommandType = CommandType.StoredProcedure
                 Dim reader As SqlDataReader = comando.ExecuteReader
                 While (reader.Read())
@@ -464,5 +463,84 @@ Public Class EventoData
         End Try
     End Function
 
+    Public Function ObtenerEventosYMensajes(calendarID As String) As List(Of EventoYMensajes)
+        Dim eventoYMensajes As New List(Of EventoYMensajes)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Console.WriteLine("Conectado a la base de datos")
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerEventosYMensajes", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@CalendarID", calendarID)
+                Dim reader As SqlDataReader = comando.ExecuteReader
+                While (reader.Read())
+                    If Not IsDBNull(reader("MessageID")) Then
+                        Dim eventoYMensajesData As New EventoYMensajes()
 
+                        Dim eventID As String = reader("EventID").ToString()
+                        Dim evento As New Evento With {
+                            .EventID = eventID,
+                            .CalendarID = calendarID,
+                            .UserID = reader("UserID").ToString(),
+                            .Summary = reader("Summary").ToString(),
+                            .Location = reader("Location").ToString(),
+                            .Description = reader("Description").ToString(),
+                            .StartDateTime = reader("StartDateTime"),
+                            .EndDateTime = reader("EndDateTime"),
+                            .RRULE = reader("MessageRRULE").ToString(),
+                            .Visibility = reader("Visibility").ToString(),
+                            .Transparency = reader("Transparency").ToString(),
+                            .LastModified = reader("LastModified"),
+                            .CreatorPhone = reader("CreatorPhone").ToString()
+                        }
+                        eventoYMensajesData.Evento = evento
+                        Dim mensaje As New Mensaje With {
+                            .EventID = eventID,
+                            .MessageID = reader("MessageID").ToString(),
+                            .AttendeeID = reader("AttendeeID").ToString(),
+                            .Title = reader("Summary").ToString(),
+                            .Description = reader("Description").ToString(),
+                            .StartDateTime = reader("StartDateTime"),
+                            .EndDateTime = reader("EndDateTime"),
+                            .WhatsAppSent = reader("WhatsAppSent"),
+                            .DesktopSent = reader("DesktopSent"),
+                            .SentTime = reader("SentTime"),
+                            .Status = reader("Status").ToString(),
+                            .RRULE = reader("MessageRRULE").ToString()
+                        }
+                        mensaje.Attendees.Add(New Asistente() With {
+                            .Email = reader("AttendeeEmail").ToString(),
+                            .PhoneNumber = reader("AttendeePhone").ToString()
+                        })
+
+                        eventoYMensajesData.Mensaje = mensaje
+
+                        eventoYMensajes.Add(eventoYMensajesData)
+                    End If
+                End While
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener eventos y mensajes de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener eventos y mensajes.", ex)
+        End Try
+        Return eventoYMensajes
+    End Function
+
+    Friend Sub ActualizarFechaEnvio(messageID As Integer, sentTime As Date)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("actualizarFechaEnvio", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@MessageID", messageID)
+                comando.Parameters.AddWithValue("@SentTime", sentTime)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al actualizar la fecha de envío en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al actualizar la fecha de envío.", ex)
+        End Try
+    End Sub
 End Class

@@ -9,10 +9,10 @@
     Public Property EmailSent As Boolean = 0
     Public Property WhatsAppSent As Boolean = 0
     Public Property DesktopSent As Boolean = 0
-    Public Property SentTime As DateTime = DateTime.Now
-    Public Property Status As String
+    Public Property SentTime As DateTime
+    Public Property Status As String = "Activo"
     Public Property MessageType As String = "Recordatorio"
     Public Property RRULE As String = String.Empty
-    Public Property Attendees As New List(Of String)
+    Public Property Attendees As New List(Of Asistente)
     Public Property Creator As String
 End Class

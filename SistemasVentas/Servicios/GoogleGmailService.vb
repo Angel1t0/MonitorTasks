@@ -22,12 +22,13 @@ Public Class GoogleGmailService
             .ApplicationName = ApplicationName
         })
 
-        Return service ' Devuelve el servicio autenticado para ser usado en otras partes de tu aplicación.
+        Return service ' Devuelve el servicio autenticado para ser usado en otras partes de la aplicación.
     End Function
 
     Public Sub EnviarMensajeMail(service As GmailService, mensaje As Mensaje)
         Dim emailBody As New StringBuilder()
-        Dim destinatarios As String = String.Join(",", mensaje.Attendees).Trim() ' Asegúrate de que no hay espacios después de las comas
+        Dim destinatarios As String = String.Join(",", mensaje.Attendees.Select(Function(a) a.Email).ToArray())
+        destinatarios = destinatarios.Trim() ' No hay espacios después de las comas
 
         emailBody.AppendLine("To: " & destinatarios)
         emailBody.AppendLine("Subject: " & mensaje.Title & " - " & mensaje.MessageType)

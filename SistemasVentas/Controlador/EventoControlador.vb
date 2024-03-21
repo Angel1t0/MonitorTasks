@@ -7,6 +7,8 @@ Public Class EventoControlador
     Private _googleServicesAuthenticator As GoogleServicesAuthenticator
     Private _servicioGoogleCalendar As GoogleCalendarService
     Private _servicioGoogleGmail As GoogleGmailService
+    Private _servicioWhatsapp As WhatsAppService
+    Private _servicioDesktop As DesktopService
     Private _datosEvento As EventoData
     Public Property GoogleEventID As String = String.Empty
     Public Property GoogleCalendarID As String
@@ -15,6 +17,8 @@ Public Class EventoControlador
         _googleServicesAuthenticator = New GoogleServicesAuthenticator()
         _servicioGoogleCalendar = New GoogleCalendarService()
         _servicioGoogleGmail = New GoogleGmailService()
+        _servicioWhatsapp = New WhatsAppService()
+        _servicioDesktop = New DesktopService()
         _datosEvento = New EventoData()
     End Sub
 
@@ -28,25 +32,29 @@ Public Class EventoControlador
             _datosEvento.InsertarEvento(evento)
 
         Else
-            ' FALTA IMPLEMENTAR CUANDO SE ACTUALIZA UN EVENTO Y CAMBIAN LOS CAMPOS DE TITULO, DESCRIPCIÓN, ETC. PARA EL MENSAJE
             _datosEvento.ActualizarEvento(evento)
         End If
     End Sub
 
     Public Sub CrearMensaje(mensaje As Mensaje)
         For Each attendee In mensaje.Attendees
-            mensaje.AttendeeID = BuscarUserID(attendee)
+            mensaje.AttendeeID = BuscarUserID(attendee.Email)
             _datosEvento.InsertarMensaje(mensaje)
         Next
         EnviarEmail(mensaje)
+        'EnviarWhatsApp("+17249465054", mensaje)
+        EnviarNotificacionDesktop(mensaje)
     End Sub
 
     Public Sub ActualizarMensaje(mensaje As Mensaje)
         For Each attendee In mensaje.Attendees
-            mensaje.AttendeeID = BuscarUserID(attendee)
+            mensaje.AttendeeID = BuscarUserID(attendee.Email)
             _datosEvento.ActualizarMensaje(mensaje)
         Next
         EnviarEmail(mensaje)
+        ' Tiene limite de mensajes
+        ' EnviarWhatsApp("+17249465054", mensaje)
+        EnviarNotificacionDesktop(mensaje)
     End Sub
 
     Public Function CrearRecurrencia(recurrencia As Recurrencia) As Boolean
@@ -108,6 +116,14 @@ Public Class EventoControlador
         _servicioGoogleGmail.EnviarMensajeMail(service, mensaje)
     End Sub
 
+    Public Sub EnviarWhatsApp(creatorPhone As String, mensaje As Mensaje)
+        _servicioWhatsapp.EnviarMensajeWhatsapp(creatorPhone, mensaje)
+    End Sub
+
+    Public Sub EnviarNotificacionDesktop(mensaje As Mensaje)
+        _servicioDesktop.EnviarNotificacionDesktop(mensaje)
+    End Sub
+
     Public Async Function ObtenerEventosAsync() As Task(Of IList(Of [Event]))
         Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
 
@@ -115,8 +131,8 @@ Public Class EventoControlador
         Return eventosGoogle
     End Function
 
-    Public Function ObtenerEventosLocales() As List(Of Evento)
-        Dim eventosTable As DataTable = _datosEvento.MostrarEventos(GoogleCalendarID)
+    Public Function ObtenerEventosLocales(calendarID As String) As List(Of Evento)
+        Dim eventosTable As DataTable = _datosEvento.MostrarEventos(calendarID)
         Dim asistentes As List(Of Asistente) = _datosEvento.ObtenerTodosAsistentes()
         Dim notificaciones As List(Of Notificacion) = _datosEvento.ObtenerTodasNotificaciones()
 
@@ -125,7 +141,7 @@ Public Class EventoControlador
 
     Public Async Function SincronizarEventosAsync() As Task(Of IList(Of [Event]))
         Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
-        Dim eventosLocales As List(Of Evento) = ObtenerEventosLocales()
+        Dim eventosLocales As List(Of Evento) = ObtenerEventosLocales(GoogleCalendarID)
         Dim eventosGoogle As IList(Of [Event]) = Await ObtenerEventosAsync()
 
         _servicioGoogleCalendar.SincronizarEventos(eventosGoogle, eventosLocales)
@@ -201,4 +217,12 @@ Public Class EventoControlador
     Public Function BuscarUserID(invitado As String) As Integer
         Return _datosEvento.BuscarUserID(invitado)
     End Function
+
+    Public Function ObtenerEventosYMensajes(calendarID As String) As List(Of EventoYMensajes)
+        Return _datosEvento.ObtenerEventosYMensajes(calendarID)
+    End Function
+
+    Public Sub ActualizarFechaEnvio(messageID As Integer, sentTime As DateTime)
+        _datosEvento.ActualizarFechaEnvio(messageID, sentTime)
+    End Sub
 End Class

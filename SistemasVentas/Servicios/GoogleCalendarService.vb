@@ -99,6 +99,7 @@ Public Class GoogleCalendarService
                     If eventoGoogle.Attendees IsNot Nothing Then
                         For Each asistenteGoogle In eventoGoogle.Attendees
                             _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteGoogle.Email})
+                            _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .AttendeeID = _datosEvento.BuscarUserID(asistenteGoogle.Email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                         Next
                     End If
 
@@ -130,6 +131,7 @@ Public Class GoogleCalendarService
                             ' Agregar todos los asistentes de Google al evento local
                             For Each email In googleAttendeesEmails
                                 _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
+                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .AttendeeID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                             Next
                         Else
                             Dim localAttendeesEmails = eventoLocal.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
@@ -137,6 +139,7 @@ Public Class GoogleCalendarService
                             ' Identificar y agregar nuevos asistentes
                             For Each email In googleAttendeesEmails.Except(localAttendeesEmails)
                                 _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
+                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .AttendeeID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                             Next
 
                             ' Identificar y eliminar asistentes que ya no están en Google
@@ -197,7 +200,6 @@ Public Class GoogleCalendarService
             .Transparency = eventoGoogle.Transparency,
             .LastModified = eventoGoogle.Updated
             }
-
 
             If evento.Visibility Is Nothing Then
                 evento.Visibility = "default" ' Valor predeterminado

@@ -10,6 +10,7 @@ Public Class GestionEventos
     Public Property EventoID As String
     Public Property ReminderID As New List(Of Integer)
     Public Property AsistenteID As Integer
+    Private _actualizarPanelRecurrencia As Boolean = True
 
     ' Instancias de los modelos para manejar la información del evento y su recurrencia.
     Private evento As New Evento()
@@ -28,6 +29,7 @@ Public Class GestionEventos
         ConfigurarComponentes()
         _controlador.GoogleCalendarID = CalendarioID
         _servicioGoogleCalendar.CalendarioID = CalendarioID
+        MessageBox.Show(Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID"))
     End Sub
 
     ' Manejadores de Eventos
@@ -104,7 +106,7 @@ Public Class GestionEventos
         _controlador.InsertarAsistente(asistente, Me)
         mensaje.AttendeeID = AsistenteID
         evento.Attendees.Add(asistente)
-        mensaje.Attendees.Add(asistente.Email)
+        mensaje.Attendees.Add(asistente)
         MessageBox.Show("Asistente agregado correctamente")
     End Sub
 
@@ -169,7 +171,7 @@ Public Class GestionEventos
             }
             comboListaInvitados.Items.Add(invitado)
             evento.Attendees.Add(asistente)
-            mensaje.Attendees.Add(invitado)
+            mensaje.Attendees.Add(asistente)
         Next
     End Sub
 
@@ -221,7 +223,7 @@ Public Class GestionEventos
         _controlador.EliminarAsistente(asistente)
         If evento.Attendees.Count > 0 Then
             evento.Attendees.RemoveAll(Function(a) a.Email.Equals(correo, StringComparison.OrdinalIgnoreCase))
-            mensaje.Attendees.RemoveAll(Function(a) a.Equals(correo, StringComparison.OrdinalIgnoreCase))
+            mensaje.Attendees.RemoveAll(Function(a) a.Email.Equals(correo, StringComparison.OrdinalIgnoreCase))
         End If
         comboListaInvitados.Items.Remove(correo)
         MessageBox.Show("Asistente eliminado correctamente")
@@ -533,6 +535,7 @@ Public Class GestionEventos
         'RECURRENCIA
         Dim rrule = dgvDataEventos.SelectedCells.Item(7).Value.ToString()
         CargarRecurrenciaDesdeRRULE(rrule)
+        PrepararComboRecurrencia(rrule)
 
         'ASITENTES
         CargarListaInvitados(EventoID)
@@ -730,14 +733,31 @@ Public Class GestionEventos
         End Select
     End Function
 
-    Private Sub comboRecurrencia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboRecurrencia.SelectedIndexChanged
-        Dim indexSeleccionado As Integer = comboRecurrencia.SelectedIndex
-        If indexSeleccionado = 3 Then
-            PanelDatosRecurrencia.Visible = True
-            PanelDatosRecurrencia.BringToFront()
-            CentrarPanel(PanelDatosRecurrencia)
+    Private Sub PrepararComboRecurrencia(rrule As String)
+        _actualizarPanelRecurrencia = False
+        If rrule = "" Then
+            comboRecurrencia.SelectedIndex = 0
+        ElseIf rrule = "RRULE:FREQ=DAILY" Then
+            comboRecurrencia.SelectedIndex = 1
+        ElseIf rrule = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR" Then
+            comboRecurrencia.SelectedIndex = 2
+        Else
+            comboRecurrencia.SelectedIndex = 3
+        End If
+        _actualizarPanelRecurrencia = True
+    End Sub
 
-            PanelDatosBasicos.Visible = False
+    ' CHECAR ESTO RECURRENCIA
+    Private Sub comboRecurrencia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboRecurrencia.SelectedIndexChanged
+        If _actualizarPanelRecurrencia Then
+            Dim indexSeleccionado As Integer = comboRecurrencia.SelectedIndex
+            If indexSeleccionado = 3 Then
+                PanelDatosRecurrencia.Visible = True
+                PanelDatosRecurrencia.BringToFront()
+                CentrarPanel(PanelDatosRecurrencia)
+
+                PanelDatosBasicos.Visible = False
+            End If
         End If
     End Sub
 
@@ -758,7 +778,6 @@ Public Class GestionEventos
         rbtnFecha.Checked = False
         txtOcurrencias.Value = 1
         dateRecuFinal.Value = DateTime.Now
-        comboRecurrencia.SelectedIndex = 0
     End Sub
 
     Private Sub CerrarVentanas()

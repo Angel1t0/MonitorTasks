@@ -294,7 +294,7 @@ Partial Class GestionEventos
         Me.MenuStrip1.Location = New System.Drawing.Point(159, 366)
         Me.MenuStrip1.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(274, 44)
+        Me.MenuStrip1.Size = New System.Drawing.Size(272, 44)
         Me.MenuStrip1.TabIndex = 130
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -662,7 +662,7 @@ Partial Class GestionEventos
         Me.MenuStrip3.Location = New System.Drawing.Point(314, 554)
         Me.MenuStrip3.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip3.Name = "MenuStrip3"
-        Me.MenuStrip3.Size = New System.Drawing.Size(234, 44)
+        Me.MenuStrip3.Size = New System.Drawing.Size(232, 44)
         Me.MenuStrip3.TabIndex = 116
         Me.MenuStrip3.Text = "MenuStrip3"
         '
