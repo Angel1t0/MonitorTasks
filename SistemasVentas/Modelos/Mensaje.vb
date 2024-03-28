@@ -1,7 +1,7 @@
 ﻿Public Class Mensaje
     Public Property MessageID As Integer
     Public Property EventID As String
-    Public Property AttendeeID As Integer
+    Public Property UserID As Integer
     Public Property Title As String
     Public Property Description As String
     Public Property StartDateTime As DateTime

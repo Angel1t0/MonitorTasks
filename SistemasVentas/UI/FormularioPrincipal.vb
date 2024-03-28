@@ -99,6 +99,7 @@ Public Class FormularioPrincipal
     End Sub
     Private Sub BtnNotificaciones_Click(sender As Object, e As EventArgs) Handles BtnNotificaciones.Click
         ActivateButton(sender, Color.FromArgb(193, 110, 153))
+        OpenChildForm(New GestionMensajes(_CalendarioID))
     End Sub
     Private Sub BtnConfiguracion_Click(sender As Object, e As EventArgs) Handles BtnConfiguracion.Click
         ActivateButton(sender, Color.FromArgb(157, 173, 173))

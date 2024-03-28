@@ -56,7 +56,7 @@ Public Class GestionRecurrenciaMensajes
                         _eventoControlador.EnviarEmail(eventoYMensajes.Mensaje)
                         ' Tiene un limite de mensajes
                         '_eventoControlador.EnviarWhatsApp(eventoYMensajes.Evento.CreatorPhone, eventoYMensajes.Mensaje)
-                        _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje)
+                        _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje, eventoYMensajes.Evento.UserID)
 
                         _eventoControlador.ActualizarFechaEnvio(eventoYMensajes.Mensaje.MessageID, eventoYMensajes.Mensaje.SentTime)
                     End If

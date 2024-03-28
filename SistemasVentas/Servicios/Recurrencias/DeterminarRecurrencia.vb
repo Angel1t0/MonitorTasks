@@ -6,6 +6,7 @@ Imports Ical.Net.Serialization
 
 Public Class DeterminarRecurrencia
     Public Function ParsearRRULE(mensaje As Mensaje) As List(Of Occurrence)
+        Dim listaOcurriencias As New List(Of Occurrence)
         Try
             Dim calendarEvent = New CalendarEvent With {
                 .Start = New CalDateTime(mensaje.StartDateTime),
@@ -18,16 +19,16 @@ Public Class DeterminarRecurrencia
                 calendarEvent.RecurrenceRules.Add(recurrencePattern)
             End If
 
-            Dim occurrences = CalendarEvent.GetOccurrences(mensaje.StartDateTime, mensaje.EndDateTime)
-            Dim listaOcurriencias As New List(Of Occurrence)
+            Dim occurrences = calendarEvent.GetOccurrences(mensaje.StartDateTime, mensaje.EndDateTime)
+
             For Each occurrence In occurrences
                 ' Aquí tendrías que programar el envío del correo para cada fecha de ocurrencia
                 Dim fechaDeEnvio = occurrence.Period.StartTime.AsSystemLocal
                 listaOcurriencias.Add(occurrence)
             Next
-            Return listaOcurriencias
         Catch ex As Exception
             Console.WriteLine("Error al parsear la recurrencia: " & ex.Message)
         End Try
+        Return listaOcurriencias
     End Function
 End Class

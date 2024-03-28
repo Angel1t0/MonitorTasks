@@ -142,7 +142,7 @@ Public Class EventoData
                 Dim comando As New SqlCommand("insertarMensaje", conexion)
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@EventID", mensaje.EventID)
-                comando.Parameters.AddWithValue("@AttendeeID", mensaje.AttendeeID)
+                comando.Parameters.AddWithValue("@UserID", mensaje.UserID)
                 comando.Parameters.AddWithValue("@EmailSent", mensaje.EmailSent)
                 comando.Parameters.AddWithValue("@WhatsAppSent", mensaje.WhatsAppSent)
                 comando.Parameters.AddWithValue("@DesktopSent", mensaje.DesktopSent)
@@ -303,19 +303,21 @@ Public Class EventoData
         End Try
     End Sub
 
-    Public Sub ActualizarMensaje(mensaje As Mensaje)
+    Public Sub ActualizarMensaje(mensaje As Mensaje, aplicarATodos As Boolean)
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
                 Dim comando As New SqlCommand("editarMensaje", conexion)
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@EventID", mensaje.EventID)
+                comando.Parameters.AddWithValue("@UserID", mensaje.UserID)
                 comando.Parameters.AddWithValue("@EmailSent", mensaje.EmailSent)
                 comando.Parameters.AddWithValue("@WhatsAppSent", mensaje.WhatsAppSent)
                 comando.Parameters.AddWithValue("@DesktopSent", mensaje.DesktopSent)
+                comando.Parameters.AddWithValue("@SentTime", mensaje.SentTime)
                 comando.Parameters.AddWithValue("@Status", mensaje.Status)
-                comando.Parameters.AddWithValue("@MessageType", mensaje.MessageType)
-                comando.Parameters.AddWithValue("@RRULE", mensaje.RRULE)
+                comando.Parameters.AddWithValue("@MessageType", "Actualización")
+                comando.Parameters.AddWithValue("@AplicarATodos", aplicarATodos)
                 comando.ExecuteNonQuery()
             End Using
         Catch ex As SqlException
@@ -497,7 +499,7 @@ Public Class EventoData
                         Dim mensaje As New Mensaje With {
                             .EventID = eventID,
                             .MessageID = reader("MessageID").ToString(),
-                            .AttendeeID = reader("AttendeeID").ToString(),
+                            .UserID = reader("MessageUserID").ToString(),
                             .Title = reader("Summary").ToString(),
                             .Description = reader("Description").ToString(),
                             .StartDateTime = reader("StartDateTime"),
@@ -543,4 +545,51 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al actualizar la fecha de envío.", ex)
         End Try
     End Sub
+
+    Public Function ObtenerEventosConNotificacionesActivas(calendarioID As String) As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerEventosConNotificacionesActivas", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@CalendarID", calendarioID)
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar eventos de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar eventos.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerDatosNotificacion(eventID As String, userID As Integer) As Mensaje
+        Dim mensaje As New Mensaje()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerDatosNotificacion", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@EventID", eventID)
+                comando.Parameters.AddWithValue("@UserID", userID)
+                Dim reader As SqlDataReader = comando.ExecuteReader
+                While (reader.Read())
+                    mensaje.EventID = eventID
+                    mensaje.UserID = userID
+                    mensaje.EmailSent = reader("EmailSent")
+                    mensaje.WhatsAppSent = reader("WhatsAppSent")
+                    mensaje.DesktopSent = reader("DesktopSent")
+                    mensaje.SentTime = reader("SentTime")
+                End While
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener datos de la notificación de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener datos de la notificación.", ex)
+        End Try
+        Return mensaje
+    End Function
 End Class

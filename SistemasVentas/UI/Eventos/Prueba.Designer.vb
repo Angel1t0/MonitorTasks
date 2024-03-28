@@ -353,6 +353,7 @@ Partial Class Prueba
         Me.IconPictureBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
         Me.IconPictureBox1.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.IconPictureBox1.IconColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
+        Me.IconPictureBox1.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconPictureBox1.Location = New System.Drawing.Point(534, 15)
         Me.IconPictureBox1.Name = "IconPictureBox1"
         Me.IconPictureBox1.Size = New System.Drawing.Size(32, 32)
@@ -553,15 +554,14 @@ Partial Class Prueba
         Me.IconButton1.Cursor = System.Windows.Forms.Cursors.Hand
         Me.IconButton1.FlatAppearance.BorderSize = 0
         Me.IconButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.IconButton1.Flip = FontAwesome.Sharp.FlipOrientation.Normal
         Me.IconButton1.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.IconButton1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.IconButton1.IconChar = FontAwesome.Sharp.IconChar.None
         Me.IconButton1.IconColor = System.Drawing.Color.Black
+        Me.IconButton1.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconButton1.IconSize = 16
         Me.IconButton1.Location = New System.Drawing.Point(128, 292)
         Me.IconButton1.Name = "IconButton1"
-        Me.IconButton1.Rotation = 0R
         Me.IconButton1.Size = New System.Drawing.Size(163, 42)
         Me.IconButton1.TabIndex = 114
         Me.IconButton1.Text = "Continuar/Omitir"
@@ -592,15 +592,14 @@ Partial Class Prueba
         Me.IconButton3.Cursor = System.Windows.Forms.Cursors.Hand
         Me.IconButton3.FlatAppearance.BorderSize = 0
         Me.IconButton3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.IconButton3.Flip = FontAwesome.Sharp.FlipOrientation.Normal
         Me.IconButton3.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.IconButton3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.IconButton3.IconChar = FontAwesome.Sharp.IconChar.None
         Me.IconButton3.IconColor = System.Drawing.Color.Black
+        Me.IconButton3.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconButton3.IconSize = 16
         Me.IconButton3.Location = New System.Drawing.Point(128, 218)
         Me.IconButton3.Name = "IconButton3"
-        Me.IconButton3.Rotation = 0R
         Me.IconButton3.Size = New System.Drawing.Size(163, 42)
         Me.IconButton3.TabIndex = 121
         Me.IconButton3.Text = "Agregar Asistente"
@@ -612,6 +611,7 @@ Partial Class Prueba
         Me.IconPictureBox3.ForeColor = System.Drawing.Color.Red
         Me.IconPictureBox3.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.IconPictureBox3.IconColor = System.Drawing.Color.Red
+        Me.IconPictureBox3.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconPictureBox3.Location = New System.Drawing.Point(318, 159)
         Me.IconPictureBox3.Name = "IconPictureBox3"
         Me.IconPictureBox3.Size = New System.Drawing.Size(32, 32)
@@ -666,6 +666,7 @@ Partial Class Prueba
         Me.IconPictureBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
         Me.IconPictureBox2.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.IconPictureBox2.IconColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
+        Me.IconPictureBox2.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconPictureBox2.Location = New System.Drawing.Point(358, 15)
         Me.IconPictureBox2.Name = "IconPictureBox2"
         Me.IconPictureBox2.Size = New System.Drawing.Size(32, 32)
@@ -823,6 +824,7 @@ Partial Class Prueba
         Me.IconPictureBox5.ForeColor = System.Drawing.Color.Red
         Me.IconPictureBox5.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.IconPictureBox5.IconColor = System.Drawing.Color.Red
+        Me.IconPictureBox5.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconPictureBox5.Location = New System.Drawing.Point(336, 104)
         Me.IconPictureBox5.Name = "IconPictureBox5"
         Me.IconPictureBox5.Size = New System.Drawing.Size(32, 32)
@@ -867,6 +869,7 @@ Partial Class Prueba
         Me.IconPictureBox4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
         Me.IconPictureBox4.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.IconPictureBox4.IconColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
+        Me.IconPictureBox4.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.IconPictureBox4.Location = New System.Drawing.Point(422, 15)
         Me.IconPictureBox4.Name = "IconPictureBox4"
         Me.IconPictureBox4.Size = New System.Drawing.Size(32, 32)

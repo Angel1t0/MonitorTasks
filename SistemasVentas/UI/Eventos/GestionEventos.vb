@@ -29,7 +29,6 @@ Public Class GestionEventos
         ConfigurarComponentes()
         _controlador.GoogleCalendarID = CalendarioID
         _servicioGoogleCalendar.CalendarioID = CalendarioID
-        MessageBox.Show(Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID"))
     End Sub
 
     ' Manejadores de Eventos
@@ -103,10 +102,8 @@ Public Class GestionEventos
             MessageBox.Show("El asistente ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        _controlador.InsertarAsistente(asistente, Me)
-        mensaje.AttendeeID = AsistenteID
+        _controlador.InsertarAsistente(asistente, mensaje)
         evento.Attendees.Add(asistente)
-        mensaje.Attendees.Add(asistente)
         MessageBox.Show("Asistente agregado correctamente")
     End Sub
 
@@ -262,7 +259,10 @@ Public Class GestionEventos
 
     Private Sub btnCrearEvento_Click(sender As Object, e As EventArgs) Handles btnCrearEvento.Click
         LlenarCamposEventos("Nuevo evento")
-        If Not DeterminarRecurrencia() Then
+        DeterminarRecurrencia()
+        Dim errores As List(Of String) = evento.ValidarCampos()
+        If errores.Count > 0 Then
+            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         _controlador.EnviarEventoAGoogleCalendar(evento)
@@ -279,19 +279,18 @@ Public Class GestionEventos
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
         LlenarCamposEventos("Actualización")
-        If Not DeterminarRecurrencia() Then
-            Return
-        End If
+        DeterminarRecurrencia()
         CrearEvento(False)
 
         evento.Message = mensaje
-        _controlador.AgregarInformacionEvento(evento, False)
+        _controlador.AgregarInformacionEvento(evento, UsuarioID)
         MessageBox.Show("Evento actualizado correctamente")
         CerrarVentanas()
         CargarEventosEnDataGridView()
     End Sub
 
     Private Sub btnAgregarAsistentes_Click(sender As Object, e As EventArgs) Handles btnAgregarAsistentes.Click
+        mensaje.EventID = EventoID
         CrearAsistente()
         AgregarListaInvitado()
     End Sub
@@ -316,7 +315,7 @@ Public Class GestionEventos
 
     Private Sub btnEnviarAPI_Click(sender As Object, e As EventArgs) Handles btnEnviarAPI.Click
         evento.Message = mensaje
-        _controlador.AgregarInformacionEvento(evento, True)
+        _controlador.AgregarInformacionEvento(evento, UsuarioID)
 
         MessageBox.Show("Evento creado exitosamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information)
         CerrarVentanas()
@@ -433,8 +432,9 @@ Public Class GestionEventos
 
         ' Configuración del DateTimePicker
         eventFechaInicio.Value = DateTime.Now
-        eventFechaFinal.Value = DateTime.Now
-        dateRecuFinal.Value = DateTime.Now
+        ' Quiero que la fecha final sea a final de año, y si por ejemplo, hoy es 31 de diciembre, que la fecha final sea el 31 de diciembre del año siguiente.
+        eventFechaFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
+        dateRecuFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
 
         ' Configuración del NumericUpDown
         numericUpCantidad.Minimum = 1
@@ -682,6 +682,12 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnContinuarActualizar_Click(sender As Object, e As EventArgs) Handles btnContinuarActualizar.Click
+        LlenarCamposEventos("Actualización")
+        Dim errores As List(Of String) = evento.ValidarCampos()
+        If errores.Count > 0 Then
+            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
         PanelDatosBasicos.Visible = False
         PanelAsistentes.Visible = True
         PanelAsistentes.BringToFront()
@@ -693,7 +699,7 @@ Public Class GestionEventos
         txtEventUbicacion.TextBox1.Text = ""
         txtEventDescrip.TextBox1.Text = ""
         eventFechaInicio.Value = DateTime.Now
-        eventFechaFinal.Value = DateTime.Now
+        eventFechaFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
         comboEventVisibilidad.SelectedIndex = 0
         comboEventDispo.SelectedIndex = 0
         comboFrecuencia.SelectedIndex = 0
@@ -702,7 +708,7 @@ Public Class GestionEventos
         rbtnConteo.Checked = False
         rbtnFecha.Checked = False
         txtOcurrencias.Value = 1
-        dateRecuFinal.Value = DateTime.Now
+        dateRecuFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
         comboInvitados.SelectedIndex = 0
         comboListaInvitados.Items.Clear()
         comboMetodoRecordar.SelectedIndex = 0
@@ -717,12 +723,12 @@ Public Class GestionEventos
                 mensaje.RRULE = ""
                 Return True
             Case 1
-                evento.RRULE = "RRULE:FREQ=DAILY"
-                mensaje.RRULE = "RRULE:FREQ=DAILY"
+                evento.RRULE = "RRULE:FREQ=DAILY;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z"
+                mensaje.RRULE = "RRULE:FREQ=DAILY;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z"
                 Return True
             Case 2
-                evento.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
-                mensaje.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
+                evento.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z"
+                mensaje.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z"
                 Return True
             Case 3
                 Return CrearRecurrencia()
@@ -762,6 +768,9 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnListoRecurrencia_Click(sender As Object, e As EventArgs) Handles btnListoRecurrencia.Click
+        If Not DeterminarRecurrencia() Then
+            Return
+        End If
         PanelDatosRecurrencia.Visible = False
         PanelDatosBasicos.Visible = True
         CentrarPanel(PanelDatosBasicos)
@@ -777,7 +786,7 @@ Public Class GestionEventos
         rbtnConteo.Checked = False
         rbtnFecha.Checked = False
         txtOcurrencias.Value = 1
-        dateRecuFinal.Value = DateTime.Now
+        dateRecuFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
     End Sub
 
     Private Sub CerrarVentanas()

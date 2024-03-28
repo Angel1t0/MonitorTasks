@@ -24,33 +24,10 @@ Partial Class AcomodarFormularios
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AcomodarFormularios))
         Me.PanelDatosBasicos = New System.Windows.Forms.Panel()
-        Me.comboEventVisibilidad = New System.Windows.Forms.ComboBox()
-        Me.comboEventDispo = New System.Windows.Forms.ComboBox()
-        Me.eventFechaFinal = New System.Windows.Forms.DateTimePicker()
-        Me.eventFechaInicio = New System.Windows.Forms.DateTimePicker()
-        Me.txtEventDescrip = New System.Windows.Forms.TextBox()
-        Me.txtEventUbicacion = New System.Windows.Forms.TextBox()
-        Me.txtEventName = New System.Windows.Forms.TextBox()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.l = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.txtOcurrencias = New System.Windows.Forms.NumericUpDown()
-        Me.rbtnFecha = New System.Windows.Forms.RadioButton()
-        Me.rbtnConteo = New System.Windows.Forms.RadioButton()
-        Me.listDias = New System.Windows.Forms.CheckedListBox()
-        Me.dateRecuFinal = New System.Windows.Forms.DateTimePicker()
-        Me.comboFrecuencia = New System.Windows.Forms.ComboBox()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.btnVolver = New System.Windows.Forms.Button()
-        Me.btnGuardarEvento = New FontAwesome.Sharp.IconButton()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnVolverEvento = New System.Windows.Forms.Button()
+        Me.btnContinuar = New FontAwesome.Sharp.IconButton()
+        Me.btnAgregarAsistentes = New FontAwesome.Sharp.IconButton()
         Me.btnEliminarAsistentes = New System.Windows.Forms.Button()
         Me.comboListaInvitados = New System.Windows.Forms.ComboBox()
         Me.labelAsistente = New System.Windows.Forms.Label()
@@ -59,11 +36,8 @@ Partial Class AcomodarFormularios
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.btnAgregarAsistentes = New FontAwesome.Sharp.IconButton()
-        Me.btnContinuar = New FontAwesome.Sharp.IconButton()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.btnEnviarAPI = New FontAwesome.Sharp.IconButton()
-        Me.Label15 = New System.Windows.Forms.Label()
+        Me.btnVolverAsistente = New System.Windows.Forms.Button()
         Me.btnActualizarNotificacion = New System.Windows.Forms.Button()
         Me.btnEliminarNotificaciones = New System.Windows.Forms.Button()
         Me.comboListaNotificaciones = New System.Windows.Forms.ComboBox()
@@ -74,10 +48,20 @@ Partial Class AcomodarFormularios
         Me.comboMetodoRecordar = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.btnVolverEvento = New System.Windows.Forms.Button()
-        Me.btnVolverAsistente = New System.Windows.Forms.Button()
+        Me.btnEnviarAPI = New FontAwesome.Sharp.IconButton()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.dateSilenciar = New System.Windows.Forms.DateTimePicker()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.checkDesktop = New System.Windows.Forms.CheckBox()
+        Me.checkGmail = New System.Windows.Forms.CheckBox()
+        Me.checkWhatsapp = New System.Windows.Forms.CheckBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.btnGuardarNotificaciones = New FontAwesome.Sharp.IconButton()
+        Me.btnCancelar = New System.Windows.Forms.Button()
+        Me.comboUsuariosANotificar = New System.Windows.Forms.ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
         Me.PanelDatosBasicos.SuspendLayout()
-        CType(Me.txtOcurrencias, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.numericUpCantidad, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -86,307 +70,21 @@ Partial Class AcomodarFormularios
         'PanelDatosBasicos
         '
         Me.PanelDatosBasicos.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.PanelDatosBasicos.Controls.Add(Me.btnGuardarEvento)
-        Me.PanelDatosBasicos.Controls.Add(Me.btnVolver)
-        Me.PanelDatosBasicos.Controls.Add(Me.txtOcurrencias)
-        Me.PanelDatosBasicos.Controls.Add(Me.rbtnFecha)
-        Me.PanelDatosBasicos.Controls.Add(Me.rbtnConteo)
-        Me.PanelDatosBasicos.Controls.Add(Me.listDias)
-        Me.PanelDatosBasicos.Controls.Add(Me.dateRecuFinal)
-        Me.PanelDatosBasicos.Controls.Add(Me.comboFrecuencia)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label20)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label19)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label18)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label17)
-        Me.PanelDatosBasicos.Controls.Add(Me.comboEventVisibilidad)
-        Me.PanelDatosBasicos.Controls.Add(Me.comboEventDispo)
-        Me.PanelDatosBasicos.Controls.Add(Me.eventFechaFinal)
-        Me.PanelDatosBasicos.Controls.Add(Me.eventFechaInicio)
-        Me.PanelDatosBasicos.Controls.Add(Me.txtEventDescrip)
-        Me.PanelDatosBasicos.Controls.Add(Me.txtEventUbicacion)
-        Me.PanelDatosBasicos.Controls.Add(Me.txtEventName)
+        Me.PanelDatosBasicos.Controls.Add(Me.dateSilenciar)
+        Me.PanelDatosBasicos.Controls.Add(Me.Label3)
+        Me.PanelDatosBasicos.Controls.Add(Me.checkDesktop)
+        Me.PanelDatosBasicos.Controls.Add(Me.checkGmail)
+        Me.PanelDatosBasicos.Controls.Add(Me.checkWhatsapp)
+        Me.PanelDatosBasicos.Controls.Add(Me.Label2)
+        Me.PanelDatosBasicos.Controls.Add(Me.btnGuardarNotificaciones)
+        Me.PanelDatosBasicos.Controls.Add(Me.btnCancelar)
+        Me.PanelDatosBasicos.Controls.Add(Me.comboUsuariosANotificar)
         Me.PanelDatosBasicos.Controls.Add(Me.Label8)
         Me.PanelDatosBasicos.Controls.Add(Me.Label7)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label6)
-        Me.PanelDatosBasicos.Controls.Add(Me.l)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label4)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label3)
-        Me.PanelDatosBasicos.Controls.Add(Me.Label2)
-        Me.PanelDatosBasicos.Location = New System.Drawing.Point(45, 24)
+        Me.PanelDatosBasicos.Location = New System.Drawing.Point(476, 37)
         Me.PanelDatosBasicos.Name = "PanelDatosBasicos"
-        Me.PanelDatosBasicos.Size = New System.Drawing.Size(985, 533)
+        Me.PanelDatosBasicos.Size = New System.Drawing.Size(547, 446)
         Me.PanelDatosBasicos.TabIndex = 0
-        '
-        'comboEventVisibilidad
-        '
-        Me.comboEventVisibilidad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.comboEventVisibilidad.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.comboEventVisibilidad.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.comboEventVisibilidad.FormattingEnabled = True
-        Me.comboEventVisibilidad.Items.AddRange(New Object() {"Default", "Público", "Privado"})
-        Me.comboEventVisibilidad.Location = New System.Drawing.Point(163, 315)
-        Me.comboEventVisibilidad.Name = "comboEventVisibilidad"
-        Me.comboEventVisibilidad.Size = New System.Drawing.Size(132, 28)
-        Me.comboEventVisibilidad.TabIndex = 91
-        '
-        'comboEventDispo
-        '
-        Me.comboEventDispo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.comboEventDispo.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.comboEventDispo.FormattingEnabled = True
-        Me.comboEventDispo.Items.AddRange(New Object() {"Ocupado", "Disponible"})
-        Me.comboEventDispo.Location = New System.Drawing.Point(163, 375)
-        Me.comboEventDispo.Name = "comboEventDispo"
-        Me.comboEventDispo.Size = New System.Drawing.Size(121, 28)
-        Me.comboEventDispo.TabIndex = 97
-        '
-        'eventFechaFinal
-        '
-        Me.eventFechaFinal.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.eventFechaFinal.Location = New System.Drawing.Point(163, 258)
-        Me.eventFechaFinal.Name = "eventFechaFinal"
-        Me.eventFechaFinal.Size = New System.Drawing.Size(250, 26)
-        Me.eventFechaFinal.TabIndex = 96
-        '
-        'eventFechaInicio
-        '
-        Me.eventFechaInicio.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.eventFechaInicio.Location = New System.Drawing.Point(163, 197)
-        Me.eventFechaInicio.Name = "eventFechaInicio"
-        Me.eventFechaInicio.Size = New System.Drawing.Size(250, 26)
-        Me.eventFechaInicio.TabIndex = 95
-        '
-        'txtEventDescrip
-        '
-        Me.txtEventDescrip.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventDescrip.Location = New System.Drawing.Point(163, 145)
-        Me.txtEventDescrip.Name = "txtEventDescrip"
-        Me.txtEventDescrip.Size = New System.Drawing.Size(100, 26)
-        Me.txtEventDescrip.TabIndex = 94
-        '
-        'txtEventUbicacion
-        '
-        Me.txtEventUbicacion.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventUbicacion.Location = New System.Drawing.Point(163, 90)
-        Me.txtEventUbicacion.Name = "txtEventUbicacion"
-        Me.txtEventUbicacion.Size = New System.Drawing.Size(100, 26)
-        Me.txtEventUbicacion.TabIndex = 93
-        '
-        'txtEventName
-        '
-        Me.txtEventName.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventName.Location = New System.Drawing.Point(163, 38)
-        Me.txtEventName.Name = "txtEventName"
-        Me.txtEventName.Size = New System.Drawing.Size(100, 26)
-        Me.txtEventName.TabIndex = 92
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(42, 380)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(110, 20)
-        Me.Label8.TabIndex = 90
-        Me.Label8.Text = "Disponibilidad"
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(71, 320)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(81, 20)
-        Me.Label7.TabIndex = 89
-        Me.Label7.Text = "Visibilidad"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(37, 261)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(115, 20)
-        Me.Label6.TabIndex = 88
-        Me.Label6.Text = "Finalizar Fecha"
-        '
-        'l
-        '
-        Me.l.AutoSize = True
-        Me.l.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.l.Location = New System.Drawing.Point(56, 201)
-        Me.l.Name = "l"
-        Me.l.Size = New System.Drawing.Size(96, 20)
-        Me.l.TabIndex = 87
-        Me.l.Text = "Incio Fecha"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(56, 145)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(96, 20)
-        Me.Label4.TabIndex = 86
-        Me.Label4.Text = "Descripcion"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(67, 93)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(85, 20)
-        Me.Label3.TabIndex = 85
-        Me.Label3.Text = "Ubicacion"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(108, 41)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(44, 20)
-        Me.Label2.TabIndex = 84
-        Me.Label2.Text = "Titulo"
-        '
-        'txtOcurrencias
-        '
-        Me.txtOcurrencias.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOcurrencias.Location = New System.Drawing.Point(547, 373)
-        Me.txtOcurrencias.Maximum = New Decimal(New Integer() {2000, 0, 0, 0})
-        Me.txtOcurrencias.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.txtOcurrencias.Name = "txtOcurrencias"
-        Me.txtOcurrencias.Size = New System.Drawing.Size(102, 26)
-        Me.txtOcurrencias.TabIndex = 109
-        Me.txtOcurrencias.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'rbtnFecha
-        '
-        Me.rbtnFecha.AutoSize = True
-        Me.rbtnFecha.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.rbtnFecha.Location = New System.Drawing.Point(773, 292)
-        Me.rbtnFecha.Name = "rbtnFecha"
-        Me.rbtnFecha.Size = New System.Drawing.Size(88, 24)
-        Me.rbtnFecha.TabIndex = 108
-        Me.rbtnFecha.Text = "Hasta el"
-        Me.rbtnFecha.UseVisualStyleBackColor = True
-        '
-        'rbtnConteo
-        '
-        Me.rbtnConteo.AutoSize = True
-        Me.rbtnConteo.Checked = True
-        Me.rbtnConteo.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.rbtnConteo.Location = New System.Drawing.Point(547, 292)
-        Me.rbtnConteo.Name = "rbtnConteo"
-        Me.rbtnConteo.Size = New System.Drawing.Size(116, 24)
-        Me.rbtnConteo.TabIndex = 107
-        Me.rbtnConteo.TabStop = True
-        Me.rbtnConteo.Text = "Despues de"
-        Me.rbtnConteo.UseVisualStyleBackColor = True
-        '
-        'listDias
-        '
-        Me.listDias.Enabled = False
-        Me.listDias.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.listDias.FormattingEnabled = True
-        Me.listDias.Items.AddRange(New Object() {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"})
-        Me.listDias.Location = New System.Drawing.Point(638, 119)
-        Me.listDias.Name = "listDias"
-        Me.listDias.Size = New System.Drawing.Size(107, 151)
-        Me.listDias.TabIndex = 106
-        '
-        'dateRecuFinal
-        '
-        Me.dateRecuFinal.Enabled = False
-        Me.dateRecuFinal.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dateRecuFinal.Location = New System.Drawing.Point(683, 373)
-        Me.dateRecuFinal.Name = "dateRecuFinal"
-        Me.dateRecuFinal.Size = New System.Drawing.Size(265, 26)
-        Me.dateRecuFinal.TabIndex = 105
-        '
-        'comboFrecuencia
-        '
-        Me.comboFrecuencia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.comboFrecuencia.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.comboFrecuencia.FormattingEnabled = True
-        Me.comboFrecuencia.Items.AddRange(New Object() {"No repetir", "Diariamente", "Semanalmente", "Mensualmente", "Anualmente"})
-        Me.comboFrecuencia.Location = New System.Drawing.Point(717, 41)
-        Me.comboFrecuencia.Name = "comboFrecuencia"
-        Me.comboFrecuencia.Size = New System.Drawing.Size(121, 28)
-        Me.comboFrecuencia.TabIndex = 104
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(625, 90)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(142, 20)
-        Me.Label20.TabIndex = 103
-        Me.Label20.Text = "Dias de la semana"
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(760, 338)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(140, 20)
-        Me.Label19.TabIndex = 102
-        Me.Label19.Text = "Fecha finalizacion"
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.Location = New System.Drawing.Point(538, 338)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(159, 20)
-        Me.Label18.TabIndex = 101
-        Me.Label18.Text = "Conteo Ocurrencias"
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label17.Location = New System.Drawing.Point(525, 46)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(171, 20)
-        Me.Label17.TabIndex = 100
-        Me.Label17.Text = "Frecuencia repeticion"
-        '
-        'btnVolver
-        '
-        Me.btnVolver.BackColor = System.Drawing.Color.Transparent
-        Me.btnVolver.FlatAppearance.BorderSize = 0
-        Me.btnVolver.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnVolver.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnVolver.Location = New System.Drawing.Point(779, 446)
-        Me.btnVolver.Name = "btnVolver"
-        Me.btnVolver.Size = New System.Drawing.Size(121, 42)
-        Me.btnVolver.TabIndex = 110
-        Me.btnVolver.Text = "Volver"
-        Me.btnVolver.UseVisualStyleBackColor = False
-        '
-        'btnGuardarEvento
-        '
-        Me.btnGuardarEvento.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnGuardarEvento.FlatAppearance.BorderSize = 0
-        Me.btnGuardarEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnGuardarEvento.Flip = FontAwesome.Sharp.FlipOrientation.Normal
-        Me.btnGuardarEvento.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuardarEvento.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.btnGuardarEvento.IconChar = FontAwesome.Sharp.IconChar.None
-        Me.btnGuardarEvento.IconColor = System.Drawing.Color.Black
-        Me.btnGuardarEvento.IconSize = 16
-        Me.btnGuardarEvento.Location = New System.Drawing.Point(416, 446)
-        Me.btnGuardarEvento.Name = "btnGuardarEvento"
-        Me.btnGuardarEvento.Rotation = 0R
-        Me.btnGuardarEvento.Size = New System.Drawing.Size(111, 42)
-        Me.btnGuardarEvento.TabIndex = 111
-        Me.btnGuardarEvento.Text = "Guardar"
-        Me.btnGuardarEvento.UseVisualStyleBackColor = False
         '
         'Panel1
         '
@@ -406,6 +104,55 @@ Partial Class AcomodarFormularios
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(476, 428)
         Me.Panel1.TabIndex = 1
+        '
+        'btnVolverEvento
+        '
+        Me.btnVolverEvento.BackColor = System.Drawing.Color.Transparent
+        Me.btnVolverEvento.FlatAppearance.BorderSize = 0
+        Me.btnVolverEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnVolverEvento.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnVolverEvento.Location = New System.Drawing.Point(298, 357)
+        Me.btnVolverEvento.Name = "btnVolverEvento"
+        Me.btnVolverEvento.Size = New System.Drawing.Size(121, 42)
+        Me.btnVolverEvento.TabIndex = 115
+        Me.btnVolverEvento.Text = "Volver"
+        Me.btnVolverEvento.UseVisualStyleBackColor = False
+        '
+        'btnContinuar
+        '
+        Me.btnContinuar.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.btnContinuar.FlatAppearance.BorderSize = 0
+        Me.btnContinuar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnContinuar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnContinuar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnContinuar.IconChar = FontAwesome.Sharp.IconChar.None
+        Me.btnContinuar.IconColor = System.Drawing.Color.Black
+        Me.btnContinuar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnContinuar.IconSize = 16
+        Me.btnContinuar.Location = New System.Drawing.Point(58, 357)
+        Me.btnContinuar.Name = "btnContinuar"
+        Me.btnContinuar.Size = New System.Drawing.Size(145, 42)
+        Me.btnContinuar.TabIndex = 114
+        Me.btnContinuar.Text = "Continuar/Omitir"
+        Me.btnContinuar.UseVisualStyleBackColor = False
+        '
+        'btnAgregarAsistentes
+        '
+        Me.btnAgregarAsistentes.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnAgregarAsistentes.FlatAppearance.BorderSize = 0
+        Me.btnAgregarAsistentes.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAgregarAsistentes.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAgregarAsistentes.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.btnAgregarAsistentes.IconChar = FontAwesome.Sharp.IconChar.None
+        Me.btnAgregarAsistentes.IconColor = System.Drawing.Color.Black
+        Me.btnAgregarAsistentes.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnAgregarAsistentes.IconSize = 16
+        Me.btnAgregarAsistentes.Location = New System.Drawing.Point(169, 257)
+        Me.btnAgregarAsistentes.Name = "btnAgregarAsistentes"
+        Me.btnAgregarAsistentes.Size = New System.Drawing.Size(163, 42)
+        Me.btnAgregarAsistentes.TabIndex = 113
+        Me.btnAgregarAsistentes.Text = "Agregar Asistente"
+        Me.btnAgregarAsistentes.UseVisualStyleBackColor = False
         '
         'btnEliminarAsistentes
         '
@@ -491,44 +238,6 @@ Partial Class AcomodarFormularios
         Me.Label9.TabIndex = 104
         Me.Label9.Text = "ASISTENTES"
         '
-        'btnAgregarAsistentes
-        '
-        Me.btnAgregarAsistentes.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnAgregarAsistentes.FlatAppearance.BorderSize = 0
-        Me.btnAgregarAsistentes.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnAgregarAsistentes.Flip = FontAwesome.Sharp.FlipOrientation.Normal
-        Me.btnAgregarAsistentes.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAgregarAsistentes.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.btnAgregarAsistentes.IconChar = FontAwesome.Sharp.IconChar.None
-        Me.btnAgregarAsistentes.IconColor = System.Drawing.Color.Black
-        Me.btnAgregarAsistentes.IconSize = 16
-        Me.btnAgregarAsistentes.Location = New System.Drawing.Point(169, 257)
-        Me.btnAgregarAsistentes.Name = "btnAgregarAsistentes"
-        Me.btnAgregarAsistentes.Rotation = 0R
-        Me.btnAgregarAsistentes.Size = New System.Drawing.Size(163, 42)
-        Me.btnAgregarAsistentes.TabIndex = 113
-        Me.btnAgregarAsistentes.Text = "Agregar Asistente"
-        Me.btnAgregarAsistentes.UseVisualStyleBackColor = False
-        '
-        'btnContinuar
-        '
-        Me.btnContinuar.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.btnContinuar.FlatAppearance.BorderSize = 0
-        Me.btnContinuar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnContinuar.Flip = FontAwesome.Sharp.FlipOrientation.Normal
-        Me.btnContinuar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnContinuar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnContinuar.IconChar = FontAwesome.Sharp.IconChar.None
-        Me.btnContinuar.IconColor = System.Drawing.Color.Black
-        Me.btnContinuar.IconSize = 16
-        Me.btnContinuar.Location = New System.Drawing.Point(58, 357)
-        Me.btnContinuar.Name = "btnContinuar"
-        Me.btnContinuar.Rotation = 0R
-        Me.btnContinuar.Size = New System.Drawing.Size(145, 42)
-        Me.btnContinuar.TabIndex = 114
-        Me.btnContinuar.Text = "Continuar/Omitir"
-        Me.btnContinuar.UseVisualStyleBackColor = False
-        '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
@@ -545,39 +254,23 @@ Partial Class AcomodarFormularios
         Me.Panel2.Controls.Add(Me.Label14)
         Me.Panel2.Controls.Add(Me.btnEnviarAPI)
         Me.Panel2.Controls.Add(Me.Label15)
-        Me.Panel2.Location = New System.Drawing.Point(493, 588)
+        Me.Panel2.Location = New System.Drawing.Point(1054, 588)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(666, 428)
         Me.Panel2.TabIndex = 2
         '
-        'btnEnviarAPI
+        'btnVolverAsistente
         '
-        Me.btnEnviarAPI.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnEnviarAPI.FlatAppearance.BorderSize = 0
-        Me.btnEnviarAPI.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnEnviarAPI.Flip = FontAwesome.Sharp.FlipOrientation.Normal
-        Me.btnEnviarAPI.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEnviarAPI.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.btnEnviarAPI.IconChar = FontAwesome.Sharp.IconChar.None
-        Me.btnEnviarAPI.IconColor = System.Drawing.Color.Black
-        Me.btnEnviarAPI.IconSize = 16
-        Me.btnEnviarAPI.Location = New System.Drawing.Point(106, 332)
-        Me.btnEnviarAPI.Name = "btnEnviarAPI"
-        Me.btnEnviarAPI.Rotation = 0R
-        Me.btnEnviarAPI.Size = New System.Drawing.Size(163, 42)
-        Me.btnEnviarAPI.TabIndex = 113
-        Me.btnEnviarAPI.Text = "Finalizar"
-        Me.btnEnviarAPI.UseVisualStyleBackColor = False
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(258, 27)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(150, 19)
-        Me.Label15.TabIndex = 104
-        Me.Label15.Text = "NOTIFICACIONES"
+        Me.btnVolverAsistente.BackColor = System.Drawing.Color.Transparent
+        Me.btnVolverAsistente.FlatAppearance.BorderSize = 0
+        Me.btnVolverAsistente.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnVolverAsistente.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnVolverAsistente.Location = New System.Drawing.Point(439, 332)
+        Me.btnVolverAsistente.Name = "btnVolverAsistente"
+        Me.btnVolverAsistente.Size = New System.Drawing.Size(121, 42)
+        Me.btnVolverAsistente.TabIndex = 125
+        Me.btnVolverAsistente.Text = "Volver"
+        Me.btnVolverAsistente.UseVisualStyleBackColor = False
         '
         'btnActualizarNotificacion
         '
@@ -682,31 +375,165 @@ Partial Class AcomodarFormularios
         Me.Label14.TabIndex = 115
         Me.Label14.Text = "Metodo de recordatorio"
         '
-        'btnVolverEvento
+        'btnEnviarAPI
         '
-        Me.btnVolverEvento.BackColor = System.Drawing.Color.Transparent
-        Me.btnVolverEvento.FlatAppearance.BorderSize = 0
-        Me.btnVolverEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnVolverEvento.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnVolverEvento.Location = New System.Drawing.Point(298, 357)
-        Me.btnVolverEvento.Name = "btnVolverEvento"
-        Me.btnVolverEvento.Size = New System.Drawing.Size(121, 42)
-        Me.btnVolverEvento.TabIndex = 115
-        Me.btnVolverEvento.Text = "Volver"
-        Me.btnVolverEvento.UseVisualStyleBackColor = False
+        Me.btnEnviarAPI.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnEnviarAPI.FlatAppearance.BorderSize = 0
+        Me.btnEnviarAPI.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnEnviarAPI.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEnviarAPI.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.btnEnviarAPI.IconChar = FontAwesome.Sharp.IconChar.None
+        Me.btnEnviarAPI.IconColor = System.Drawing.Color.Black
+        Me.btnEnviarAPI.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnEnviarAPI.IconSize = 16
+        Me.btnEnviarAPI.Location = New System.Drawing.Point(106, 332)
+        Me.btnEnviarAPI.Name = "btnEnviarAPI"
+        Me.btnEnviarAPI.Size = New System.Drawing.Size(163, 42)
+        Me.btnEnviarAPI.TabIndex = 113
+        Me.btnEnviarAPI.Text = "Finalizar"
+        Me.btnEnviarAPI.UseVisualStyleBackColor = False
         '
-        'btnVolverAsistente
+        'Label15
         '
-        Me.btnVolverAsistente.BackColor = System.Drawing.Color.Transparent
-        Me.btnVolverAsistente.FlatAppearance.BorderSize = 0
-        Me.btnVolverAsistente.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnVolverAsistente.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnVolverAsistente.Location = New System.Drawing.Point(439, 332)
-        Me.btnVolverAsistente.Name = "btnVolverAsistente"
-        Me.btnVolverAsistente.Size = New System.Drawing.Size(121, 42)
-        Me.btnVolverAsistente.TabIndex = 125
-        Me.btnVolverAsistente.Text = "Volver"
-        Me.btnVolverAsistente.UseVisualStyleBackColor = False
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.Location = New System.Drawing.Point(258, 27)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(150, 19)
+        Me.Label15.TabIndex = 104
+        Me.Label15.Text = "NOTIFICACIONES"
+        '
+        'dateSilenciar
+        '
+        Me.dateSilenciar.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.dateSilenciar.Location = New System.Drawing.Point(239, 270)
+        Me.dateSilenciar.Name = "dateSilenciar"
+        Me.dateSilenciar.Size = New System.Drawing.Size(221, 22)
+        Me.dateSilenciar.TabIndex = 129
+        '
+        'Label3
+        '
+        Me.Label3.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(113, 271)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(113, 20)
+        Me.Label3.TabIndex = 128
+        Me.Label3.Text = "Silenciar hasta"
+        '
+        'checkDesktop
+        '
+        Me.checkDesktop.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.checkDesktop.AutoSize = True
+        Me.checkDesktop.Location = New System.Drawing.Point(409, 204)
+        Me.checkDesktop.Name = "checkDesktop"
+        Me.checkDesktop.Size = New System.Drawing.Size(85, 20)
+        Me.checkDesktop.TabIndex = 127
+        Me.checkDesktop.Text = "Escritorio"
+        Me.checkDesktop.UseVisualStyleBackColor = True
+        '
+        'checkGmail
+        '
+        Me.checkGmail.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.checkGmail.AutoSize = True
+        Me.checkGmail.Location = New System.Drawing.Point(336, 204)
+        Me.checkGmail.Name = "checkGmail"
+        Me.checkGmail.Size = New System.Drawing.Size(64, 20)
+        Me.checkGmail.TabIndex = 126
+        Me.checkGmail.Text = "Gmail"
+        Me.checkGmail.UseVisualStyleBackColor = True
+        '
+        'checkWhatsapp
+        '
+        Me.checkWhatsapp.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.checkWhatsapp.AutoSize = True
+        Me.checkWhatsapp.Location = New System.Drawing.Point(239, 203)
+        Me.checkWhatsapp.Name = "checkWhatsapp"
+        Me.checkWhatsapp.Size = New System.Drawing.Size(91, 20)
+        Me.checkWhatsapp.TabIndex = 125
+        Me.checkWhatsapp.Text = "Whatsapp"
+        Me.checkWhatsapp.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        Me.Label2.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(168, 60)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(211, 19)
+        Me.Label2.TabIndex = 124
+        Me.Label2.Text = "EDITAR NOTIFICACIONES"
+        '
+        'btnGuardarNotificaciones
+        '
+        Me.btnGuardarNotificaciones.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnGuardarNotificaciones.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnGuardarNotificaciones.FlatAppearance.BorderSize = 0
+        Me.btnGuardarNotificaciones.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnGuardarNotificaciones.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGuardarNotificaciones.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.btnGuardarNotificaciones.IconChar = FontAwesome.Sharp.IconChar.None
+        Me.btnGuardarNotificaciones.IconColor = System.Drawing.Color.Black
+        Me.btnGuardarNotificaciones.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnGuardarNotificaciones.IconSize = 16
+        Me.btnGuardarNotificaciones.Location = New System.Drawing.Point(275, 345)
+        Me.btnGuardarNotificaciones.Name = "btnGuardarNotificaciones"
+        Me.btnGuardarNotificaciones.Size = New System.Drawing.Size(111, 42)
+        Me.btnGuardarNotificaciones.TabIndex = 123
+        Me.btnGuardarNotificaciones.Text = "Guardar"
+        Me.btnGuardarNotificaciones.UseVisualStyleBackColor = False
+        '
+        'btnCancelar
+        '
+        Me.btnCancelar.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnCancelar.BackColor = System.Drawing.Color.Transparent
+        Me.btnCancelar.FlatAppearance.BorderSize = 0
+        Me.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnCancelar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCancelar.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.btnCancelar.Location = New System.Drawing.Point(160, 345)
+        Me.btnCancelar.Name = "btnCancelar"
+        Me.btnCancelar.Size = New System.Drawing.Size(111, 42)
+        Me.btnCancelar.TabIndex = 122
+        Me.btnCancelar.Text = "Cancelar"
+        Me.btnCancelar.UseVisualStyleBackColor = False
+        '
+        'comboUsuariosANotificar
+        '
+        Me.comboUsuariosANotificar.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.comboUsuariosANotificar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.comboUsuariosANotificar.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.comboUsuariosANotificar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.comboUsuariosANotificar.FormattingEnabled = True
+        Me.comboUsuariosANotificar.Items.AddRange(New Object() {"Todos"})
+        Me.comboUsuariosANotificar.Location = New System.Drawing.Point(239, 128)
+        Me.comboUsuariosANotificar.Name = "comboUsuariosANotificar"
+        Me.comboUsuariosANotificar.Size = New System.Drawing.Size(221, 28)
+        Me.comboUsuariosANotificar.TabIndex = 121
+        '
+        'Label8
+        '
+        Me.Label8.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(52, 202)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(174, 20)
+        Me.Label8.TabIndex = 120
+        Me.Label8.Text = "Notificar por medio de"
+        '
+        'Label7
+        '
+        Me.Label7.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(79, 130)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(147, 20)
+        Me.Label7.TabIndex = 119
+        Me.Label7.Text = "Usuarios a notificar"
         '
         'AcomodarFormularios
         '
@@ -720,7 +547,6 @@ Partial Class AcomodarFormularios
         Me.Text = "AcomodarFormularios"
         Me.PanelDatosBasicos.ResumeLayout(False)
         Me.PanelDatosBasicos.PerformLayout()
-        CType(Me.txtOcurrencias, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
@@ -731,32 +557,6 @@ Partial Class AcomodarFormularios
     End Sub
 
     Friend WithEvents PanelDatosBasicos As Panel
-    Friend WithEvents comboEventVisibilidad As ComboBox
-    Friend WithEvents comboEventDispo As ComboBox
-    Friend WithEvents eventFechaFinal As DateTimePicker
-    Friend WithEvents eventFechaInicio As DateTimePicker
-    Friend WithEvents txtEventDescrip As TextBox
-    Friend WithEvents txtEventUbicacion As TextBox
-    Friend WithEvents txtEventName As TextBox
-    Friend WithEvents Label8 As Label
-    Friend WithEvents Label7 As Label
-    Friend WithEvents Label6 As Label
-    Friend WithEvents l As Label
-    Friend WithEvents Label4 As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents txtOcurrencias As NumericUpDown
-    Friend WithEvents rbtnFecha As RadioButton
-    Friend WithEvents rbtnConteo As RadioButton
-    Friend WithEvents listDias As CheckedListBox
-    Friend WithEvents dateRecuFinal As DateTimePicker
-    Friend WithEvents comboFrecuencia As ComboBox
-    Friend WithEvents Label20 As Label
-    Friend WithEvents Label19 As Label
-    Friend WithEvents Label18 As Label
-    Friend WithEvents Label17 As Label
-    Friend WithEvents btnVolver As Button
-    Friend WithEvents btnGuardarEvento As FontAwesome.Sharp.IconButton
     Friend WithEvents Panel1 As Panel
     Friend WithEvents btnEliminarAsistentes As Button
     Friend WithEvents comboListaInvitados As ComboBox
@@ -783,4 +583,15 @@ Partial Class AcomodarFormularios
     Friend WithEvents Label14 As Label
     Friend WithEvents btnVolverEvento As Button
     Friend WithEvents btnVolverAsistente As Button
+    Friend WithEvents dateSilenciar As DateTimePicker
+    Friend WithEvents Label3 As Label
+    Friend WithEvents checkDesktop As CheckBox
+    Friend WithEvents checkGmail As CheckBox
+    Friend WithEvents checkWhatsapp As CheckBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents btnGuardarNotificaciones As FontAwesome.Sharp.IconButton
+    Friend WithEvents btnCancelar As Button
+    Friend WithEvents comboUsuariosANotificar As ComboBox
+    Friend WithEvents Label8 As Label
+    Friend WithEvents Label7 As Label
 End Class

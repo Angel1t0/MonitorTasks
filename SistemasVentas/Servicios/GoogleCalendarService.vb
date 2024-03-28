@@ -99,7 +99,7 @@ Public Class GoogleCalendarService
                     If eventoGoogle.Attendees IsNot Nothing Then
                         For Each asistenteGoogle In eventoGoogle.Attendees
                             _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteGoogle.Email})
-                            _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .AttendeeID = _datosEvento.BuscarUserID(asistenteGoogle.Email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
+                            _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(asistenteGoogle.Email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                         Next
                     End If
 
@@ -131,7 +131,7 @@ Public Class GoogleCalendarService
                             ' Agregar todos los asistentes de Google al evento local
                             For Each email In googleAttendeesEmails
                                 _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
-                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .AttendeeID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
+                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                             Next
                         Else
                             Dim localAttendeesEmails = eventoLocal.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
@@ -139,7 +139,7 @@ Public Class GoogleCalendarService
                             ' Identificar y agregar nuevos asistentes
                             For Each email In googleAttendeesEmails.Except(localAttendeesEmails)
                                 _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
-                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .AttendeeID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
+                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                             Next
 
                             ' Identificar y eliminar asistentes que ya no están en Google
@@ -233,7 +233,8 @@ Public Class GoogleCalendarService
 
             request.ShowDeleted = False
             request.SingleEvents = False
-            request.TimeMinDateTimeOffset = New DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            request.TimeMinDateTimeOffset = New DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0, DateTimeKind.Utc) ' AQUI LA API SE COMPORTA DE ESTA FORMA, LA FECHA FINAL DE LA RECURRENCIA AFECTA LOS EVENTOS QUE SE OBTIENEN
+            'request.TimeMaxDateTimeOffset = New DateTime(DateTime.Now.Year + 1, 12, 31, 23, 59, 59, DateTimeKind.Utc)
             request.OrderBy = EventsResource.ListRequest.OrderByEnum.Updated
 
             Dim events As Events = Await request.ExecuteAsync()

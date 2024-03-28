@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Imports System.Diagnostics.Eventing.Reader
+Imports System.Runtime.InteropServices
+Imports System.Threading.Tasks
 Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
 Imports Google.Apis.Gmail.v1
@@ -23,38 +25,28 @@ Public Class EventoControlador
     End Sub
 
     Public Sub CrearEvento(evento As Evento, isVisible As Boolean)
-        Dim errores As List(Of String) = evento.ValidarCampos()
-        If errores.Count > 0 Then
-            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
         If isVisible = True Then
             _datosEvento.InsertarEvento(evento)
-
         Else
             _datosEvento.ActualizarEvento(evento)
         End If
     End Sub
 
     Public Sub CrearMensaje(mensaje As Mensaje)
-        For Each attendee In mensaje.Attendees
-            mensaje.AttendeeID = BuscarUserID(attendee.Email)
-            _datosEvento.InsertarMensaje(mensaje)
-        Next
-        EnviarEmail(mensaje)
-        'EnviarWhatsApp("+17249465054", mensaje)
-        EnviarNotificacionDesktop(mensaje)
+        _datosEvento.InsertarMensaje(mensaje)
     End Sub
 
-    Public Sub ActualizarMensaje(mensaje As Mensaje)
-        For Each attendee In mensaje.Attendees
-            mensaje.AttendeeID = BuscarUserID(attendee.Email)
-            _datosEvento.ActualizarMensaje(mensaje)
-        Next
+    Public Sub EnviarMensaje(mensaje As Mensaje, userID As Integer)
+        If mensaje.Attendees.Count = 0 Then
+            Return
+        End If
         EnviarEmail(mensaje)
-        ' Tiene limite de mensajes
-        ' EnviarWhatsApp("+17249465054", mensaje)
-        EnviarNotificacionDesktop(mensaje)
+        'EnviarWhatsApp("+17249465054", mensaje)
+        EnviarNotificacionDesktop(mensaje, userID)
+    End Sub
+
+    Public Sub ActualizarMensaje(mensaje As Mensaje, aplicarATodos As Boolean)
+        _datosEvento.ActualizarMensaje(mensaje, aplicarATodos)
     End Sub
 
     Public Function CrearRecurrencia(recurrencia As Recurrencia) As Boolean
@@ -71,8 +63,11 @@ Public Class EventoControlador
         _servicioGoogleCalendar.EliminarEventoGoogle(eventID)
     End Sub
 
-    Public Sub InsertarAsistente(asistente As Asistente, gestionEventos As GestionEventos)
-        gestionEventos.AsistenteID = _datosEvento.InsertarAsistente(asistente)
+    Public Sub InsertarAsistente(asistente As Asistente, mensaje As Mensaje)
+        Dim attendeeID As Integer = _datosEvento.InsertarAsistente(asistente)
+        mensaje.UserID = _datosEvento.BuscarUserID(asistente.Email)
+        mensaje.Attendees.Add(asistente)
+        CrearMensaje(mensaje)
     End Sub
 
     Public Sub EliminarAsistente(asistente As Asistente)
@@ -101,13 +96,9 @@ Public Class EventoControlador
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
     End Sub
 
-    Public Async Sub AgregarInformacionEvento(evento As Evento, IsNew As Boolean)
+    Public Async Sub AgregarInformacionEvento(evento As Evento, userID As Integer)
         Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
-        If IsNew And evento.Attendees.Count > 0 Then
-            CrearMensaje(evento.Message)
-        ElseIf Not IsNew And evento.Attendees.Count > 0 Then
-            ActualizarMensaje(evento.Message)
-        End If
+        EnviarMensaje(evento.Message, userID)
         Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)
     End Sub
 
@@ -120,7 +111,10 @@ Public Class EventoControlador
         _servicioWhatsapp.EnviarMensajeWhatsapp(creatorPhone, mensaje)
     End Sub
 
-    Public Sub EnviarNotificacionDesktop(mensaje As Mensaje)
+    Public Sub EnviarNotificacionDesktop(mensaje As Mensaje, userID As Integer)
+        If mensaje.UserID <> userID Then
+            Return
+        End If
         _servicioDesktop.EnviarNotificacionDesktop(mensaje)
     End Sub
 
@@ -225,4 +219,12 @@ Public Class EventoControlador
     Public Sub ActualizarFechaEnvio(messageID As Integer, sentTime As DateTime)
         _datosEvento.ActualizarFechaEnvio(messageID, sentTime)
     End Sub
+
+    Public Function ObtenerEventosConNotificacionesActivas(calendarioID As String) As DataTable
+        Return _datosEvento.ObtenerEventosConNotificacionesActivas(calendarioID)
+    End Function
+
+    Public Function ObtenerDatosNotificacion(eventID As String, userID As Integer) As Mensaje
+        Return _datosEvento.ObtenerDatosNotificacion(eventID, userID)
+    End Function
 End Class
