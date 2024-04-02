@@ -10,7 +10,7 @@ Public Class GestionRecurrenciaMensajes
 
     Public Sub New(calendarID As String)
         _timer = New Timer With {
-            .Interval = 60000, ' Revisar cada minuto, ajusta según necesites
+            .Interval = 20000, ' Revisar cada minuto, ajusta según necesites
             .AutoReset = True
             }
 
@@ -48,17 +48,25 @@ Public Class GestionRecurrenciaMensajes
                     eventoYMensajes.Mensaje.SentTime = eventoYMensajes.Mensaje.StartDateTime
                 End If
                 For Each ocurrencia In listaOcurriencias
-                    If ocurrencia.Period.StartTime.AsSystemLocal <= horaActual.Date And
+                    If ocurrencia.Period.StartTime.AsSystemLocal.Date <= horaActual.Date And
                         eventoYMensajes.Mensaje.SentTime.Date < ocurrencia.Period.StartTime.AsSystemLocal.Date Then
 
                         eventoYMensajes.Mensaje.SentTime = ocurrencia.Period.StartTime.AsSystemLocal
-                        ' Aquí es donde enviarías el correo
-                        _eventoControlador.EnviarEmail(eventoYMensajes.Mensaje)
-                        ' Tiene un limite de mensajes
-                        '_eventoControlador.EnviarWhatsApp(eventoYMensajes.Evento.CreatorPhone, eventoYMensajes.Mensaje)
-                        _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje, eventoYMensajes.Evento.UserID)
-
                         _eventoControlador.ActualizarFechaEnvio(eventoYMensajes.Mensaje.MessageID, eventoYMensajes.Mensaje.SentTime)
+
+                        ' Aquí es donde se llaman a las funciones para enviar el correo, WhatsApp y notificación de escritorio
+                        If eventoYMensajes.Mensaje.EmailSent = False Then
+                            _eventoControlador.EnviarEmail(eventoYMensajes.Mensaje)
+                        End If
+                        If eventoYMensajes.Mensaje.WhatsAppSent = False Then
+                            Console.WriteLine("Notificación de Whatsapp enviada")
+                            '_eventoControlador.EnviarWhatsApp(eventoYMensajes.Evento.CreatorPhone, eventoYMensajes.Mensaje) Tiene un limite de mensajes
+                        End If
+                        If eventoYMensajes.Mensaje.DesktopSent = False Then
+                            _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje, eventoYMensajes.Evento.UserID)
+                            Console.WriteLine("Notificación de escritorio enviada")
+                        End If
+
                     End If
                 Next
             Next

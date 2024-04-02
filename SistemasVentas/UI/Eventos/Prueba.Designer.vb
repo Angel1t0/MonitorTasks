@@ -207,7 +207,7 @@ Partial Class Prueba
         Me.ControlPanel1.Controls.Add(Me.comboEventVisibilidad)
         Me.ControlPanel1.Controls.Add(Me.Label7)
         Me.ControlPanel1.Controls.Add(Me.Label8)
-        Me.ControlPanel1.Location = New System.Drawing.Point(627, 501)
+        Me.ControlPanel1.Location = New System.Drawing.Point(546, 389)
         Me.ControlPanel1.Name = "ControlPanel1"
         Me.ControlPanel1.Size = New System.Drawing.Size(600, 625)
         Me.ControlPanel1.TabIndex = 106
@@ -407,7 +407,7 @@ Partial Class Prueba
         Me.PanelDatosRecurrencia.Controls.Add(Me.Label10)
         Me.PanelDatosRecurrencia.Controls.Add(Me.Label21)
         Me.PanelDatosRecurrencia.Controls.Add(Me.Label22)
-        Me.PanelDatosRecurrencia.Location = New System.Drawing.Point(43, 617)
+        Me.PanelDatosRecurrencia.Location = New System.Drawing.Point(147, 477)
         Me.PanelDatosRecurrencia.Name = "PanelDatosRecurrencia"
         Me.PanelDatosRecurrencia.Size = New System.Drawing.Size(373, 476)
         Me.PanelDatosRecurrencia.TabIndex = 121
@@ -581,7 +581,7 @@ Partial Class Prueba
         Me.ControlPanel2.Controls.Add(Me.Label34)
         Me.ControlPanel2.Controls.Add(Me.Label35)
         Me.ControlPanel2.Controls.Add(Me.Label36)
-        Me.ControlPanel2.Location = New System.Drawing.Point(246, 104)
+        Me.ControlPanel2.Location = New System.Drawing.Point(546, 27)
         Me.ControlPanel2.Name = "ControlPanel2"
         Me.ControlPanel2.Size = New System.Drawing.Size(424, 356)
         Me.ControlPanel2.TabIndex = 123
@@ -729,7 +729,7 @@ Partial Class Prueba
         Me.ControlPanel3.Controls.Add(Me.Panel3)
         Me.ControlPanel3.Controls.Add(Me.Label30)
         Me.ControlPanel3.Controls.Add(Me.Label32)
-        Me.ControlPanel3.Location = New System.Drawing.Point(770, 67)
+        Me.ControlPanel3.Location = New System.Drawing.Point(32, 12)
         Me.ControlPanel3.Name = "ControlPanel3"
         Me.ControlPanel3.Size = New System.Drawing.Size(488, 428)
         Me.ControlPanel3.TabIndex = 124
@@ -911,7 +911,7 @@ Partial Class Prueba
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(159, Byte), Integer), CType(CType(159, Byte), Integer), CType(CType(159, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1472, 742)
+        Me.ClientSize = New System.Drawing.Size(1472, 1046)
         Me.Controls.Add(Me.ControlPanel3)
         Me.Controls.Add(Me.ControlPanel2)
         Me.Controls.Add(Me.ControlPanel1)

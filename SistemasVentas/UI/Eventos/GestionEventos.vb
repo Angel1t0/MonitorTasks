@@ -443,6 +443,7 @@ Public Class GestionEventos
     End Sub
 
     Private Function FormatoComboVisibilidad() As String
+        ' Convierte el texto seleccionado en el ComboBox a un formato aceptado por Google Calendar
         Select Case comboEventVisibilidad.SelectedItem.ToString()
             Case "Default"
                 Return "default"

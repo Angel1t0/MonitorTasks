@@ -504,6 +504,7 @@ Public Class EventoData
                             .Description = reader("Description").ToString(),
                             .StartDateTime = reader("StartDateTime"),
                             .EndDateTime = reader("EndDateTime"),
+                            .EmailSent = reader("EmailSent"),
                             .WhatsAppSent = reader("WhatsAppSent"),
                             .DesktopSent = reader("DesktopSent"),
                             .SentTime = reader("SentTime"),
