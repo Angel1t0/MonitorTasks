@@ -89,6 +89,7 @@
     <Compile Include="Controlador\EventoControlador.vb" />
     <Compile Include="Datos\CadenaConexion.vb" />
     <Compile Include="Datos\EventoData.vb" />
+    <Compile Include="Modelos\Calendario.vb" />
     <Compile Include="Modelos\EventoYMensajes.vb" />
     <Compile Include="Modelos\Mensaje.vb" />
     <Compile Include="Servicios\DesktopService.vb" />

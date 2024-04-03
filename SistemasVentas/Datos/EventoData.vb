@@ -1,32 +1,47 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Diagnostics.Eventing.Reader
+Imports Google.Apis.Calendar.v3
 Imports log4net
 
 Public Class EventoData
-    Public Function ObtenerCalendarios(idUsuario As String) As List(Of List(Of String))
-        Dim calendarios As New List(Of List(Of String))
-        Dim calendariosName As New List(Of String)
-        Dim calendariosID As New List(Of String)
+    'Public Function ObtenerCalendarios(idUsuario As String) As List(Of List(Of String))
+    '    Dim calendarios As New List(Of List(Of String))
+    '    Dim calendariosName As New List(Of String)
+    '    Dim calendariosID As New List(Of String)
+    '    Try
+    '        Using conexion As SqlConnection = CrearConexionSQL()
+    '            conexion.Open()
+    '            Dim comando As New SqlCommand("mostrarCalendariosID", conexion)
+    '            comando.CommandType = CommandType.StoredProcedure
+    '            comando.Parameters.AddWithValue("@UsuarioID", idUsuario)
+    '            Dim reader As SqlDataReader = comando.ExecuteReader
+    '            While (reader.Read())
+    '                calendariosID.Add(reader(0))
+    '                calendariosName.Add(reader(1))
+    '            End While
+    '            calendarios.Add(calendariosID)
+    '            calendarios.Add(calendariosName)
+    '        End Using
+    '    Catch ex As SqlException
+    '        Throw New ApplicationException("Error al mostrar usuarios de la base de datos.", ex)
+    '    Catch ex As Exception
+    '        Throw New ApplicationException("Error inesperado al mostrar usuarios.", ex)
+    '    End Try
+    '    Return calendarios
+    'End Function
+
+    Public Function ObtenerCalendarioID() As String
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
-                Dim comando As New SqlCommand("mostrarCalendariosID", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@UsuarioID", idUsuario)
-                Dim reader As SqlDataReader = comando.ExecuteReader
-                While (reader.Read())
-                    calendariosID.Add(reader(0))
-                    calendariosName.Add(reader(1))
-                End While
-                calendarios.Add(calendariosID)
-                calendarios.Add(calendariosName)
+                Dim comando As New SqlCommand($"SELECT CalendarID FROM Calendarios WHERE UsuarioID = {Login.idUsuario}", conexion)
+                Return comando.ExecuteScalar()
             End Using
         Catch ex As SqlException
-            Throw New ApplicationException("Error al mostrar usuarios de la base de datos.", ex)
+            Throw New ApplicationException("Error al obtener el ID del calendario.", ex)
         Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al mostrar usuarios.", ex)
+            Throw New ApplicationException("Error inesperado al obtener el ID del calendario.", ex)
         End Try
-        Return calendarios
     End Function
 
     Public Function ObtenerCorreoUsuario() As String
@@ -593,4 +608,67 @@ Public Class EventoData
         End Try
         Return mensaje
     End Function
+
+    Public Function ObtenerCalendarios() As List(Of Calendario)
+        Dim calendarios As New List(Of Calendario)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerCalendarios", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@UserID", Login.idUsuario)
+                Dim reader As SqlDataReader = comando.ExecuteReader
+                While (reader.Read())
+                    Dim calendario As New Calendario With {
+                        .CalendarID = reader("CalendarID").ToString(),
+                        .UserID = reader("UsuarioID").ToString(),
+                        .CalendarName = reader("CalendarName").ToString(),
+                        .OwnerEmail = reader("OwnerEmail").ToString()
+                    }
+                    calendarios.Add(calendario)
+                End While
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener calendarios de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener calendarios.", ex)
+        End Try
+        Return calendarios
+    End Function
+
+    Public Sub InsertarCalendario(calendarioGoogle As Calendario)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarCalendario", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@CalendarID", calendarioGoogle.CalendarID)
+                comando.Parameters.AddWithValue("@UsuarioID", Login.idUsuario)
+                comando.Parameters.AddWithValue("@CalendarName", calendarioGoogle.CalendarName)
+                comando.Parameters.AddWithValue("@OwnerEmail", ObtenerCorreoUsuario())
+                comando.Parameters.AddWithValue("@Status", calendarioGoogle.Status)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar el calendario en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar el calendario.", ex)
+        End Try
+    End Sub
+
+    Public Sub EliminarCalendario(calendarioID As String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("eliminarCalendario", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@CalendarID", calendarioID)
+                conexion.Open()
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al eliminar el calendario de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al eliminar el calendario.", ex)
+        End Try
+    End Sub
 End Class

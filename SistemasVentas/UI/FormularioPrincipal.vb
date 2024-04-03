@@ -153,6 +153,4 @@ Public Class FormularioPrincipal
             FormBorderStyle = FormBorderStyle.Sizable
         End If
     End Sub
-
-
 End Class

@@ -7,7 +7,7 @@ Imports System.Threading.Tasks
 ' Clase para manejar la autenticación y creación del servicio de Google Calendar.
 Public Class GoogleCalendarService
     Private _datosEvento As EventoData
-    Public Property CalendarioID As String = "angel01.am73@gmail.com"
+    Public Property CalendarioID As String
     Public Sub New()
         _datosEvento = New EventoData()
     End Sub
@@ -18,7 +18,7 @@ Public Class GoogleCalendarService
     ' Método que maneja la autenticación y crea un servicio de Google Calendar.
     Public Function Authenticate() As CalendarService
         Dim authenticator As New GoogleServicesAuthenticator()
-        Dim credential As UserCredential = authenticator.AuthenticateGoogleServices()
+        Dim credential As UserCredential = authenticator.AuthenticateGoogleServices(Login.idUsuario)
 
         ' Inicializar el servicio de Google Calendar
         Dim service = New CalendarService(New BaseClientService.Initializer() With {
@@ -26,10 +26,32 @@ Public Class GoogleCalendarService
             .ApplicationName = ApplicationName
         })
 
-        Return service ' Devuelve el servicio autenticado para ser usado en otras partes de tu aplicación.
+        Return service ' Devuelve el servicio autenticado para ser usado en otras partes de la aplicación.
+    End Function
+
+    Public Function ObtenerCalendariosGoogle(service As CalendarService) As List(Of Calendario)
+        Dim listRequest = service.CalendarList.List()
+        listRequest.MinAccessRole = CalendarListResource.ListRequest.MinAccessRoleEnum.Owner
+        listRequest.ShowDeleted = False
+        Dim CalendarList = listRequest.Execute()
+        Dim calendarios As New List(Of Calendario)
+
+        If calendarList.Items IsNot Nothing AndAlso calendarList.Items.Count > 0 Then
+            For Each calendarListEntry In calendarList.Items
+                calendarios.Add(New Calendario With {
+                    .CalendarID = calendarListEntry.Id,
+                    .CalendarName = calendarListEntry.Summary
+                })
+            Next
+        Else
+            Console.WriteLine("No se encontraron calendarios.")
+        End If
+
+        Return calendarios
     End Function
 
     Public Function ConvertirAModeloGoogleCalendar(evento As Evento) As [Event]
+
         Dim eventoGoogle As New [Event] With {
             .Summary = evento.Summary,
             .Location = evento.Location,
@@ -84,6 +106,27 @@ Public Class GoogleCalendarService
         End Try
     End Function
 
+    Public Sub SincronizarCalendarios(calendariosGoogle As List(Of Calendario), calendariosLocales As List(Of Calendario))
+        Try
+            ' Insertar calendarios basado en Google Calendar
+            For Each calendarioGoogle In calendariosGoogle
+                Dim calendarioLocal As Calendario = calendariosLocales.FirstOrDefault(Function(c) c.CalendarID = calendarioGoogle.CalendarID)
+                If calendarioLocal Is Nothing Then
+                    ' Insertar nuevo calendario
+                    _datosEvento.InsertarCalendario(calendarioGoogle)
+                End If
+            Next
+            ' Eliminar calendarios locales que ya no existen en Google
+            For Each calendarioLocal In calendariosLocales
+                If Not calendariosGoogle.Any(Function(c) c.CalendarID = calendarioLocal.CalendarID) Then
+                    _datosEvento.EliminarCalendario(calendarioLocal.CalendarID)
+                End If
+            Next
+        Catch ex As Exception
+            Console.WriteLine($"Error al sincronizar calendarios: {ex.Message}")
+        End Try
+    End Sub
+
     Public Sub SincronizarEventos(eventosGoogle As IList(Of [Event]), eventosLocales As List(Of Evento))
         Try
             ' Insertar o actualizar eventos basado en Google Calendar
@@ -91,6 +134,10 @@ Public Class GoogleCalendarService
                 Dim eventoLocal As Evento = eventosLocales.FirstOrDefault(Function(e) e.EventID = eventoGoogle.Id)
                 Dim eventoGoogleConvertido As Evento = ConvertirDeGoogleEventoAEventoLocal(eventoGoogle)
                 Dim tolerancia As TimeSpan = TimeSpan.FromSeconds(1)
+
+                If Login.idUsuario <> eventoGoogleConvertido.UserID Then
+                    Continue For
+                End If
                 If eventoLocal Is Nothing Then
                     ' Insertar nuevo evento
                     _datosEvento.InsertarEvento(eventoGoogleConvertido)

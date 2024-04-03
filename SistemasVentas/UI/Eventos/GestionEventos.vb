@@ -2,7 +2,6 @@
 Public Class GestionEventos
     ' Controlador para manejar la lógica de negocio y la comunicación con Google Calendar.
     Private _controlador As New EventoControlador()
-    Private _servicioGoogleCalendar As New GoogleCalendarService()
 
     ' Propiedades para almacenar información relevante del evento y el ID del calendario seleccionado.
     Public Property CalendarioID As String
@@ -27,8 +26,7 @@ Public Class GestionEventos
         PanelNotificaciones.Visible = False
         CargarAsistentes()
         ConfigurarComponentes()
-        _controlador.GoogleCalendarID = CalendarioID
-        _servicioGoogleCalendar.CalendarioID = CalendarioID
+        _controlador.EstablecerCalendarioID(CalendarioID)
     End Sub
 
     ' Manejadores de Eventos

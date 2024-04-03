@@ -15,6 +15,11 @@ Public Class EventoControlador
     Public Property GoogleEventID As String = String.Empty
     Public Property GoogleCalendarID As String
 
+    Public Sub EstablecerCalendarioID(calendarID As String)
+        GoogleCalendarID = calendarID
+        _servicioGoogleCalendar.CalendarioID = calendarID
+    End Sub
+
     Public Sub New()
         _googleServicesAuthenticator = New GoogleServicesAuthenticator()
         _servicioGoogleCalendar = New GoogleCalendarService()
@@ -141,6 +146,13 @@ Public Class EventoControlador
         _servicioGoogleCalendar.SincronizarEventos(eventosGoogle, eventosLocales)
     End Function
 
+    Public Sub SincronizarCalendarios()
+        Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
+        Dim calendariosGoogle As List(Of Calendario) = _servicioGoogleCalendar.ObtenerCalendariosGoogle(service)
+        Dim calendariosLocales As List(Of Calendario) = _datosEvento.ObtenerCalendarios()
+
+        _servicioGoogleCalendar.SincronizarCalendarios(calendariosGoogle, calendariosLocales)
+    End Sub
 
     Public Function TransformarAEvento(eventosTable As DataTable, asistentes As List(Of Asistente), notificaciones As List(Of Notificacion)) As List(Of Evento)
         Dim eventos As New List(Of Evento)
@@ -155,7 +167,8 @@ Public Class EventoControlador
                 .RRULE = row(6).ToString(),
                 .Visibility = row(7).ToString(),
                 .Transparency = row(8).ToString(),
-                .LastModified = row(9).ToString()
+                .LastModified = row(9).ToString(),
+                .UserID = row(10).ToString()
             }
             evento.Attendees = asistentes.Where(Function(a) a.EventID.Equals(evento.EventID)).ToList()
             evento.Reminders = notificaciones.Where(Function(n) n.EventID.Equals(evento.EventID)).ToList()
@@ -181,8 +194,12 @@ Public Class EventoControlador
         End Select
     End Function
 
-    Public Function ObtenerCalendarios(idUsuario As String) As List(Of List(Of String))
-        Return _datosEvento.ObtenerCalendarios(idUsuario)
+    'Public Function ObtenerCalendarios(idUsuario As String) As List(Of List(Of String))
+    '    Return _datosEvento.ObtenerCalendarios(idUsuario)
+    'End Function
+
+    Public Function ObtenerCalendariosLocales() As List(Of Calendario)
+        Return _datosEvento.ObtenerCalendarios()
     End Function
 
     Public Function ObtenerEventos(calendarioID As String) As DataTable

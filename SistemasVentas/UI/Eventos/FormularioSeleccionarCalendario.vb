@@ -5,11 +5,17 @@ Public Class FormularioSeleccionarCalendario
     Public Property CalendarioID As String
     Public Property UsuarioID As String = Login.idUsuario
 
-    Private Function CargarCalendarios() As List(Of String)
-        Dim calendarios As List(Of List(Of String)) = _controlador.ObtenerCalendarios(UsuarioID)
+    Private calendariosID As New List(Of String)
 
+    Private Function CargarCalendarios() As List(Of String)
+        Dim calendarios As List(Of Calendario) = _controlador.ObtenerCalendariosLocales()
         AgregarCalendariosACombo(calendarios)
-        Return calendarios(0)
+
+        For Each calendario In calendarios
+            calendariosID.Add(calendario.CalendarID)
+        Next
+
+        Return calendariosID
     End Function
 
     Private Sub guardarCalendarioID(listCalendariosID As List(Of String))
@@ -21,16 +27,15 @@ Public Class FormularioSeleccionarCalendario
         guardarCalendarioID(CargarCalendarios())
     End Sub
 
-    Private Sub AgregarCalendariosACombo(calendarios As List(Of List(Of String)))
-        Dim calendariosName As List(Of String) = calendarios(1)
-        For Each calendario In calendariosName
-            ComboCalendario.Items.Add(calendario)
+    Private Sub AgregarCalendariosACombo(calendarios As List(Of Calendario))
+        For Each calendario In calendarios
+            ComboCalendario.Items.Add(calendario.CalendarName)
         Next
     End Sub
 
     Private Sub BtnSeleccionarCalendario_Click_1(sender As Object, e As EventArgs) Handles BtnSeleccionarCalendario.Click
         SeleccionarCalendario()
-        guardarCalendarioID(_controlador.ObtenerCalendarios(UsuarioID)(0))
+        guardarCalendarioID(calendariosID)
         ' Mostrar formulario de gestión de eventos y cerrar este formulario
         Dim formularioPrincipal As New FormularioPrincipal()
         formularioPrincipal._CalendarioID = CalendarioID
@@ -90,5 +95,9 @@ Public Class FormularioSeleccionarCalendario
             Return
         End If
         ComboCalendario.SelectedIndex = 0
+    End Sub
+
+    Private Sub btnSincronizar_Click(sender As Object, e As EventArgs) Handles btnSincronizar.Click
+        _controlador.SincronizarCalendarios()
     End Sub
 End Class

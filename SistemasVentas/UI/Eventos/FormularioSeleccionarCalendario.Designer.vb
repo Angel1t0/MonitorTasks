@@ -30,6 +30,7 @@ Partial Class FormularioSeleccionarCalendario
         Me.BtnSeleccionarCalendario = New System.Windows.Forms.Button()
         Me.ComboCalendario = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.btnSincronizar = New System.Windows.Forms.Button()
         Me.panelCalendarios.SuspendLayout()
         Me.PanelTitulo.SuspendLayout()
         CType(Me.BtnCerrar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -40,6 +41,7 @@ Partial Class FormularioSeleccionarCalendario
         'panelCalendarios
         '
         Me.panelCalendarios.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.panelCalendarios.Controls.Add(Me.btnSincronizar)
         Me.panelCalendarios.Controls.Add(Me.PanelTitulo)
         Me.panelCalendarios.Controls.Add(Me.BtnSeleccionarCalendario)
         Me.panelCalendarios.Controls.Add(Me.ComboCalendario)
@@ -67,8 +69,9 @@ Partial Class FormularioSeleccionarCalendario
         Me.BtnCerrar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnCerrar.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.BtnCerrar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.WindowClose
+        Me.BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.TimesRectangle
         Me.BtnCerrar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnCerrar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnCerrar.IconSize = 30
         Me.BtnCerrar.Location = New System.Drawing.Point(420, 8)
         Me.BtnCerrar.Name = "BtnCerrar"
@@ -83,6 +86,7 @@ Partial Class FormularioSeleccionarCalendario
         Me.BtnMaximizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.BtnMaximizar.IconChar = FontAwesome.Sharp.IconChar.WindowMaximize
         Me.BtnMaximizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMaximizar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnMaximizar.IconSize = 30
         Me.BtnMaximizar.Location = New System.Drawing.Point(370, 8)
         Me.BtnMaximizar.Name = "BtnMaximizar"
@@ -97,6 +101,7 @@ Partial Class FormularioSeleccionarCalendario
         Me.BtnMinimizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.BtnMinimizar.IconChar = FontAwesome.Sharp.IconChar.WindowMinimize
         Me.BtnMinimizar.IconColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.BtnMinimizar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnMinimizar.IconSize = 30
         Me.BtnMinimizar.Location = New System.Drawing.Point(319, 8)
         Me.BtnMinimizar.Name = "BtnMinimizar"
@@ -124,20 +129,36 @@ Partial Class FormularioSeleccionarCalendario
         Me.ComboCalendario.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboCalendario.Font = New System.Drawing.Font("Century Gothic", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboCalendario.FormattingEnabled = True
-        Me.ComboCalendario.Location = New System.Drawing.Point(95, 189)
+        Me.ComboCalendario.Location = New System.Drawing.Point(54, 189)
         Me.ComboCalendario.Name = "ComboCalendario"
-        Me.ComboCalendario.Size = New System.Drawing.Size(280, 31)
+        Me.ComboCalendario.Size = New System.Drawing.Size(277, 31)
         Me.ComboCalendario.TabIndex = 1
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Century Gothic", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(92, 132)
+        Me.Label1.Location = New System.Drawing.Point(91, 111)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(283, 27)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Seleccionar Calendario"
+        '
+        'btnSincronizar
+        '
+        Me.btnSincronizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSincronizar.BackColor = System.Drawing.Color.Transparent
+        Me.btnSincronizar.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnSincronizar.FlatAppearance.BorderSize = 0
+        Me.btnSincronizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSincronizar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSincronizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnSincronizar.Location = New System.Drawing.Point(337, 173)
+        Me.btnSincronizar.Name = "btnSincronizar"
+        Me.btnSincronizar.Size = New System.Drawing.Size(113, 55)
+        Me.btnSincronizar.TabIndex = 104
+        Me.btnSincronizar.Text = "Sincronizar de Calendar"
+        Me.btnSincronizar.UseVisualStyleBackColor = False
         '
         'FormularioSeleccionarCalendario
         '
@@ -166,4 +187,5 @@ Partial Class FormularioSeleccionarCalendario
     Friend WithEvents BtnCerrar As FontAwesome.Sharp.IconPictureBox
     Friend WithEvents BtnMaximizar As FontAwesome.Sharp.IconPictureBox
     Friend WithEvents BtnMinimizar As FontAwesome.Sharp.IconPictureBox
+    Friend WithEvents btnSincronizar As Button
 End Class

@@ -14,7 +14,7 @@ Public Class GoogleGmailService
     ' Método que maneja la autenticación y crea un servicio de Gmail.
     Public Function AuthenticateGmail() As GmailService
         Dim authenticator As New GoogleServicesAuthenticator()
-        Dim credential As UserCredential = authenticator.AuthenticateGoogleServices()
+        Dim credential As UserCredential = authenticator.AuthenticateGoogleServices(Login.idUsuario)
 
         ' Inicializar el servicio de Google Calendar
         Dim service = New GmailService(New BaseClientService.Initializer() With {

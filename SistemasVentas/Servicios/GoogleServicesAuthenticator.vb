@@ -14,16 +14,19 @@ Public Class GoogleServicesAuthenticator
     Private credential As UserCredential ' Almacena las credenciales como propiedad de instancia
 
     ' Método que maneja la autenticación y devuelve credenciales de usuario, si no han sido ya obtenidas.
-    Public Function AuthenticateGoogleServices() As UserCredential
+    Public Function AuthenticateGoogleServices(userID As Integer) As UserCredential
+        Dim tokenDirectoryPath As String = Path.Combine(TokenPath, userID.ToString())
+        Dim fileDataStore = New FileDataStore(tokenDirectoryPath, True)
+
         If credential Is Nothing Then
             Using stream As New FileStream(ClientSecretPath, FileMode.Open, FileAccess.Read)
                 Try
                     credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                         GoogleClientSecrets.FromStream(stream).Secrets,
                         Scopes,
-                        "user",
+                        userID,
                         CancellationToken.None,
-                        New FileDataStore(TokenPath, True)).Result
+                        fileDataStore).Result
 
                     Console.WriteLine("Credential file saved to: " & TokenPath)
                 Catch ex As Exception
@@ -36,7 +39,7 @@ Public Class GoogleServicesAuthenticator
 
     ' Simplifica la obtención de los servicios reutilizando las credenciales autenticadas
     Public Function ObtenerServicioCalendar() As CalendarService
-        Dim credential As UserCredential = AuthenticateGoogleServices()
+        Dim credential As UserCredential = AuthenticateGoogleServices(Login.idUsuario)
 
         Return New CalendarService(New BaseClientService.Initializer() With {
             .HttpClientInitializer = credential,
@@ -45,7 +48,7 @@ Public Class GoogleServicesAuthenticator
     End Function
 
     Public Function ObtenerServicioGmail() As GmailService
-        Dim credential As UserCredential = AuthenticateGoogleServices()
+        Dim credential As UserCredential = AuthenticateGoogleServices(Login.idUsuario)
 
         Return New GmailService(New BaseClientService.Initializer() With {
             .HttpClientInitializer = credential,
