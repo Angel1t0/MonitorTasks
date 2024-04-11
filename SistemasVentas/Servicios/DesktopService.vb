@@ -8,7 +8,7 @@
     End Sub
 
     Public Sub EnviarNotificacionDesktop(mensaje As Mensaje)
-        ' Asegura que el título y la descripción tengan un valor predeterminado si están vacíos
+        ' Asegurar que el título y la descripción tengan un valor predeterminado si están vacíos
         Dim titulo = If(String.IsNullOrWhiteSpace(mensaje.Title), "Sin título", mensaje.Title)
         Dim descripcion = If(String.IsNullOrWhiteSpace(mensaje.Description), "Sin descripción", mensaje.Description) & Environment.NewLine & mensaje.StartDateTime.Date.ToString("yyyy-MM-ddTHH") & Environment.NewLine & "Fecha de fin: " & mensaje.EndDateTime.Date.ToString("yyyy-MM-ddTHH")
 

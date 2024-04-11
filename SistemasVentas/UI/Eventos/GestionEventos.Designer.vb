@@ -26,14 +26,22 @@ Partial Class GestionEventos
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(GestionEventos))
-        Me.dgvDataEventos = New System.Windows.Forms.DataGridView()
-        Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelEventos = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.tabEventosPropios = New System.Windows.Forms.TabPage()
+        Me.dgvDataEventos = New System.Windows.Forms.DataGridView()
+        Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
+        Me.tabEventosCompartidos = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.labelCantidadEventos = New System.Windows.Forms.Label()
         Me.btnInsertarEvento = New FontAwesome.Sharp.IconButton()
         Me.btnSincronizar = New System.Windows.Forms.Button()
+        Me.dgvDataEventosCompartidos = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.PanelNotificaciones = New SistemasVentas.ControlPanel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.btnEnviarAPI = New System.Windows.Forms.ToolStripMenuItem()
@@ -100,10 +108,14 @@ Partial Class GestionEventos
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
-        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelEventos.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
+        Me.tabEventosPropios.SuspendLayout()
+        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabEventosCompartidos.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelNotificaciones.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.numericUpCantidad, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -121,6 +133,50 @@ Partial Class GestionEventos
         Me.PanelDatosRecurrencia.SuspendLayout()
         CType(Me.txtOcurrencias, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
+        '
+        'panelEventos
+        '
+        Me.panelEventos.AutoSize = True
+        Me.panelEventos.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.panelEventos.Controls.Add(Me.Panel2)
+        Me.panelEventos.Controls.Add(Me.Panel1)
+        Me.panelEventos.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.panelEventos.Location = New System.Drawing.Point(0, 0)
+        Me.panelEventos.Name = "panelEventos"
+        Me.panelEventos.Size = New System.Drawing.Size(1159, 683)
+        Me.panelEventos.TabIndex = 9
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.TabControl1)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(0, 73)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Padding = New System.Windows.Forms.Padding(10)
+        Me.Panel2.Size = New System.Drawing.Size(1159, 610)
+        Me.Panel2.TabIndex = 106
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Controls.Add(Me.tabEventosPropios)
+        Me.TabControl1.Controls.Add(Me.tabEventosCompartidos)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl1.Location = New System.Drawing.Point(10, 10)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(1139, 590)
+        Me.TabControl1.TabIndex = 102
+        '
+        'tabEventosPropios
+        '
+        Me.tabEventosPropios.Controls.Add(Me.dgvDataEventos)
+        Me.tabEventosPropios.Location = New System.Drawing.Point(4, 25)
+        Me.tabEventosPropios.Name = "tabEventosPropios"
+        Me.tabEventosPropios.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabEventosPropios.Size = New System.Drawing.Size(1131, 561)
+        Me.tabEventosPropios.TabIndex = 0
+        Me.tabEventosPropios.Text = "Eventos Propios"
+        Me.tabEventosPropios.UseVisualStyleBackColor = True
         '
         'dgvDataEventos
         '
@@ -152,7 +208,7 @@ Partial Class GestionEventos
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvDataEventos.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvDataEventos.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvDataEventos.Location = New System.Drawing.Point(10, 10)
+        Me.dgvDataEventos.Location = New System.Drawing.Point(3, 3)
         Me.dgvDataEventos.Margin = New System.Windows.Forms.Padding(10)
         Me.dgvDataEventos.Name = "dgvDataEventos"
         Me.dgvDataEventos.ReadOnly = True
@@ -169,8 +225,8 @@ Partial Class GestionEventos
         Me.dgvDataEventos.RowHeadersWidth = 51
         Me.dgvDataEventos.RowTemplate.Height = 40
         Me.dgvDataEventos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDataEventos.Size = New System.Drawing.Size(1139, 575)
-        Me.dgvDataEventos.TabIndex = 101
+        Me.dgvDataEventos.Size = New System.Drawing.Size(1125, 555)
+        Me.dgvDataEventos.TabIndex = 102
         '
         'Eli
         '
@@ -182,27 +238,16 @@ Partial Class GestionEventos
         Me.Eli.ReadOnly = True
         Me.Eli.Width = 6
         '
-        'panelEventos
+        'tabEventosCompartidos
         '
-        Me.panelEventos.AutoSize = True
-        Me.panelEventos.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.panelEventos.Controls.Add(Me.Panel2)
-        Me.panelEventos.Controls.Add(Me.Panel1)
-        Me.panelEventos.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.panelEventos.Location = New System.Drawing.Point(0, 0)
-        Me.panelEventos.Name = "panelEventos"
-        Me.panelEventos.Size = New System.Drawing.Size(1159, 683)
-        Me.panelEventos.TabIndex = 9
-        '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.dgvDataEventos)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(0, 88)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Padding = New System.Windows.Forms.Padding(10)
-        Me.Panel2.Size = New System.Drawing.Size(1159, 595)
-        Me.Panel2.TabIndex = 106
+        Me.tabEventosCompartidos.Controls.Add(Me.dgvDataEventosCompartidos)
+        Me.tabEventosCompartidos.Location = New System.Drawing.Point(4, 25)
+        Me.tabEventosCompartidos.Name = "tabEventosCompartidos"
+        Me.tabEventosCompartidos.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabEventosCompartidos.Size = New System.Drawing.Size(1131, 561)
+        Me.tabEventosCompartidos.TabIndex = 1
+        Me.tabEventosCompartidos.Text = "Eventos Compartidos"
+        Me.tabEventosCompartidos.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -212,7 +257,7 @@ Partial Class GestionEventos
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1159, 88)
+        Me.Panel1.Size = New System.Drawing.Size(1159, 73)
         Me.Panel1.TabIndex = 105
         '
         'labelCantidadEventos
@@ -263,6 +308,67 @@ Partial Class GestionEventos
         Me.btnSincronizar.TabIndex = 103
         Me.btnSincronizar.Text = "Sincronizar"
         Me.btnSincronizar.UseVisualStyleBackColor = False
+        '
+        'dgvDataEventosCompartidos
+        '
+        Me.dgvDataEventosCompartidos.AllowUserToAddRows = False
+        Me.dgvDataEventosCompartidos.AllowUserToDeleteRows = False
+        Me.dgvDataEventosCompartidos.AllowUserToResizeRows = False
+        Me.dgvDataEventosCompartidos.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.dgvDataEventosCompartidos.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgvDataEventosCompartidos.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+        Me.dgvDataEventosCompartidos.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle4.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.DarkSlateGray
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataEventosCompartidos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvDataEventosCompartidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDataEventosCompartidos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewImageColumn1})
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle5.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataEventosCompartidos.DefaultCellStyle = DataGridViewCellStyle5
+        Me.dgvDataEventosCompartidos.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvDataEventosCompartidos.Location = New System.Drawing.Point(3, 3)
+        Me.dgvDataEventosCompartidos.Margin = New System.Windows.Forms.Padding(10)
+        Me.dgvDataEventosCompartidos.Name = "dgvDataEventosCompartidos"
+        Me.dgvDataEventosCompartidos.ReadOnly = True
+        Me.dgvDataEventosCompartidos.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataEventosCompartidos.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvDataEventosCompartidos.RowHeadersVisible = False
+        Me.dgvDataEventosCompartidos.RowHeadersWidth = 51
+        Me.dgvDataEventosCompartidos.RowTemplate.Height = 40
+        Me.dgvDataEventosCompartidos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvDataEventosCompartidos.Size = New System.Drawing.Size(1125, 555)
+        Me.dgvDataEventosCompartidos.TabIndex = 103
+        '
+        'DataGridViewImageColumn1
+        '
+        Me.DataGridViewImageColumn1.HeaderText = ""
+        Me.DataGridViewImageColumn1.Image = CType(resources.GetObject("DataGridViewImageColumn1.Image"), System.Drawing.Image)
+        Me.DataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.DataGridViewImageColumn1.MinimumWidth = 6
+        Me.DataGridViewImageColumn1.Name = "DataGridViewImageColumn1"
+        Me.DataGridViewImageColumn1.ReadOnly = True
+        Me.DataGridViewImageColumn1.Visible = False
+        Me.DataGridViewImageColumn1.Width = 6
         '
         'PanelNotificaciones
         '
@@ -1082,11 +1188,15 @@ Partial Class GestionEventos
         Me.Name = "GestionEventos"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "GestionEventos"
-        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).EndInit()
         Me.panelEventos.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
+        Me.TabControl1.ResumeLayout(False)
+        Me.tabEventosPropios.ResumeLayout(False)
+        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabEventosCompartidos.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelNotificaciones.ResumeLayout(False)
         Me.PanelNotificaciones.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
@@ -1116,8 +1226,6 @@ Partial Class GestionEventos
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents dgvDataEventos As DataGridView
-    Friend WithEvents Eli As DataGridViewImageColumn
     Friend WithEvents panelEventos As Panel
     Friend WithEvents btnSincronizar As Button
     Friend WithEvents PanelDatosRecurrencia As ControlPanel
@@ -1190,4 +1298,11 @@ Partial Class GestionEventos
     Friend WithEvents btnInsertarEvento As FontAwesome.Sharp.IconButton
     Friend WithEvents Panel2 As Panel
     Friend WithEvents labelCantidadEventos As Label
+    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents tabEventosPropios As TabPage
+    Friend WithEvents dgvDataEventos As DataGridView
+    Friend WithEvents Eli As DataGridViewImageColumn
+    Friend WithEvents tabEventosCompartidos As TabPage
+    Friend WithEvents dgvDataEventosCompartidos As DataGridView
+    Friend WithEvents DataGridViewImageColumn1 As DataGridViewImageColumn
 End Class

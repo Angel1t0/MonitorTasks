@@ -50,15 +50,15 @@
 
     Private Sub CargarListaInvitados(eventID As String)
         comboUsuariosANotificar.Items.Clear()
-        Dim listaInvitados As List(Of String) = _eventoControlador.ObtenerAsistentesInvitados(eventID)
+        Dim listaAsistentes As List(Of Asistente) = _eventoControlador.ObtenerAsistentesInvitados(eventID)
 
         ' Si hay más de un invitado, agrega la opción "Todos"
-        If listaInvitados.Count > 1 Then
+        If listaAsistentes.Count > 1 Then
             comboUsuariosANotificar.Items.Add("Todos")
         End If
 
-        For Each invitado In listaInvitados
-            comboUsuariosANotificar.Items.Add(invitado)
+        For Each asistente In listaAsistentes
+            comboUsuariosANotificar.Items.Add(asistente.Email)
         Next
     End Sub
 
@@ -105,4 +105,5 @@
         PanelDataMensajes.Visible = True
         Panel1.Visible = True
     End Sub
+
 End Class

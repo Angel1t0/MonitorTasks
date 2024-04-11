@@ -60,7 +60,7 @@ Public Class GestionRecurrenciaMensajes
                         End If
                         If eventoYMensajes.Mensaje.WhatsAppSent = False Then
                             Console.WriteLine("Notificación de Whatsapp enviada")
-                            '_eventoControlador.EnviarWhatsApp(eventoYMensajes.Evento.CreatorPhone, eventoYMensajes.Mensaje) Tiene un limite de mensajes
+                            _eventoControlador.EnviarWhatsApp(eventoYMensajes.Mensaje)
                         End If
                         If eventoYMensajes.Mensaje.DesktopSent = False Then
                             _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje, eventoYMensajes.Evento.UserID)

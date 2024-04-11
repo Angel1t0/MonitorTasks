@@ -215,8 +215,8 @@ Public Class EventoData
     End Function
 
 
-    Public Function MostrarAsistentesInvitados(eventID As String) As List(Of String)
-        Dim asistentes As New List(Of String)
+    Public Function MostrarAsistentesInvitados(eventID As String) As List(Of Asistente)
+        Dim asistentes As New List(Of Asistente)
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
@@ -224,8 +224,12 @@ Public Class EventoData
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@EventID", eventID)
                 Dim reader As SqlDataReader = comando.ExecuteReader
-                While (reader.Read())
-                    asistentes.Add(reader(0))
+                While reader.Read()
+                    Dim asistente As New Asistente() With {
+                    .Email = If(reader.IsDBNull(0), String.Empty, reader.GetString(0)),
+                    .PhoneNumber = If(reader.IsDBNull(1), String.Empty, reader.GetString(1))
+                }
+                    asistentes.Add(asistente)
                 End While
                 Return asistentes
             End Using
@@ -389,6 +393,7 @@ Public Class EventoData
                     Dim asistente As New Asistente()
                     asistente.EventID = reader(1)
                     asistente.Email = reader(2)
+                    asistente.Status = reader(4)
                     asistentes.Add(asistente)
                 End While
             End Using
@@ -671,4 +676,59 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al eliminar el calendario.", ex)
         End Try
     End Sub
+
+    Public Sub ActualizarAsistente(asistenteGoogle As Asistente)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("editarAsistentes", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@EventID", asistenteGoogle.EventID)
+                comando.Parameters.AddWithValue("@Email", asistenteGoogle.Email)
+                comando.Parameters.AddWithValue("@Status", asistenteGoogle.Status)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al actualizar el asistente en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al actualizar el asistente.", ex)
+        End Try
+    End Sub
+
+    ' GESTION EVENTOS COMPARTIDOS
+    Public Function ObtenerEventosCompartidos() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerEventosCompartidos", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", ObtenerCorreoUsuario())
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar eventos compartidos de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar eventos compartidos.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerTelefonoAsistente(email As String) As String
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerTelefonoAsistente", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", email)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener el teléfono del asistente.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener el teléfono del asistente.", ex)
+        End Try
+    End Function
 End Class

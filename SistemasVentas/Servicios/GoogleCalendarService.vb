@@ -85,7 +85,7 @@ Public Class GoogleCalendarService
                 eventoGoogle.Recurrence = New List(Of String) From {evento.RRULE}
             End If
 
-            eventoGoogle.Attendees = evento.Attendees.Select(Function(a) New EventAttendee() With {.Email = a.Email}).ToList()
+            eventoGoogle.Attendees = evento.Attendees.Select(Function(a) New EventAttendee() With {.Email = a.Email, .ResponseStatus = a.Status}).ToList()
             ' Configurar asistentes
             'If evento.Attendees IsNot Nothing AndAlso evento.Attendees.Count > 0 Then
             '    eventoGoogle.Attendees = evento.Attendees.Select(Function(a) New EventAttendee() With {.Email = a.Email}).ToList()
@@ -103,6 +103,25 @@ Public Class GoogleCalendarService
             Dim updatedEvent As [Event] = Await service.Events.Update(eventoGoogle, CalendarioID, googleEventId).ExecuteAsync()
         Catch ex As Exception
             Console.WriteLine($"Error al actualizar eventos: {ex.Message}")
+        End Try
+    End Function
+
+    ' Actualizar status de asistente mediante el eventID y el Email
+    Public Async Function ActualizarAsistenteGoogleAsync(service As CalendarService, asistente As Asistente) As Task
+        Try
+            ' Obtener el evento existente
+            Dim eventoGoogle As [Event] = Await service.Events.Get(CalendarioID, asistente.EventID).ExecuteAsync()
+
+            ' Actualizar el estado de respuesta del asistente
+            Dim asistenteGoogle As EventAttendee = eventoGoogle.Attendees.FirstOrDefault(Function(a) a.Email = asistente.Email)
+            If asistenteGoogle IsNot Nothing Then
+                asistenteGoogle.ResponseStatus = asistente.Status
+            End If
+
+            ' Actualizar el evento en Google Calendar
+            Dim updatedEvent As [Event] = Await service.Events.Update(eventoGoogle, CalendarioID, asistente.EventID).ExecuteAsync()
+        Catch ex As Exception
+            Console.WriteLine($"Error al actualizar asistente: {ex.Message}")
         End Try
     End Function
 
@@ -145,7 +164,7 @@ Public Class GoogleCalendarService
                     ' Verificar si hay asistentes antes de intentar iterar
                     If eventoGoogle.Attendees IsNot Nothing Then
                         For Each asistenteGoogle In eventoGoogle.Attendees
-                            _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteGoogle.Email})
+                            _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteGoogle.Email, .Status = asistenteGoogle.ResponseStatus})
                             _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(asistenteGoogle.Email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                         Next
                     End If
@@ -171,27 +190,37 @@ Public Class GoogleCalendarService
                         End If
                         ' Si el evento de Google tiene asistentes
                     Else
-                        Dim googleAttendeesEmails = eventoGoogle.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
+                        'Dim googleAttendeesEmails = eventoGoogle.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
+                        Dim googleAttendees = eventoGoogle.Attendees.Select(Function(a) New Asistente With {.Email = a.Email, .Status = a.ResponseStatus}).ToList()
 
                         ' Si el evento local no tiene asistentes
                         If eventoLocal.Attendees Is Nothing OrElse eventoLocal.Attendees.Count = 0 Then
                             ' Agregar todos los asistentes de Google al evento local
-                            For Each email In googleAttendeesEmails
-                                _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
-                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
+                            For Each asistente In googleAttendees
+                                _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistente.Email, .Status = asistente.Status})
+                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(asistente.Email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                             Next
                         Else
                             Dim localAttendeesEmails = eventoLocal.Attendees.Select(Function(a) a.Email.ToLower()).ToList()
 
                             ' Identificar y agregar nuevos asistentes
-                            For Each email In googleAttendeesEmails.Except(localAttendeesEmails)
-                                _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
-                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
+                            For Each asistente In googleAttendees.Where(Function(a) Not localAttendeesEmails.Contains(a.Email))
+                                _datosEvento.InsertarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistente.Email, .Status = asistente.Status})
+                                _datosEvento.InsertarMensaje(New Mensaje With {.EventID = eventoGoogleConvertido.EventID, .UserID = _datosEvento.BuscarUserID(asistente.Email), .Title = eventoGoogleConvertido.Summary, .StartDateTime = eventoGoogleConvertido.StartDateTime, .EndDateTime = eventoGoogleConvertido.EndDateTime, .SentTime = eventoGoogleConvertido.StartDateTime, .MessageType = "Actualización", .RRULE = eventoGoogleConvertido.RRULE})
                             Next
 
                             ' Identificar y eliminar asistentes que ya no están en Google
-                            For Each email In localAttendeesEmails.Except(googleAttendeesEmails)
-                                _datosEvento.EliminarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = email})
+                            For Each asistenteLocal In eventoLocal.Attendees.Where(Function(a) Not googleAttendees.Any(Function(ga) ga.Email = a.Email))
+                                _datosEvento.EliminarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteLocal.Email})
+                            Next
+
+                            ' Actualiza el estado de respuesta para los asistentes existentes
+                            For Each asistenteGoogle In googleAttendees
+                                Dim asistenteLocal = eventoLocal.Attendees.FirstOrDefault(Function(a) a.Email = asistenteGoogle.Email)
+                                If asistenteLocal IsNot Nothing AndAlso asistenteLocal.Status <> asistenteGoogle.Status Then
+                                    ' Actualiza el estado de respuesta en la base de datos
+                                    _datosEvento.ActualizarAsistente(New Asistente With {.EventID = eventoGoogleConvertido.EventID, .Email = asistenteLocal.Email, .Status = asistenteGoogle.Status})
+                                End If
                             Next
                         End If
                     End If
@@ -241,7 +270,7 @@ Public Class GoogleCalendarService
             .Location = eventoGoogle.Location,
             .Description = eventoGoogle.Description,
             .StartDateTime = If(eventoGoogle.Start.DateTime.HasValue, eventoGoogle.Start.DateTime.Value, DateTime.Parse(eventoGoogle.Start.Date)),
-            .EndDateTime = If(eventoGoogle.End.DateTime.HasValue, eventoGoogle.End.DateTime.Value, DateTime.Parse(eventoGoogle.End.Date)),
+            .EndDateTime = If(eventoGoogle.End.DateTime, DateTime.Parse(eventoGoogle.End.Date)),
             .RRULE = eventoGoogle.Recurrence?.FirstOrDefault(),
             .Visibility = eventoGoogle.Visibility,
             .Transparency = eventoGoogle.Transparency,
@@ -257,7 +286,7 @@ Public Class GoogleCalendarService
             End If
 
             If eventoGoogle.Attendees IsNot Nothing Then
-                evento.Attendees = eventoGoogle.Attendees.Select(Function(a) New Asistente With {.Email = a.Email}).ToList()
+                evento.Attendees = eventoGoogle.Attendees.Select(Function(a) New Asistente With {.Email = a.Email, .Status = a.ResponseStatus}).ToList()
             End If
 
             If eventoGoogle.Reminders IsNot Nothing AndAlso eventoGoogle.Reminders.Overrides IsNot Nothing Then

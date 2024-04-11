@@ -46,7 +46,7 @@ Public Class EventoControlador
             Return
         End If
         EnviarEmail(mensaje)
-        'EnviarWhatsApp("+17249465054", mensaje)
+        EnviarWhatsApp(mensaje)
         EnviarNotificacionDesktop(mensaje, userID)
     End Sub
 
@@ -112,8 +112,8 @@ Public Class EventoControlador
         _servicioGoogleGmail.EnviarMensajeMail(service, mensaje)
     End Sub
 
-    Public Sub EnviarWhatsApp(creatorPhone As String, mensaje As Mensaje)
-        _servicioWhatsapp.EnviarMensajeWhatsapp(creatorPhone, mensaje)
+    Public Sub EnviarWhatsApp(mensaje As Mensaje)
+        _servicioWhatsapp.EnviarMensajeWhatsapp(mensaje, "WhatsApp")
     End Sub
 
     Public Sub EnviarNotificacionDesktop(mensaje As Mensaje, userID As Integer)
@@ -210,7 +210,7 @@ Public Class EventoControlador
         Return _datosEvento.ObtenerNombreInvitado(email)
     End Function
 
-    Public Function ObtenerAsistentesInvitados(eventID As String) As List(Of String)
+    Public Function ObtenerAsistentesInvitados(eventID As String) As List(Of Asistente)
         Return _datosEvento.MostrarAsistentesInvitados(eventID)
     End Function
 
@@ -243,5 +243,21 @@ Public Class EventoControlador
 
     Public Function ObtenerDatosNotificacion(eventID As String, userID As Integer) As Mensaje
         Return _datosEvento.ObtenerDatosNotificacion(eventID, userID)
+    End Function
+
+    Public Function ObtenerEventosCompartidos() As DataTable
+        Return _datosEvento.ObtenerEventosCompartidos()
+    End Function
+
+    Public Async Function ActualizarStatusAsistente(asistente As Asistente) As Task
+        Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
+
+        Await _servicioGoogleCalendar.ActualizarAsistenteGoogleAsync(service, asistente)
+        ' Actualizar en BD
+        _datosEvento.ActualizarAsistente(asistente)
+    End Function
+
+    Public Function ObtenerTelefonoAsistente(email As String) As String
+        Return _datosEvento.ObtenerTelefonoAsistente(email)
     End Function
 End Class

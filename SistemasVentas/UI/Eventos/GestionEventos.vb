@@ -8,11 +8,11 @@ Public Class GestionEventos
     Public Property UsuarioID As String
     Public Property EventoID As String
     Public Property ReminderID As New List(Of Integer)
-    Public Property AsistenteID As Integer
     Private _actualizarPanelRecurrencia As Boolean = True
 
     ' Instancias de los modelos para manejar la información del evento y su recurrencia.
     Private evento As New Evento()
+    Private asistente As New Asistente()
     Private recurrencia As New Recurrencia()
     Private mensaje As New Mensaje()
 
@@ -93,6 +93,7 @@ Public Class GestionEventos
         Dim asistente As New Asistente() With {
             .EventID = EventoID,
             .Email = comboInvitados.Text,
+            .PhoneNumber = _controlador.ObtenerTelefonoAsistente(comboInvitados.Text),
             .DisplayName = labelAsistente.Text
         }
         Dim indice As Integer = comboListaInvitados.FindString(asistente.Email)
@@ -152,19 +153,17 @@ Public Class GestionEventos
     Public Sub CargarEventosEnDataGridView()
         dgvDataEventos.DataSource = _controlador.ObtenerEventos(CalendarioID)
         labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventos.Rows.Count}"
-        EstilizarTabla()
+        EstilizarTabla(dgvDataEventos)
+        dgvDataEventos.Columns(11).Visible = False
     End Sub
 
     Public Sub CargarListaInvitados(eventID As String)
         comboListaInvitados.Items.Clear()
         evento.Attendees.Clear()
         mensaje.Attendees.Clear()
-        Dim listaInvitados As List(Of String) = _controlador.ObtenerAsistentesInvitados(eventID)
-        For Each invitado In listaInvitados
-            Dim asistente As New Asistente() With {
-                .Email = invitado
-            }
-            comboListaInvitados.Items.Add(invitado)
+        Dim listaAsistentes As List(Of Asistente) = _controlador.ObtenerAsistentesInvitados(eventID)
+        For Each asistente In listaAsistentes
+            comboListaInvitados.Items.Add(asistente.Email)
             evento.Attendees.Add(asistente)
             mensaje.Attendees.Add(asistente)
         Next
@@ -503,20 +502,20 @@ Public Class GestionEventos
         Return dataTable
     End Function
 
-    Private Sub EstilizarTabla()
-        dgvDataEventos.Columns(0).Width = 40
-        dgvDataEventos.Columns(1).Visible = False
-        dgvDataEventos.Columns(9).Visible = False
-        dgvDataEventos.Columns(2).Width = 150
-        dgvDataEventos.Columns(3).Width = 150
-        dgvDataEventos.Columns(4).Width = 200
-        dgvDataEventos.Columns(5).Width = 200
-        dgvDataEventos.Columns(6).Width = 200
-        dgvDataEventos.Columns(7).Width = 100
-        dgvDataEventos.Columns(8).Width = 100
-        dgvDataEventos.Columns(10).Width = 150
+    Private Sub EstilizarTabla(dgvData As DataGridView)
+        dgvData.Columns(0).Width = 40
+        dgvData.Columns(1).Visible = False
+        dgvData.Columns(9).Visible = False
+        dgvData.Columns(2).Width = 150
+        dgvData.Columns(3).Width = 150
+        dgvData.Columns(4).Width = 200
+        dgvData.Columns(5).Width = 200
+        dgvData.Columns(6).Width = 200
+        dgvData.Columns(7).Width = 100
+        dgvData.Columns(8).Width = 100
+        dgvData.Columns(10).Width = 150
 
-        dgvDataEventos.EnableHeadersVisualStyles = False
+        dgvData.EnableHeadersVisualStyles = False
     End Sub
 
     Private Sub PrepararActualizarEvento()
@@ -793,6 +792,56 @@ Public Class GestionEventos
         PanelAsistentes.Visible = False
         PanelNotificaciones.Visible = False
         panelEventos.Visible = True
+    End Sub
+
+    ' GESTION EVENTOS COMPARTIDOS
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        If TabControl1.SelectedTab.Text = "Eventos Compartidos" Then
+            ' Llama a la función que carga los eventos compartidos en dgvEventosCompartidos
+            CargarEventosCompartidosEnDataGridView()
+        ElseIf TabControl1.SelectedTab.Text = "Eventos Propios" Then
+            ' Opcionalmente, puedes recargar los eventos propios si es necesario
+            CargarEventosEnDataGridView()
+        End If
+    End Sub
+
+    Private Sub CargarEventosCompartidosEnDataGridView()
+        dgvDataEventosCompartidos.DataSource = _controlador.ObtenerEventosCompartidos()
+        labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventosCompartidos.Rows.Count}"
+        EstilizarTabla(dgvDataEventosCompartidos)
+        dgvDataEventosCompartidos.Columns(12).Visible = False
+        ComprobarStatusAsistentes()
+    End Sub
+
+    Private Sub ComprobarStatusAsistentes()
+        ' Si el status del asistente es "needsAction" el color de fondo de esa fila se pondra en amarillo y tambien cambia el color al seleccionar la fila
+        For Each row As DataGridViewRow In dgvDataEventosCompartidos.Rows
+            If row.Cells(13).Value.ToString() = "needsAction" Then
+                row.DefaultCellStyle.BackColor = Color.Yellow
+                row.DefaultCellStyle.SelectionBackColor = Color.Yellow
+            End If
+        Next
+    End Sub
+
+    Private Async Sub dgvDataEventosCompartidos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventosCompartidos.CellDoubleClick
+        ' Si la celda no tiene el status "needsAction" no se le preguntará al usuario si desea confirmar su asistencia
+        If dgvDataEventosCompartidos.SelectedCells.Item(13).Value.ToString() <> "needsAction" Then
+            Return
+        End If
+
+        ' Si el usuario hace doble clic en una celda, se le preguntará si desea confirmar su asistencia
+        Dim respuesta = MessageBox.Show("¿Confirmar asistencia?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If respuesta = DialogResult.No Then
+            Return
+        End If
+        Dim asistente As New Asistente() With {
+            .EventID = dgvDataEventosCompartidos.SelectedCells.Item(1).Value.ToString(),
+            .Email = dgvDataEventosCompartidos.SelectedCells.Item(12).Value.ToString(),
+            .Status = "accepted"
+        }
+
+        Await _controlador.ActualizarStatusAsistente(asistente)
+        CargarEventosCompartidosEnDataGridView()
     End Sub
 End Class
 

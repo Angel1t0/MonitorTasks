@@ -266,11 +266,11 @@ Partial Class GestionMensajes
         Me.Label8.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(49, 202)
+        Me.Label8.Location = New System.Drawing.Point(23, 202)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(174, 20)
+        Me.Label8.Size = New System.Drawing.Size(205, 20)
         Me.Label8.TabIndex = 120
-        Me.Label8.Text = "Notificar por medio de"
+        Me.Label8.Text = "Silenciar notificaciones por"
         '
         'Label7
         '
