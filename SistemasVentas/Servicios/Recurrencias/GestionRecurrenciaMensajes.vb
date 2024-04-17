@@ -10,7 +10,7 @@ Public Class GestionRecurrenciaMensajes
 
     Public Sub New(calendarID As String)
         _timer = New Timer With {
-            .Interval = 20000, ' Revisar cada minuto, ajusta según necesites
+            .Interval = 60000, ' Revisar cada minuto, ajusta según necesites
             .AutoReset = True
             }
 

@@ -96,6 +96,7 @@
     <Compile Include="Modelos\EventoYMensajes.vb" />
     <Compile Include="Modelos\Mensaje.vb" />
     <Compile Include="Servicios\DesktopService.vb" />
+    <Compile Include="Servicios\PodioService.vb" />
     <Compile Include="Servicios\Recurrencias\DeterminarRecurrencia.vb" />
     <Compile Include="Servicios\Recurrencias\GestionRecurrenciaMensajes.vb" />
     <Compile Include="Servicios\GoogleServicesAuthenticator.vb" />
@@ -276,6 +277,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.19041.1</Version>
+    </PackageReference>
+    <PackageReference Include="Podio">
+      <Version>1.5.9</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
