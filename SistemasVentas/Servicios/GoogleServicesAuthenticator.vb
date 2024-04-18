@@ -18,24 +18,26 @@ Public Class GoogleServicesAuthenticator
         Dim tokenDirectoryPath As String = Path.Combine(TokenPath, userID.ToString())
         Dim fileDataStore = New FileDataStore(tokenDirectoryPath, True)
 
-        If credential Is Nothing Then
-            Using stream As New FileStream(ClientSecretPath, FileMode.Open, FileAccess.Read)
-                Try
-                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                        GoogleClientSecrets.FromStream(stream).Secrets,
-                        Scopes,
-                        userID,
-                        CancellationToken.None,
-                        fileDataStore).Result
+        Using stream As New FileStream(ClientSecretPath, FileMode.Open, FileAccess.Read)
+            Try
+                ' Siempre autoriza, independientemente de si ya hay un token existente.
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                GoogleClientSecrets.FromStream(stream).Secrets,
+                Scopes,
+                userID.ToString(), ' Usamos ToString para asegurar que el user ID se maneja como un string
+                CancellationToken.None,
+                fileDataStore).Result
 
-                    Console.WriteLine("Credential file saved to: " & TokenPath)
-                Catch ex As Exception
-                    Throw New ApplicationException("Error al autenticar con Google Services.", ex)
-                End Try
-            End Using
-        End If
+                Console.WriteLine("Credential file saved to: " & tokenDirectoryPath)
+            Catch ex As AggregateException
+                Console.WriteLine("Error al autenticar con Google Services: " & ex.InnerException.Message)
+                Throw
+            End Try
+        End Using
+
         Return credential
     End Function
+
 
     ' Simplifica la obtención de los servicios reutilizando las credenciales autenticadas
     Public Function ObtenerServicioCalendar() As CalendarService

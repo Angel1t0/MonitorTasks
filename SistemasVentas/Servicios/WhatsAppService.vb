@@ -41,12 +41,12 @@ Public Class WhatsAppService
                 Dim TelefonoEnviar As String = attendee.PhoneNumber
 
                 If TipoCanal = "SMS" Then
-                    _twilioOE.SendSMSTwilio(PTwilioAccountSid, PTwilioAuthToken, PTwilioPhoneNumberwhatsappFrom, description, TelefonoEnviar)
+                    _twilioOE.SendSMSTwilio(PTwilioAccountSid, PTwilioAuthToken, PTwilioPhoneNumberwhatsappFrom, description, "52" & TelefonoEnviar)
                 ElseIf TipoCanal = "WhatsApp" Then
                     _twilioOE.EnviarSMSWhatsApp(0, 0, 0, description, "52" & TelefonoEnviar, TipoCanal, 0, "", PTwilioPhoneNumberwhatsappFrom, PTwilioAccountSid, PTwilioAuthToken, "")
                 Else
                     _twilioOE.EnviarSMSWhatsApp(0, 0, 0, description, "52" & TelefonoEnviar, TipoCanal, 0, "", PTwilioPhoneNumberwhatsappFrom, PTwilioAccountSid, PTwilioAuthToken, "")
-                    _twilioOE.SendSMSTwilio(PTwilioAccountSid, PTwilioAuthToken, PTwilioPhoneNumberwhatsappFrom, description, TelefonoEnviar)
+                    _twilioOE.SendSMSTwilio(PTwilioAccountSid, PTwilioAuthToken, PTwilioPhoneNumberwhatsappFrom, description, "52" & TelefonoEnviar)
                 End If
             Next
         Catch ex As Exception

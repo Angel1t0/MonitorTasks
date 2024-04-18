@@ -25,8 +25,8 @@ Public Class FormularioPrincipal
     Private Sub FormularioPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim gestionRecurrenciaMensajes As New GestionRecurrenciaMensajes(_CalendarioID)
         Dim podioService As New PodioService
-        'gestionRecurrenciaMensajes.Iniciar()
-        podioService.CreateItem()
+        gestionRecurrenciaMensajes.Iniciar()
+        'podioService.CreateItem()
     End Sub
 
     ' Este metodo se encarga de resaltar el boton que se ha seleccionado

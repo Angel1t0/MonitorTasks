@@ -1,5 +1,6 @@
 ﻿Imports Ical.Net.CalendarComponents
 Imports Ical.Net.DataTypes
+Imports System.Threading.Tasks
 Imports System.Timers
 
 Public Class GestionRecurrenciaMensajes
@@ -32,7 +33,7 @@ Public Class GestionRecurrenciaMensajes
         VerificarYEnviarCorreos()
     End Sub
 
-    Private Sub VerificarYEnviarCorreos()
+    Private Async Sub VerificarYEnviarCorreos()
         ' 1. Obtener la lista de eventos y mensajes
         ' 2. Para cada evento, verificar si corresponde enviar algún mensaje basado en su recurrencia
         ' 3. Si es así, enviar el mensaje
@@ -59,14 +60,14 @@ Public Class GestionRecurrenciaMensajes
                             _eventoControlador.EnviarEmail(eventoYMensajes.Mensaje)
                         End If
                         If eventoYMensajes.Mensaje.WhatsAppSent = False Then
-                            Console.WriteLine("Notificación de Whatsapp enviada")
                             _eventoControlador.EnviarWhatsApp(eventoYMensajes.Mensaje)
+                            Console.WriteLine("Notificación de Whatsapp enviada")
                         End If
                         If eventoYMensajes.Mensaje.DesktopSent = False Then
                             _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje, eventoYMensajes.Evento.UserID)
                             Console.WriteLine("Notificación de escritorio enviada")
                         End If
-
+                        Await Task.Delay(2000) ' Esperar 2 segundos entre cada envío
                     End If
                 Next
             Next

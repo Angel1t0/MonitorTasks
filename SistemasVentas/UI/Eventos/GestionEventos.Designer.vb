@@ -36,12 +36,12 @@ Partial Class GestionEventos
         Me.dgvDataEventos = New System.Windows.Forms.DataGridView()
         Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
         Me.tabEventosCompartidos = New System.Windows.Forms.TabPage()
+        Me.dgvDataEventosCompartidos = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.labelCantidadEventos = New System.Windows.Forms.Label()
         Me.btnInsertarEvento = New FontAwesome.Sharp.IconButton()
         Me.btnSincronizar = New System.Windows.Forms.Button()
-        Me.dgvDataEventosCompartidos = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.PanelNotificaciones = New SistemasVentas.ControlPanel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.btnEnviarAPI = New System.Windows.Forms.ToolStripMenuItem()
@@ -114,8 +114,8 @@ Partial Class GestionEventos
         Me.tabEventosPropios.SuspendLayout()
         CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabEventosCompartidos.SuspendLayout()
-        Me.Panel1.SuspendLayout()
         CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
         Me.PanelNotificaciones.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.numericUpCantidad, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -249,66 +249,6 @@ Partial Class GestionEventos
         Me.tabEventosCompartidos.Text = "Eventos Compartidos"
         Me.tabEventosCompartidos.UseVisualStyleBackColor = True
         '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.labelCantidadEventos)
-        Me.Panel1.Controls.Add(Me.btnInsertarEvento)
-        Me.Panel1.Controls.Add(Me.btnSincronizar)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1159, 73)
-        Me.Panel1.TabIndex = 105
-        '
-        'labelCantidadEventos
-        '
-        Me.labelCantidadEventos.AutoSize = True
-        Me.labelCantidadEventos.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.labelCantidadEventos.Location = New System.Drawing.Point(26, 32)
-        Me.labelCantidadEventos.Name = "labelCantidadEventos"
-        Me.labelCantidadEventos.Size = New System.Drawing.Size(19, 21)
-        Me.labelCantidadEventos.TabIndex = 108
-        Me.labelCantidadEventos.Text = "0"
-        '
-        'btnInsertarEvento
-        '
-        Me.btnInsertarEvento.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnInsertarEvento.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnInsertarEvento.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnInsertarEvento.FlatAppearance.BorderSize = 0
-        Me.btnInsertarEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnInsertarEvento.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnInsertarEvento.ForeColor = System.Drawing.Color.White
-        Me.btnInsertarEvento.IconChar = FontAwesome.Sharp.IconChar.Add
-        Me.btnInsertarEvento.IconColor = System.Drawing.Color.White
-        Me.btnInsertarEvento.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnInsertarEvento.IconSize = 16
-        Me.btnInsertarEvento.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnInsertarEvento.Location = New System.Drawing.Point(926, 23)
-        Me.btnInsertarEvento.Name = "btnInsertarEvento"
-        Me.btnInsertarEvento.Padding = New System.Windows.Forms.Padding(18, 1, 18, 0)
-        Me.btnInsertarEvento.Size = New System.Drawing.Size(177, 40)
-        Me.btnInsertarEvento.TabIndex = 106
-        Me.btnInsertarEvento.Text = "Nuevo Evento"
-        Me.btnInsertarEvento.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnInsertarEvento.UseVisualStyleBackColor = False
-        '
-        'btnSincronizar
-        '
-        Me.btnSincronizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSincronizar.BackColor = System.Drawing.Color.Transparent
-        Me.btnSincronizar.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnSincronizar.FlatAppearance.BorderSize = 0
-        Me.btnSincronizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnSincronizar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSincronizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnSincronizar.Location = New System.Drawing.Point(793, 23)
-        Me.btnSincronizar.Name = "btnSincronizar"
-        Me.btnSincronizar.Size = New System.Drawing.Size(106, 40)
-        Me.btnSincronizar.TabIndex = 103
-        Me.btnSincronizar.Text = "Sincronizar"
-        Me.btnSincronizar.UseVisualStyleBackColor = False
-        '
         'dgvDataEventosCompartidos
         '
         Me.dgvDataEventosCompartidos.AllowUserToAddRows = False
@@ -370,6 +310,66 @@ Partial Class GestionEventos
         Me.DataGridViewImageColumn1.Visible = False
         Me.DataGridViewImageColumn1.Width = 6
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.labelCantidadEventos)
+        Me.Panel1.Controls.Add(Me.btnInsertarEvento)
+        Me.Panel1.Controls.Add(Me.btnSincronizar)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1159, 73)
+        Me.Panel1.TabIndex = 105
+        '
+        'labelCantidadEventos
+        '
+        Me.labelCantidadEventos.AutoSize = True
+        Me.labelCantidadEventos.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.labelCantidadEventos.Location = New System.Drawing.Point(26, 32)
+        Me.labelCantidadEventos.Name = "labelCantidadEventos"
+        Me.labelCantidadEventos.Size = New System.Drawing.Size(19, 21)
+        Me.labelCantidadEventos.TabIndex = 108
+        Me.labelCantidadEventos.Text = "0"
+        '
+        'btnInsertarEvento
+        '
+        Me.btnInsertarEvento.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnInsertarEvento.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnInsertarEvento.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnInsertarEvento.FlatAppearance.BorderSize = 0
+        Me.btnInsertarEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnInsertarEvento.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnInsertarEvento.ForeColor = System.Drawing.Color.White
+        Me.btnInsertarEvento.IconChar = FontAwesome.Sharp.IconChar.Add
+        Me.btnInsertarEvento.IconColor = System.Drawing.Color.White
+        Me.btnInsertarEvento.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnInsertarEvento.IconSize = 16
+        Me.btnInsertarEvento.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnInsertarEvento.Location = New System.Drawing.Point(926, 23)
+        Me.btnInsertarEvento.Name = "btnInsertarEvento"
+        Me.btnInsertarEvento.Padding = New System.Windows.Forms.Padding(18, 1, 18, 0)
+        Me.btnInsertarEvento.Size = New System.Drawing.Size(177, 40)
+        Me.btnInsertarEvento.TabIndex = 106
+        Me.btnInsertarEvento.Text = "Nuevo Evento"
+        Me.btnInsertarEvento.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnInsertarEvento.UseVisualStyleBackColor = False
+        '
+        'btnSincronizar
+        '
+        Me.btnSincronizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSincronizar.BackColor = System.Drawing.Color.Transparent
+        Me.btnSincronizar.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnSincronizar.FlatAppearance.BorderSize = 0
+        Me.btnSincronizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSincronizar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSincronizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnSincronizar.Location = New System.Drawing.Point(793, 23)
+        Me.btnSincronizar.Name = "btnSincronizar"
+        Me.btnSincronizar.Size = New System.Drawing.Size(106, 40)
+        Me.btnSincronizar.TabIndex = 103
+        Me.btnSincronizar.Text = "Sincronizar"
+        Me.btnSincronizar.UseVisualStyleBackColor = False
+        '
         'PanelNotificaciones
         '
         Me.PanelNotificaciones.BackColor = System.Drawing.Color.White
@@ -400,7 +400,7 @@ Partial Class GestionEventos
         Me.MenuStrip1.Location = New System.Drawing.Point(159, 366)
         Me.MenuStrip1.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(274, 44)
+        Me.MenuStrip1.Size = New System.Drawing.Size(272, 44)
         Me.MenuStrip1.TabIndex = 130
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -768,7 +768,7 @@ Partial Class GestionEventos
         Me.MenuStrip3.Location = New System.Drawing.Point(314, 554)
         Me.MenuStrip3.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip3.Name = "MenuStrip3"
-        Me.MenuStrip3.Size = New System.Drawing.Size(234, 44)
+        Me.MenuStrip3.Size = New System.Drawing.Size(232, 44)
         Me.MenuStrip3.TabIndex = 116
         Me.MenuStrip3.Text = "MenuStrip3"
         '
@@ -1194,9 +1194,9 @@ Partial Class GestionEventos
         Me.tabEventosPropios.ResumeLayout(False)
         CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabEventosCompartidos.ResumeLayout(False)
+        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelNotificaciones.ResumeLayout(False)
         Me.PanelNotificaciones.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)

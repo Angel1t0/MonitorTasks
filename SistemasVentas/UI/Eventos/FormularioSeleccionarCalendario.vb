@@ -1,7 +1,9 @@
 ﻿Imports System.Runtime.InteropServices
+Imports System.Threading.Tasks
 
 Public Class FormularioSeleccionarCalendario
     Private _controlador As New EventoControlador()
+    Private _googleServicesAuthenticator As New GoogleServicesAuthenticator()
     Public Property CalendarioID As String
     Public Property UsuarioID As String = Login.idUsuario
 
@@ -89,12 +91,26 @@ Public Class FormularioSeleccionarCalendario
     End Sub
 
     Private Sub FormularioSeleccionarCalendario_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        CargarCalendarios()
-        If ComboCalendario.Items.Count = 0 Then
-            BtnSeleccionarCalendario.Enabled = False
-            Return
-        End If
-        ComboCalendario.SelectedIndex = 0
+        While True
+            Try
+                _googleServicesAuthenticator.AuthenticateGoogleServices(Login.idUsuario)
+                ' Si la autenticación es exitosa, proceder con la carga normal de la aplicación.
+                CargarCalendarios()
+                If ComboCalendario.Items.Count = 0 Then
+                    BtnSeleccionarCalendario.Enabled = False
+                    Return
+                End If
+                ComboCalendario.SelectedIndex = 0
+                Exit While
+            Catch ex As Exception
+                ' Preguntar al usuario si desea reintentar la autenticación.
+                Dim result As DialogResult = MessageBox.Show("No se pudo autenticar con Google Services. ¿Desea reintentar?", "Error de Autenticación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                If result = DialogResult.No Then
+                    Me.Close() ' Cerrar la aplicación si el usuario no desea reintentar.
+                    Exit While
+                End If
+            End Try
+        End While
     End Sub
 
     Private Sub btnSincronizar_Click(sender As Object, e As EventArgs) Handles btnSincronizar.Click
