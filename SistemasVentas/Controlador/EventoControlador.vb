@@ -217,6 +217,7 @@ Public Class EventoControlador
     Public Function ObtenerNotificacionesActivas(eventID As String) As List(Of Notificacion)
         Return _datosEvento.MostrarNotificacionesActivas(eventID)
     End Function
+
     Public Function ObtenerCorreosAsistentesExcepto(email As String) As List(Of String)
         Return _datosEvento.ObtenerCorreosUsuarioExcepto(email)
     End Function

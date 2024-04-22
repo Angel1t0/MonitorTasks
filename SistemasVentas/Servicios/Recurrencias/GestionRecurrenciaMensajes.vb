@@ -33,7 +33,7 @@ Public Class GestionRecurrenciaMensajes
         VerificarYEnviarCorreos()
     End Sub
 
-    Private Async Sub VerificarYEnviarCorreos()
+    Private Sub VerificarYEnviarCorreos()
         ' 1. Obtener la lista de eventos y mensajes
         ' 2. Para cada evento, verificar si corresponde enviar algún mensaje basado en su recurrencia
         ' 3. Si es así, enviar el mensaje
@@ -67,9 +67,10 @@ Public Class GestionRecurrenciaMensajes
                             _eventoControlador.EnviarNotificacionDesktop(eventoYMensajes.Mensaje, eventoYMensajes.Evento.UserID)
                             Console.WriteLine("Notificación de escritorio enviada")
                         End If
-                        Await Task.Delay(2000) ' Esperar 2 segundos entre cada envío
+
                     End If
                 Next
+                'Await Task.Delay(2000) ' Esperar 2 segundos entre cada envío
             Next
         Catch ex As Exception
             Console.WriteLine("Error al verificar y enviar correos: " & ex.Message)
