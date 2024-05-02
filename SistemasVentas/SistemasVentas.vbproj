@@ -94,6 +94,7 @@
     <Compile Include="Datos\EventoData.vb" />
     <Compile Include="Modelos\Calendario.vb" />
     <Compile Include="Modelos\EventoYMensajes.vb" />
+    <Compile Include="Modelos\PodioItem.vb" />
     <Compile Include="Modelos\Mensaje.vb" />
     <Compile Include="Servicios\DesktopService.vb" />
     <Compile Include="Servicios\PodioService.vb" />

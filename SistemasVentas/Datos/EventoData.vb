@@ -135,6 +135,7 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@Email", asistente.Email)
                 comando.Parameters.AddWithValue("@DisplayName", asistente.DisplayName)
                 comando.Parameters.AddWithValue("@Status", asistente.Status)
+                comando.Parameters.AddWithValue("@PodioItemID", asistente.PodioItemID)
 
                 ' Ejecuta el comando y captura el AttendeeID generado
                 Dim result As Object = comando.ExecuteScalar()
@@ -729,6 +730,115 @@ Public Class EventoData
             Throw New ApplicationException("Error al obtener el teléfono del asistente.", ex)
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado al obtener el teléfono del asistente.", ex)
+        End Try
+    End Function
+
+    Public Function ObtenerEventosConPodio(calendarioID As String) As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerEventosConPodio", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@CalendarID", calendarioID)
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar eventos con podio de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar eventos con podio.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function InsertarPodioItem(podioItem As PodioItem) As Integer
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarPodioItem", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@EventID", podioItem.EventID)
+                comando.Parameters.AddWithValue("@PodioAppID", podioItem.PodioAppID)
+                comando.Parameters.AddWithValue("@PodioAppItemID", podioItem.PodioAppItemID)
+                comando.Parameters.AddWithValue("@Title", podioItem.Title)
+                comando.Parameters.AddWithValue("@Description", podioItem.Description)
+                comando.Parameters.AddWithValue("@Company", podioItem.Company)
+                comando.Parameters.AddWithValue("@Department", podioItem.Department)
+                comando.Parameters.AddWithValue("@DepartmentPriority", podioItem.DepartmentPriority)
+                comando.Parameters.AddWithValue("@SystemArea", podioItem.SystemArea)
+                comando.Parameters.AddWithValue("@Categories", podioItem.Categories)
+                comando.Parameters.AddWithValue("@SystemPriority", podioItem.SystemPriority)
+                comando.Parameters.AddWithValue("@Priority", podioItem.Priority)
+                comando.Parameters.AddWithValue("@StartDate", podioItem.StartDate)
+                comando.Parameters.AddWithValue("@EndDate", podioItem.EndDate)
+                comando.Parameters.AddWithValue("@WorkPlan", podioItem.WorkPlan)
+                comando.Parameters.AddWithValue("@Status", podioItem.Status)
+                comando.Parameters.AddWithValue("@Progress", podioItem.Progress)
+                comando.Parameters.AddWithValue("@SystemProject", podioItem.SystemProject)
+                comando.Parameters.AddWithValue("@GeneralProject", podioItem.GeneralProject)
+                comando.Parameters.AddWithValue("@HoursAccumulated", podioItem.HoursAccumulated)
+                comando.Parameters.AddWithValue("@ExtraHours", podioItem.ExtraHours)
+                comando.Parameters.AddWithValue("@ScrumDaily", podioItem.ScrumDaily)
+                comando.Parameters.AddWithValue("@CreatedOn", DateTime.Now)
+                comando.Parameters.AddWithValue("@LastModified", DateTime.Now)
+                Return comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar el item de podio en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar el item de podio.", ex)
+        End Try
+    End Function
+
+    Public Sub InsertarSolicitante(podioItemID As Object, podioUserID As Integer)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarSolicitante", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.Parameters.AddWithValue("@UserID", podioUserID)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar el solicitante en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar el solicitante.", ex)
+        End Try
+    End Sub
+
+    Public Sub InsertarAutorizante(podioItemID As Integer, podioUserID As Integer)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarAutorizante", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.Parameters.AddWithValue("@UserID", podioUserID)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar el autorizante en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar el autorizante.", ex)
+        End Try
+    End Sub
+
+    Public Function ObtenerPodioUserIDPorCorreo(correo As String) As Integer
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerPodioUserIDPorCorreo", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", correo)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener el ID del usuario de Podio.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener el ID del usuario de Podio.", ex)
         End Try
     End Function
 End Class

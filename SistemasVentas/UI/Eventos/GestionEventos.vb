@@ -1,4 +1,6 @@
 ﻿
+Imports Newtonsoft.Json.Linq
+
 Public Class GestionEventos
     ' Controlador para manejar la lógica de negocio y la comunicación con Google Calendar.
     Private _controlador As New EventoControlador()
@@ -9,24 +11,52 @@ Public Class GestionEventos
     Public Property EventoID As String
     Public Property ReminderID As New List(Of Integer)
     Private _actualizarPanelRecurrencia As Boolean = True
+    Private _inicializacionTerminada As Boolean = False
 
     ' Instancias de los modelos para manejar la información del evento y su recurrencia.
     Private evento As New Evento()
     Private asistente As New Asistente()
     Private recurrencia As New Recurrencia()
     Private mensaje As New Mensaje()
+    Private podioItem As New PodioItem()
 
     Private Sub GestionEventos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Dim determinarRecurrencia As New DeterminarRecurrencia()
         'determinarRecurrencia.ParsearRRULE()
         CargarEventosEnDataGridView()
         PanelDatosBasicos.Visible = False
+        panelDatosPodio.Visible = False
         PanelDatosRecurrencia.Visible = False
         PanelAsistentes.Visible = False
         PanelNotificaciones.Visible = False
         CargarAsistentes()
+        podioItem.InitializeOptions()
         ConfigurarComponentes()
         _controlador.EstablecerCalendarioID(CalendarioID)
+        Dim newItem As New PodioItem()
+        With newItem
+            .Title = "Prueba 10"
+            .Description = "Esta es una prueba"
+            .Company = "3"
+            .Department = "5"
+            .DepartmentPriority = 3
+            .SystemArea = "1"
+            .Categories = "7"
+            .RequestorContacts = New List(Of Integer) From {3599090}
+            .AuthorizerContacts = New List(Of Integer) From {3599090}
+            .AssignedToContacts = New List(Of Integer) From {3599090}
+            .SystemPriority = 2
+            .Priority = "2"
+            .StartDate = DateTime.Parse("2023-03-14")
+            .EndDate = DateTime.Parse("2023-03-19")
+            .WorkPlan = "Este es un plan de trabajo"
+            .Status = "10"
+            .Progress = 50
+            .SystemProject = "2011085875"
+            .HoursAccumulated = 576000
+            .ExtraHours = 576000
+        End With
+        _controlador.EnviarItemAPodio(newItem)
     End Sub
 
     ' Manejadores de Eventos
@@ -35,6 +65,22 @@ Public Class GestionEventos
         mensaje.EventID = EventoID
 
         _controlador.CrearEvento(evento, isVisible)
+    End Sub
+
+    Private Sub CrearPodioItem()
+        podioItem.EventID = EventoID
+        podioItem.PodioAppItemID = _controlador.EnviarItemAPodio(podioItem)
+        podioItem.PodioItemID = _controlador.CrearPodioItem(podioItem)
+
+        _controlador.InsertarAsistente(mensaje)
+        _controlador.InsertarSolicitante(podioItem)
+        _controlador.InsertarAutorizante(podioItem)
+    End Sub
+
+    Private Sub ActualizarPodioItem()
+        podioItem.EventID = EventoID
+        _controlador.ActualizarItemEnPodio(podioItem)
+        _controlador.CrearPodioItem(podioItem)
     End Sub
 
     Private Sub LlenarCamposEventos(messageType As String)
@@ -54,6 +100,30 @@ Public Class GestionEventos
         mensaje.EndDateTime = evento.EndDateTime
         mensaje.Status = "Activo"
         mensaje.MessageType = messageType
+
+        podioItem.Title = evento.Summary
+        podioItem.Description = evento.Description
+        podioItem.StartDate = evento.StartDateTime
+        podioItem.EndDate = evento.EndDateTime
+    End Sub
+
+    Private Sub LlenarCamposPodioItem()
+        podioItem.Company = podioItem.GetSelectedOptionId(comboEmpresa.SelectedItem.ToString(), podioItem.companyOptions)
+        podioItem.Department = podioItem.GetSelectedOptionId(comboDepartamento.SelectedItem.ToString(), podioItem.departmentOptions)
+        podioItem.SystemArea = podioItem.GetSelectedOptionId(comboArea.SelectedItem.ToString(), podioItem.systemAreaOptions)
+        podioItem.Categories = podioItem.GetSelectedOptionId(comboCategorias.SelectedItem.ToString(), podioItem.categoryOptions)
+        podioItem.DepartmentPriority = numericOrdenDpt.Value
+        podioItem.SystemPriority = numericOrdenSistemas.Value
+        podioItem.Priority = podioItem.GetSelectedOptionId(comboPrioridad.SelectedItem.ToString(), podioItem.priorityOptions)
+        podioItem.WorkPlan = textPlanAccion.TextBox1.Text
+        podioItem.Status = podioItem.GetSelectedOptionId(comboStatus.SelectedItem.ToString(), podioItem.statusOptions)
+        podioItem.Progress = barraAvance.Value
+        podioItem.SystemProject = ObtenerIdSistemasProyecto()
+        podioItem.GeneralProject = txtProyectoGeneral.Text.ToString()
+        podioItem.HoursAccumulated = podioItem.ConvertTimeToSeconds(maskHorasAcumuladas.Text)
+        podioItem.ExtraHours = podioItem.ConvertTimeToSeconds(maskHorasExtras.Text)
+        podioItem.CreatedOn = DateTime.Now
+        podioItem.LastModified = DateTime.Now
     End Sub
 
     Private Function CrearRecurrencia() As Boolean
@@ -90,28 +160,67 @@ Public Class GestionEventos
     End Function
 
     Private Sub CrearAsistente()
+        Dim correoAsistente As String = comboAsignadoA.SelectedItem.ToString()
         Dim asistente As New Asistente() With {
             .EventID = EventoID,
-            .Email = comboInvitados.Text,
-            .PhoneNumber = _controlador.ObtenerTelefonoAsistente(comboInvitados.Text),
-            .DisplayName = labelAsistente.Text
+            .Email = correoAsistente,
+            .PhoneNumber = _controlador.ObtenerTelefonoAsistente(correoAsistente),
+            .PodioItemID = podioItem.PodioItemID
         }
-        Dim indice As Integer = comboListaInvitados.FindString(asistente.Email)
+        Dim indice As Integer = comboAsignados.FindString(asistente.Email)
         If indice >= 0 Then
             MessageBox.Show("El asistente ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        _controlador.InsertarAsistente(asistente, mensaje)
+
+        mensaje.EventID = EventoID
         evento.Attendees.Add(asistente)
+        mensaje.Attendees.Add(asistente)
+        podioItem.AssignedToContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(asistente.Email))
         MessageBox.Show("Asistente agregado correctamente")
     End Sub
 
+    Private Sub CrearSolicitante()
+        Dim correoSolicitante As String = comboSolicitante.SelectedItem.ToString()
+        Dim indice As Integer = comboSolicitantes.FindString(correoSolicitante)
+        If indice >= 0 Then
+            MessageBox.Show("El solicitante ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        podioItem.RequestorContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(correoSolicitante))
+    End Sub
+
+    Private Sub CrearAutorizante()
+        Dim correoAutorizante As String = comboAutoriza.SelectedItem.ToString()
+        Dim indice As Integer = comboAutorizantes.FindString(correoAutorizante)
+        If indice >= 0 Then
+            MessageBox.Show("El autorizante ya ha sido agregado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        podioItem.AuthorizerContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(correoAutorizante))
+    End Sub
+
     Public Sub AgregarListaInvitado()
-        comboListaInvitados.Items.Clear()
+        comboAsignados.Items.Clear()
         For Each invitado In evento.Attendees
-            comboListaInvitados.Items.Add(invitado.Email)
+            comboAsignados.Items.Add(invitado.Email)
         Next
-        comboListaInvitados.SelectedIndex = 0
+        comboAsignados.SelectedIndex = 0
+    End Sub
+
+    Public Sub AgregarListaSolicitante()
+        comboSolicitantes.Items.Clear()
+        For Each solicitante In podioItem.RequestorContacts
+            comboSolicitantes.Items.Add(solicitante)
+        Next
+        comboSolicitantes.SelectedIndex = 0
+    End Sub
+    Public Sub AgregarListaAutorizante()
+        comboAutorizantes.Items.Clear()
+        For Each autorizante In podioItem.AuthorizerContacts
+            comboAutorizantes.Items.Add(autorizante)
+        Next
+        comboAutorizantes.SelectedIndex = 0
     End Sub
 
     Private Sub CrearRecordatorio()
@@ -151,23 +260,29 @@ Public Class GestionEventos
     End Sub
 
     Public Sub CargarEventosEnDataGridView()
-        dgvDataEventos.DataSource = _controlador.ObtenerEventos(CalendarioID)
+        dgvDataEventos.DataSource = _controlador.ObtenerEventosConPodio(CalendarioID)
         labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventos.Rows.Count}"
         EstilizarTabla(dgvDataEventos)
-        dgvDataEventos.Columns(11).Visible = False
+        'dgvDataEventos.Columns(11).Visible = False
     End Sub
 
     Public Sub CargarListaInvitados(eventID As String)
-        comboListaInvitados.Items.Clear()
+        comboAsignados.Items.Clear()
+        comboSolicitantes.Items.Clear()
+        comboAutorizantes.Items.Clear()
+
         evento.Attendees.Clear()
         mensaje.Attendees.Clear()
         Dim listaAsistentes As List(Of Asistente) = _controlador.ObtenerAsistentesInvitados(eventID)
         For Each asistente In listaAsistentes
-            comboListaInvitados.Items.Add(asistente.Email)
+            comboAsignados.Items.Add(asistente.Email)
             evento.Attendees.Add(asistente)
             mensaje.Attendees.Add(asistente)
+            podioItem.AssignedToContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(asistente.Email))
         Next
     End Sub
+
+    'FALTA IMPLEMENTAR EL MÉTODO PARA CARGAR LOS SOLICITANTES Y AUTORIZANTES EN PREPARAR ACTUALIZAR
 
     Public Sub CargarListaNotificaciones(eventID As String)
         Dim listaNotificaciones As List(Of Notificacion) = _controlador.ObtenerNotificacionesActivas(eventID)
@@ -205,22 +320,41 @@ Public Class GestionEventos
     End Sub
 
     Public Sub EliminarAsistente()
-        If comboListaInvitados.Text = "" Then
+        If comboAsignados.Text = "" Then
             MessageBox.Show("No hay asistentes para eliminar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        Dim correo As String = comboListaInvitados.SelectedItem.ToString()
-        Dim asistente As New Asistente() With {
-            .EventID = EventoID,
-            .Email = correo
-        }
-        _controlador.EliminarAsistente(asistente)
+        Dim correo As String = comboAsignados.SelectedItem.ToString()
+
         If evento.Attendees.Count > 0 Then
             evento.Attendees.RemoveAll(Function(a) a.Email.Equals(correo, StringComparison.OrdinalIgnoreCase))
             mensaje.Attendees.RemoveAll(Function(a) a.Email.Equals(correo, StringComparison.OrdinalIgnoreCase))
+            podioItem.AssignedToContacts.Remove(_controlador.ObtenerPodioUserIDPorCorreo(correo))
         End If
-        comboListaInvitados.Items.Remove(correo)
+        comboAsignados.Items.Remove(correo)
         MessageBox.Show("Asistente eliminado correctamente")
+    End Sub
+
+    Public Sub EliminarSolicitante()
+        If comboSolicitantes.Text = "" Then
+            MessageBox.Show("No hay solicitantes para eliminar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        Dim correo As String = comboSolicitantes.SelectedItem.ToString()
+        podioItem.RequestorContacts.Remove(_controlador.ObtenerPodioUserIDPorCorreo(correo))
+        comboSolicitantes.Items.Remove(correo)
+        MessageBox.Show("Solicitante eliminado correctamente")
+    End Sub
+
+    Public Sub EliminarAutorizante()
+        If comboAutorizantes.Text = "" Then
+            MessageBox.Show("No hay autorizantes para eliminar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        Dim correo As String = comboAutorizantes.SelectedItem.ToString()
+        podioItem.AuthorizerContacts.Remove(_controlador.ObtenerPodioUserIDPorCorreo(correo))
+        comboAutorizantes.Items.Remove(correo)
+        MessageBox.Show("Autorizante eliminado correctamente")
     End Sub
 
     Public Sub EliminarNotificacion()
@@ -245,55 +379,72 @@ Public Class GestionEventos
 
     Private Sub btnInsertarEvento_Click(sender As Object, e As EventArgs) Handles btnInsertarEvento.Click
         LimpiarCampos()
-        PanelDatosBasicos.Visible = True
+
         panelEventos.Visible = False
         btnActualizarEvento.Visible = False
         btnContinuarActualizar.Visible = False
+
+        Panel2.Parent.Controls.Remove(PanelDatosBasicos)
+        Me.Controls.Add(PanelDatosBasicos)
+        PanelDatosBasicos.Visible = True
+        PanelDatosBasicos.BringToFront()
+        CentrarPanel(PanelDatosBasicos)
+
         btnCrearEvento.Visible = True
         btnEnviarAPI.Visible = True
-        CentrarPanel(PanelDatosBasicos)
-    End Sub
-
-    Private Sub btnCrearEvento_Click(sender As Object, e As EventArgs) Handles btnCrearEvento.Click
-        LlenarCamposEventos("Nuevo evento")
-        DeterminarRecurrencia()
-        Dim errores As List(Of String) = evento.ValidarCampos()
-        If errores.Count > 0 Then
-            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-        _controlador.EnviarEventoAGoogleCalendar(evento)
-        EventoID = _controlador.GoogleEventID
-        CrearEvento(True)
-
-        PanelDatosBasicos.Visible = False
-        PanelAsistentes.Visible = True
-        PanelAsistentes.BringToFront()
-        CentrarPanel(PanelAsistentes)
-
-        CargarEventosEnDataGridView()
+        _inicializacionTerminada = True
     End Sub
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
         LlenarCamposEventos("Actualización")
+        LlenarCamposPodioItem()
         DeterminarRecurrencia()
         CrearEvento(False)
+        ActualizarPodioItem()
 
         evento.Message = mensaje
         _controlador.AgregarInformacionEvento(evento, UsuarioID)
+
         MessageBox.Show("Evento actualizado correctamente")
         CerrarVentanas()
         CargarEventosEnDataGridView()
     End Sub
 
-    Private Sub btnAgregarAsistentes_Click(sender As Object, e As EventArgs) Handles btnAgregarAsistentes.Click
-        mensaje.EventID = EventoID
+    ' Métodos para crear asistentes, solicitantes, autorizantes
+    Private Sub comboAsignadoA_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboAsignadoA.SelectedIndexChanged
+        If Not _inicializacionTerminada Then
+            Return
+        End If
         CrearAsistente()
         AgregarListaInvitado()
     End Sub
 
-    Private Sub btnEliminarAsistentes_Click(sender As Object, e As EventArgs) Handles btnEliminarAsistentes.Click
+    Private Sub comboAutoriza_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboAutoriza.SelectedIndexChanged
+        If Not _inicializacionTerminada Then
+            Return
+        End If
+        CrearAutorizante()
+        AgregarListaAutorizante()
+    End Sub
+
+    Private Sub comboSolicitante_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboSolicitante.SelectedIndexChanged
+        If Not _inicializacionTerminada Then
+            Return
+        End If
+        CrearSolicitante()
+        AgregarListaSolicitante()
+    End Sub
+
+    Private Sub pictureEliminarAsignados_Click(sender As Object, e As EventArgs) Handles pictureEliminarAsignados.Click
         EliminarAsistente()
+    End Sub
+
+    Private Sub pictureEliminarSolicitantes_Click(sender As Object, e As EventArgs) Handles pictureEliminarSolicitantes.Click
+        EliminarSolicitante()
+    End Sub
+
+    Private Sub pictureEliminarAutorizantes_Click(sender As Object, e As EventArgs) Handles pictureEliminarAutorizantes.Click
+        EliminarAutorizante()
     End Sub
 
     Private Sub btnAgregarRecordatorio_Click(sender As Object, e As EventArgs) Handles btnAgregarRecordatorio.Click
@@ -311,7 +462,9 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnEnviarAPI_Click(sender As Object, e As EventArgs) Handles btnEnviarAPI.Click
+        LlenarCamposPodioItem()
         evento.Message = mensaje
+        CrearPodioItem()
         _controlador.AgregarInformacionEvento(evento, UsuarioID)
 
         MessageBox.Show("Evento creado exitosamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -347,10 +500,6 @@ Public Class GestionEventos
                 dateRecuFinal.Enabled = True
             End If
         End If
-    End Sub
-
-    Private Sub comboInvitados_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboInvitados.SelectedIndexChanged
-        labelAsistente.Text = _controlador.ObtenerNombreAsistente(comboInvitados.SelectedItem.ToString())
     End Sub
 
     Private Sub rbtnConteo_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnConteo.CheckedChanged
@@ -390,10 +539,14 @@ Public Class GestionEventos
         btnContinuarActualizar.Visible = True
         btnCrearEvento.Visible = False
         btnEnviarAPI.Visible = False
+        panelEventos.Visible = False
+
+        Panel2.Parent.Controls.Remove(PanelDatosBasicos)
+        Me.Controls.Add(PanelDatosBasicos)
         PanelDatosBasicos.Visible = True
         PanelDatosBasicos.BringToFront()
-        panelEventos.Visible = False
         CentrarPanel(PanelDatosBasicos)
+
         PrepararActualizarEvento()
     End Sub
 
@@ -410,20 +563,27 @@ Public Class GestionEventos
     ' Métodos Auxiliares
 
     Private Sub CargarAsistentes()
+        ' Aqui cargan los asignados, usuarios en general
         Dim listaCorreos As List(Of String) = _controlador.ObtenerCorreosAsistentesExcepto(_controlador.ObtenerCorreoUsuario)
 
         For Each correo As String In listaCorreos
-            comboInvitados.Items.Add(correo)
+            comboAsignadoA.Items.Add(correo)
+            comboAutoriza.Items.Add(correo)
+            comboSolicitante.Items.Add(correo)
         Next
     End Sub
 
     Private Sub ConfigurarComponentes()
+        LoadOptionInComboBox()
+
         ' Configuración del ComboBox
         comboEventDispo.SelectedIndex = 0 ' Selecciona "Ocupado" por defecto
         comboEventVisibilidad.SelectedIndex = 0 ' Selecciona "Público" por defecto
         comboRecurrencia.SelectedIndex = 0 ' Selecciona "No repetir" por defecto
         comboFrecuencia.SelectedIndex = 0 ' Selecciona "No repetir" por defecto
-        comboInvitados.SelectedIndex = 0 ' Selecciona el primer correo por defecto
+        comboAsignadoA.SelectedIndex = 0 ' Selecciona el primer correo por defecto
+        comboAutoriza.SelectedIndex = 0 ' Selecciona el primer correo por defecto
+        comboSolicitante.SelectedIndex = 0 ' Selecciona el primer correo por defecto
         comboMetodoRecordar.SelectedIndex = 0 ' Selecciona "Correo electrónico" por defecto
         comboUnidades.SelectedIndex = 0 ' Selecciona "Minutos" por defecto
 
@@ -476,45 +636,42 @@ Public Class GestionEventos
         panel.Location = New Point((Me.Width - panel.Width) / 2, (Me.Height - panel.Height) / 2)
     End Sub
 
-    Private Function ConvertirEventosADataTable(eventos As IList(Of Evento)) As DataTable
-        Dim dataTable As New DataTable()
-
-        ' Definir las columnas del DataTable
-        With dataTable.Columns
-            .Add("ID", GetType(String))
-            .Add("Resumen", GetType(String))
-            .Add("Ubicación", GetType(String))
-            .Add("Descripción", GetType(String))
-            .Add("Inicio", GetType(DateTime))
-            .Add("Fin", GetType(DateTime))
-            .Add("Visibilidad", GetType(String))
-            .Add("Transparencia", GetType(String))
-            .Add("Última Modificación", GetType(DateTime))
-        End With
-
-        ' Llenar el DataTable con los eventos
-        For Each evento In eventos
-            dataTable.Rows.Add(evento.EventID, evento.Summary, evento.Location,
-                           evento.Description, evento.StartDateTime, evento.EndDateTime,
-                           evento.Visibility, evento.Transparency, evento.LastModified)
-        Next
-
-        Return dataTable
-    End Function
-
     Private Sub EstilizarTabla(dgvData As DataGridView)
-        dgvData.Columns(0).Width = 40
-        dgvData.Columns(1).Visible = False
-        dgvData.Columns(9).Visible = False
-        dgvData.Columns(2).Width = 150
-        dgvData.Columns(3).Width = 150
-        dgvData.Columns(4).Width = 200
-        dgvData.Columns(5).Width = 200
-        dgvData.Columns(6).Width = 200
-        dgvData.Columns(7).Width = 100
-        dgvData.Columns(8).Width = 100
-        dgvData.Columns(10).Width = 150
+        dgvData.Columns(1).Visible = False ' Oculta el ID del evento
+        dgvData.Columns(3).Visible = False ' Oculta la ubicacion
+        dgvData.Columns(13).Visible = False ' Visibilidad
+        dgvData.Columns(14).Visible = False ' Disponibilidad
+        dgvData.Columns(16).Visible = False ' Id usuario
+        dgvData.Columns(17).Visible = False ' podioItemID
+        dgvData.Columns(18).Visible = False ' PodioAppID
+        dgvData.Columns(19).Visible = False ' PodioAppItemID
+        dgvData.Columns(23).Visible = False ' Fecha inicio podio
+        dgvData.Columns(24).Visible = False ' Fecha fin podio
+        dgvData.Columns(29).Visible = False ' Horas acumuladas
+        dgvData.Columns(30).Visible = False ' Horas extras
+        dgvData.Columns(31).Visible = False ' Scrum
+        dgvData.Columns(32).Visible = False ' Fecha creación podio
+        dgvData.Columns(33).Visible = False ' Fecha modificación podio
 
+        dgvData.Columns(0).Width = 40
+        dgvData.Columns(2).Width = 150 ' Titulo
+        dgvData.Columns(4).Width = 200 ' Descripcion
+        dgvData.Columns(5).Width = 200 ' Fecha inicio
+        dgvData.Columns(6).Width = 200 ' Fecha fin
+        dgvData.Columns(7).Width = 100 ' Empresa
+        dgvData.Columns(8).Width = 100 ' Departamenteo
+        dgvData.Columns(9).Width = 100 ' Recurrenccia
+        dgvData.Columns(10).Width = 100 ' Area de sistemas
+        dgvData.Columns(11).Width = 100 ' Categorias
+        dgvData.Columns(12).Width = 100 ' Estatus
+        dgvData.Columns(15).Width = 100 ' Ultima modificacion
+        dgvData.Columns(20).Width = 100 ' Department prioridad
+        dgvData.Columns(21).Width = 100 ' Prioridad sistemas
+        dgvData.Columns(22).Width = 100 ' Prioridad
+        dgvData.Columns(25).Width = 200 ' Plan de trabajo
+        dgvData.Columns(26).Width = 100 ' Progreso
+        dgvData.Columns(27).Width = 100 ' Proyecto sistemas
+        dgvData.Columns(28).Width = 100 ' Proyecto general
         dgvData.EnableHeadersVisualStyles = False
     End Sub
 
@@ -522,16 +679,36 @@ Public Class GestionEventos
         EventoID = dgvDataEventos.SelectedCells.Item(1).Value.ToString()
         _controlador.GoogleEventID = EventoID
 
+        'DATOS BÁSICOS
         txtEventName.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(2).Value), "", dgvDataEventos.SelectedCells.Item(2).Value)
         txtEventUbicacion.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
         txtEventDescrip.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
         eventFechaInicio.Value = dgvDataEventos.SelectedCells.Item(5).Value
         eventFechaFinal.Value = dgvDataEventos.SelectedCells.Item(6).Value
-        comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
-        comboEventDispo.SelectedItem = dgvDataEventos.SelectedCells.Item(9).Value
+        comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(13).Value
+        comboEventDispo.SelectedItem = dgvDataEventos.SelectedCells.Item(14).Value
+
+        'DATOS PODIO
+        podioItem.PodioItemID = dgvDataEventos.SelectedCells.Item(17).Value
+        podioItem.PodioAppID = dgvDataEventos.SelectedCells.Item(18).Value
+        comboEmpresa.SelectedItem = dgvDataEventos.SelectedCells.Item(7).Value
+        comboDepartamento.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
+        comboArea.SelectedItem = dgvDataEventos.SelectedCells.Item(10).Value
+        comboCategorias.SelectedItem = dgvDataEventos.SelectedCells.Item(11).Value
+        comboStatus.SelectedItem = dgvDataEventos.SelectedCells.Item(12).Value
+        numericOrdenDpt.Value = dgvDataEventos.SelectedCells.Item(20).Value
+        numericOrdenSistemas.Value = dgvDataEventos.SelectedCells.Item(21).Value
+        comboPrioridad.SelectedItem = dgvDataEventos.SelectedCells.Item(22).Value
+        textPlanAccion.TextBox1.Text = dgvDataEventos.SelectedCells.Item(25).Value
+        barraAvance.Value = dgvDataEventos.SelectedCells.Item(26).Value
+        comboProyectoSistemas.SelectedItem = dgvDataEventos.SelectedCells.Item(27).Value
+        txtProyectoGeneral.Text = dgvDataEventos.SelectedCells.Item(28).Value
+        maskHorasAcumuladas.Text = dgvDataEventos.SelectedCells.Item(29).Value
+        maskHorasExtras.Text = dgvDataEventos.SelectedCells.Item(30).Value
+
 
         'RECURRENCIA
-        Dim rrule = dgvDataEventos.SelectedCells.Item(7).Value.ToString()
+        Dim rrule = dgvDataEventos.SelectedCells.Item(9).Value.ToString()
         CargarRecurrenciaDesdeRRULE(rrule)
         PrepararComboRecurrencia(rrule)
 
@@ -656,29 +833,34 @@ Public Class GestionEventos
         End Select
     End Sub
 
-    ' Nuevos
-    Private Sub btnContinuar_Click(sender As Object, e As EventArgs) Handles btnContinuar.Click
-        PanelAsistentes.Visible = False
-        PanelNotificaciones.BringToFront()
-        PanelNotificaciones.Visible = True
+    ' Boton para crear el evento, esta en el panel datos básicos
+    Private Sub btnCrearEvento_Click(sender As Object, e As EventArgs) Handles btnCrearEvento.Click
+        LlenarCamposEventos("Nuevo evento")
+        DeterminarRecurrencia()
+        Dim errores As List(Of String) = evento.ValidarCampos()
+        If errores.Count > 0 Then
+            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        _controlador.EnviarEventoAGoogleCalendar(evento)
+        EventoID = _controlador.GoogleEventID
+        CrearEvento(True)
 
-        CentrarPanel(PanelNotificaciones)
+        PanelDatosBasicos.Visible = False
+        Panel2.Parent.Controls.Remove(panelDatosPodio)
+        Me.Controls.Add(panelDatosPodio)
+        panelDatosPodio.Visible = True
+        panelDatosPodio.BringToFront()
+        CentrarPanel(panelDatosPodio)
+
+        'PanelAsistentes.Visible = True
+        'PanelAsistentes.BringToFront()
+        'CentrarPanel(PanelAsistentes)
+
+        CargarEventosEnDataGridView()
     End Sub
 
-    Private Sub btnVolverEvento_Click(sender As Object, e As EventArgs) Handles btnVolverEvento.Click
-        PanelAsistentes.Visible = False
-        PanelAsistentes.SendToBack()
-        PanelDatosBasicos.Visible = True
-        CentrarPanel(PanelDatosBasicos)
-    End Sub
-
-    Private Sub btnVolverAsistente_Click(sender As Object, e As EventArgs) Handles btnVolverAsistente.Click
-        PanelNotificaciones.Visible = False
-        PanelNotificaciones.SendToBack()
-        PanelAsistentes.Visible = True
-        CentrarPanel(PanelAsistentes)
-    End Sub
-
+    ' Boton para actualizar el evento, esta en el panel datos básicos
     Private Sub btnContinuarActualizar_Click(sender As Object, e As EventArgs) Handles btnContinuarActualizar.Click
         LlenarCamposEventos("Actualización")
         Dim errores As List(Of String) = evento.ValidarCampos()
@@ -687,8 +869,52 @@ Public Class GestionEventos
             Return
         End If
         PanelDatosBasicos.Visible = False
+        Panel2.Parent.Controls.Remove(panelDatosPodio)
+        Me.Controls.Add(panelDatosPodio)
+        panelDatosPodio.Visible = True
+        panelDatosPodio.BringToFront()
+        CentrarPanel(panelDatosPodio)
+    End Sub
+
+    Private Sub btnContinuarDatosPodio_Click(sender As Object, e As EventArgs) Handles btnContinuarDatosPodio.Click
+        'AQUI DEBERÍA IR UNA VALIDACION DE LOS CAMPOS DE PODIO
+        panelDatosPodio.Visible = False
+        Panel2.Parent.Controls.Remove(PanelAsistentes)
+        Me.Controls.Add(PanelAsistentes)
         PanelAsistentes.Visible = True
         PanelAsistentes.BringToFront()
+        CentrarPanel(PanelAsistentes)
+    End Sub
+
+    Private Sub btnVolverDatosBasicos_Click(sender As Object, e As EventArgs) Handles btnVolverDatosBasicos.Click
+        panelDatosPodio.Visible = False
+
+        PanelDatosBasicos.Visible = True
+        PanelDatosBasicos.BringToFront()
+        CentrarPanel(PanelDatosBasicos)
+    End Sub
+
+    Private Sub btnContinuar_Click(sender As Object, e As EventArgs) Handles btnContinuar.Click
+        PanelAsistentes.Visible = False
+
+        Panel2.Parent.Controls.Remove(PanelNotificaciones)
+        Me.Controls.Add(PanelNotificaciones)
+        PanelNotificaciones.Visible = True
+        PanelNotificaciones.BringToFront()
+        CentrarPanel(PanelNotificaciones)
+    End Sub
+
+    Private Sub btnVolverDatosPodio_Click(sender As Object, e As EventArgs) Handles btnVolverDatosPodio.Click
+        PanelAsistentes.Visible = False
+        PanelAsistentes.SendToBack()
+        panelDatosPodio.Visible = True
+        CentrarPanel(panelDatosPodio)
+    End Sub
+
+    Private Sub btnVolverAsistente_Click(sender As Object, e As EventArgs) Handles btnVolverAsistente.Click
+        PanelNotificaciones.Visible = False
+        PanelNotificaciones.SendToBack()
+        PanelAsistentes.Visible = True
         CentrarPanel(PanelAsistentes)
     End Sub
 
@@ -707,8 +933,28 @@ Public Class GestionEventos
         rbtnFecha.Checked = False
         txtOcurrencias.Value = 1
         dateRecuFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
-        comboInvitados.SelectedIndex = 0
-        comboListaInvitados.Items.Clear()
+
+        comboEmpresa.SelectedIndex = 0
+        comboDepartamento.SelectedIndex = 0
+        comboArea.SelectedIndex = 0
+        comboCategorias.SelectedIndex = 0
+        comboPrioridad.SelectedIndex = 0
+        comboStatus.SelectedIndex = 0
+        comboProyectoSistemas.SelectedIndex = 0
+        txtProyectoGeneral.Text = ""
+        numericOrdenSistemas.Value = 1
+        numericOrdenDpt.Value = 1
+        maskHorasAcumuladas.Text = "00:00:00"
+        maskHorasExtras.Text = "00:00:00"
+        barraAvance.Value = 0
+
+        comboAsignadoA.SelectedIndex = 0
+        comboAsignados.Items.Clear()
+        comboAutoriza.SelectedIndex = 0
+        comboAutorizantes.Items.Clear()
+        comboSolicitante.SelectedIndex = 0
+        comboSolicitantes.Items.Clear()
+
         comboMetodoRecordar.SelectedIndex = 0
         comboUnidades.SelectedIndex = 0
         numericUpCantidad.Value = 1
@@ -789,6 +1035,7 @@ Public Class GestionEventos
 
     Private Sub CerrarVentanas()
         PanelDatosBasicos.Visible = False
+        panelDatosPodio.Visible = False
         PanelAsistentes.Visible = False
         PanelNotificaciones.Visible = False
         panelEventos.Visible = True
@@ -800,7 +1047,7 @@ Public Class GestionEventos
             ' Llama a la función que carga los eventos compartidos en dgvEventosCompartidos
             CargarEventosCompartidosEnDataGridView()
         ElseIf TabControl1.SelectedTab.Text = "Eventos Propios" Then
-            ' Opcionalmente, puedes recargar los eventos propios si es necesario
+            ' Para recargar los eventos propios si es necesario
             CargarEventosEnDataGridView()
         End If
     End Sub
@@ -808,7 +1055,7 @@ Public Class GestionEventos
     Private Sub CargarEventosCompartidosEnDataGridView()
         dgvDataEventosCompartidos.DataSource = _controlador.ObtenerEventosCompartidos()
         labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventosCompartidos.Rows.Count}"
-        EstilizarTabla(dgvDataEventosCompartidos)
+        'EstilizarTabla(dgvDataEventosCompartidos)
         dgvDataEventosCompartidos.Columns(12).Visible = False
         ComprobarStatusAsistentes()
     End Sub
@@ -842,6 +1089,60 @@ Public Class GestionEventos
 
         Await _controlador.ActualizarStatusAsistente(asistente)
         CargarEventosCompartidosEnDataGridView()
+    End Sub
+
+    Private Sub comboProyectoSistemas_TextChanged(sender As Object, e As EventArgs) Handles comboProyectoSistemas.TextChanged
+        If Not _inicializacionTerminada Then
+            Return
+        End If
+        ' Reiniciar el Timer cada vez que el usuario escribe algo.
+        SearchTimer.Stop()
+        SearchTimer.Start()
+    End Sub
+
+    ' Buscador de items en Podio
+    Private Async Sub SearchTimer_Tick(sender As Object, e As EventArgs) Handles SearchTimer.Tick
+        ' Detener el Timer para evitar múltiples ejecuciones.
+        SearchTimer.Stop()
+
+        ' Verificar longitud del texto para optimizar la búsqueda.
+        If comboProyectoSistemas.Text.Length >= 4 Then
+            Try
+                Dim results As JArray = Await _controlador.SearchItemPodio(comboProyectoSistemas.Text, 5) ' Ajusta appId y límites según necesites.
+                comboProyectoSistemas.Items.Clear()
+                podioItem.itemTitleToIdMap.Clear() ' Limpiar el diccionario antes de llenarlo de nuevo
+
+                For Each item As JObject In results
+                    Dim title As String = item("title").ToString()
+                    Dim itemId As String = item("id").ToString() ' Asegúrate de que "item_id" es el campo correcto
+                    podioItem.itemTitleToIdMap.Add(title, itemId) ' Guardar la relación título-ID en el diccionario
+                    comboProyectoSistemas.Items.Add(title)
+                Next
+                comboProyectoSistemas.DroppedDown = True ' Opcional: Muestra la lista desplegable.
+            Catch ex As Exception
+                MessageBox.Show("Error buscando items: " & ex.Message)
+            End Try
+        Else
+            comboProyectoSistemas.Items.Clear()
+        End If
+    End Sub
+
+    Private Function ObtenerIdSistemasProyecto() As String
+        If comboProyectoSistemas.SelectedItem IsNot Nothing Then
+            Dim selectedTitle As String = comboProyectoSistemas.SelectedItem.ToString()
+            If podioItem.itemTitleToIdMap.ContainsKey(selectedTitle) Then
+                Return podioItem.itemTitleToIdMap(selectedTitle)
+            End If
+        End If
+    End Function
+
+    Public Sub LoadOptionInComboBox()
+        podioItem.LoadOptionsIntoComboBox(comboEmpresa, podioItem.companyOptions)
+        podioItem.LoadOptionsIntoComboBox(comboDepartamento, podioItem.departmentOptions)
+        podioItem.LoadOptionsIntoComboBox(comboArea, podioItem.systemAreaOptions)
+        podioItem.LoadOptionsIntoComboBox(comboCategorias, podioItem.categoryOptions)
+        podioItem.LoadOptionsIntoComboBox(comboPrioridad, podioItem.priorityOptions)
+        podioItem.LoadOptionsIntoComboBox(comboStatus, podioItem.statusOptions)
     End Sub
 End Class
 

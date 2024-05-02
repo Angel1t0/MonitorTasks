@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
 Imports Google.Apis.Gmail.v1
+Imports Newtonsoft.Json.Linq
 
 Public Class EventoControlador
     Private _googleServicesAuthenticator As GoogleServicesAuthenticator
@@ -11,6 +12,7 @@ Public Class EventoControlador
     Private _servicioGoogleGmail As GoogleGmailService
     Private _servicioWhatsapp As WhatsAppService
     Private _servicioDesktop As DesktopService
+    Private _servicioPodio As PodioService
     Private _datosEvento As EventoData
     Public Property GoogleEventID As String = String.Empty
     Public Property GoogleCalendarID As String
@@ -27,6 +29,7 @@ Public Class EventoControlador
         _servicioWhatsapp = New WhatsAppService()
         _servicioDesktop = New DesktopService()
         _datosEvento = New EventoData()
+        _servicioPodio = New PodioService()
     End Sub
 
     Public Sub CrearEvento(evento As Evento, isVisible As Boolean)
@@ -40,6 +43,14 @@ Public Class EventoControlador
     Public Sub CrearMensaje(mensaje As Mensaje)
         _datosEvento.InsertarMensaje(mensaje)
     End Sub
+
+    Public Function CrearPodioItem(podioItem As PodioItem)
+        Return _datosEvento.InsertarPodioItem(podioItem)
+    End Function
+
+    Public Async Function SearchItemPodio(query As String, limit As Integer) As Task(Of JArray)
+        Return Await _servicioPodio.SearchAppByQuery(query, limit)
+    End Function
 
     Public Sub EnviarMensaje(mensaje As Mensaje, userID As Integer)
         If mensaje.Attendees.Count = 0 Then
@@ -68,15 +79,24 @@ Public Class EventoControlador
         _servicioGoogleCalendar.EliminarEventoGoogle(eventID)
     End Sub
 
-    Public Sub InsertarAsistente(asistente As Asistente, mensaje As Mensaje)
-        Dim attendeeID As Integer = _datosEvento.InsertarAsistente(asistente)
-        mensaje.UserID = _datosEvento.BuscarUserID(asistente.Email)
-        mensaje.Attendees.Add(asistente)
-        CrearMensaje(mensaje)
+    Public Sub InsertarAsistente(mensaje As Mensaje)
+        For Each attendee In mensaje.Attendees
+            _datosEvento.InsertarAsistente(attendee)
+            mensaje.UserID = _datosEvento.BuscarUserID(attendee.Email)
+            CrearMensaje(mensaje)
+        Next
     End Sub
 
-    Public Sub EliminarAsistente(asistente As Asistente)
-        _datosEvento.EliminarAsistente(asistente)
+    Public Sub InsertarSolicitante(podioItem As PodioItem)
+        For Each solicitanteCorreo In podioItem.RequestorContacts
+            _datosEvento.InsertarSolicitante(podioItem.PodioItemID, _datosEvento.BuscarUserID(solicitanteCorreo))
+        Next
+    End Sub
+
+    Public Sub InsertarAutorizante(podioItem As PodioItem)
+        For Each autorizanteCorreo In podioItem.AuthorizerContacts
+            _datosEvento.InsertarAutorizante(podioItem.PodioItemID, _datosEvento.BuscarUserID(autorizanteCorreo))
+        Next
     End Sub
 
     Public Sub InsertarNotificacion(notificacion As Notificacion)
@@ -99,6 +119,14 @@ Public Class EventoControlador
         Dim createdEvent As [Event] = service.Events.Insert(eventoGoogle, calendarId).Execute()
         GoogleEventID = createdEvent.Id
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
+    End Sub
+
+    Public Function EnviarItemAPodio(podioItem As PodioItem) As Integer
+        Return _servicioPodio.CreateItem(podioItem).Result
+    End Function
+
+    Public Sub ActualizarItemEnPodio(podioItem As PodioItem)
+        _servicioPodio.UpdatePodioItem(podioItem)
     End Sub
 
     Public Async Sub AgregarInformacionEvento(evento As Evento, userID As Integer)
@@ -260,5 +288,13 @@ Public Class EventoControlador
 
     Public Function ObtenerTelefonoAsistente(email As String) As String
         Return _datosEvento.ObtenerTelefonoAsistente(email)
+    End Function
+
+    Public Function ObtenerEventosConPodio(calendarioID As String) As DataTable
+        Return _datosEvento.ObtenerEventosConPodio(calendarioID)
+    End Function
+
+    Public Function ObtenerPodioUserIDPorCorreo(email As String) As Integer
+        Return _datosEvento.ObtenerPodioUserIDPorCorreo(email)
     End Function
 End Class

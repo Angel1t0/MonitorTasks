@@ -5,4 +5,5 @@
     Public Property PhoneNumber As String
     Public Property DisplayName As String = "Invitado"
     Public Property Status As String = "needsAction"
+    Public Property PodioItemID As Integer
 End Class
