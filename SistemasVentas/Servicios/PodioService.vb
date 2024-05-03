@@ -52,156 +52,100 @@ Public Class PodioService
         End If
     End Function
 
-    Public Async Function CreateItem(podioItem As PodioItem) As Task(Of Integer)
-        Await EnsureAuthenticated().ConfigureAwait(False)  ' Asegura autenticación
-
-        ' Crea el objeto JSON para los campos
-        Dim itemFields As New JArray From {
-            New JObject From {
-                {"field_id", 10086319}, ' Titulo
-                {"value", podioItem.Title}
-            },
-            New JObject From {
-                {"field_id", 50907911}, ' Descripcion
-                {"value", podioItem.Description}
-            },
-            New JObject From {
-                {"field_id", 50907912}, ' Empresa (categoría)
-                {"value", podioItem.Company}
-            },
-            New JObject From {
-                {"field_id", 191364514}, ' Departamento (categoría)
-                {"value", podioItem.Department}
-            },
-            New JObject From {
-                {"field_id", 203943021}, ' Área de sistemas (categoría)
-                {"value", podioItem.SystemArea}
-            },
-            New JObject From {
-                {"field_id", 57128977}, ' Category (categoría)
-                {"value", podioItem.Categories}
-            },
-            New JObject From {
-                {"field_id", 50907913}, ' Solicitante (contacto)
-                {"values", New JArray(podioItem.RequestorContacts.Select(Function(id) New JObject From {{"value", id}}))}
-            },
-            New JObject From {
-                {"field_id", 50907915}, ' Asignado a (contacto)
-                {"values", New JArray(podioItem.AssignedToContacts.Select(Function(id) New JObject From {{"value", id}}))}
-            },
-            New JObject From {
-                {"field_id", 50907916}, ' Prioridad (categoría)
-                {"value", podioItem.Priority}
-            },
-            New JObject From {
-                {"field_id", 50908150}, ' Status (categoría)
-                {"value", podioItem.Status}
-            }
-        }
-
-        ' Condiciones para saber si esta vacio o es nulo, ya que no acepta valores nulos
-        If podioItem.DepartmentPriority <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 191362674}, ' Orden de prioridad por departamento (numeric)
-            {"value", podioItem.DepartmentPriority}
-        })
-        End If
-
-        If podioItem.AuthorizerContacts IsNot Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 50907914}, ' Autorizante (contacto)
-            {"values", New JArray(podioItem.AuthorizerContacts.Select(Function(id) New JObject From {{"value", id}}))}
-        })
-        End If
-
-        If podioItem.SystemPriority <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 189076789}, ' Orden de prioridad de Sistemas (numeric)
-            {"value", podioItem.SystemPriority}
-        })
-        End If
-
-        If podioItem.StartDate <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 10086320}, ' Fecha de inicio (date)
-            {"start", podioItem.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ")}
-        })
-        End If
-
-        If podioItem.EndDate <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 50907917}, ' Fecha de fin (date)
-            {"start", podioItem.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ")}
-        })
-        End If
-
-        If podioItem.WorkPlan <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 75115253}, ' Plan de trabajo (text)
-            {"value", podioItem.WorkPlan}
-        })
-        End If
-
-        If podioItem.Progress <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 50907918}, ' Progreso (barra de progreso)
-            {"value", podioItem.Progress}
-        })
-        End If
-
-        If podioItem.SystemProject <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 50907910}, ' Proyecto de Sistemas (referencia de app)
-            {"value", podioItem.SystemProject}
-        })
-        End If
-
-        If podioItem.GeneralProject <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 104722848}, ' Proyecto General (referencia de app)
-            {"value", podioItem.GeneralProject}
-        })
-        End If
-
-        If podioItem.HoursAccumulated <> Nothing Then
-            itemFields.Add(New JObject From {
-            {"field_id", 50907919}, ' Horas acumuladas (duración)
-            {"value", podioItem.HoursAccumulated}
-        })
-        End If
-
-        If podioItem.ExtraHours <> Nothing Then
-            itemFields.Add(New JObject From {
-                {"field_id", 51007152}, ' Horas extras (duración)
-                {"value", podioItem.ExtraHours}
-         })
-        End If
-
-        ' Prepara el objeto JSON final para la solicitud
-        Dim itemObject As New JObject From {
-        {"fields", itemFields}
-    }
+    Public Async Function CreateItem(podioItem As PodioItem) As Task(Of Long)
         Try
-            Dim content As New StringContent(itemObject.ToString(), Encoding.UTF8, "application/json")
-            Dim response = Await httpClient.PostAsync($"https://api.podio.com/item/app/{podioAppID}/", content).ConfigureAwait(False)
-            If response.IsSuccessStatusCode Then
-                Dim resultString = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
-                Dim result = JObject.Parse(resultString)
-                Dim itemId = result("item_id").Value(Of Integer)()
-                Console.WriteLine("Item creado con ID: " & itemId)
-                Return itemId
-            Else
-                Dim errorDetails = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
-                Console.WriteLine("Error creando item: " & response.StatusCode & " " & errorDetails)
-                Throw New Exception("Failed to create item in Podio. Status: " & response.StatusCode)
+            Await EnsureAuthenticated().ConfigureAwait(False)  ' Asegura autenticación
+
+            ' Crea el objeto JSON para los campos
+            Dim itemFields As New JObject()
+
+            itemFields.Add("10086319", podioItem.Title) ' Título
+            itemFields.Add("50907911", podioItem.Description) ' Descripción
+            itemFields.Add("50907912", New JObject From {{"value", Integer.Parse(podioItem.Company)}}) ' Empresa
+            itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Department)}}) ' Departamento
+            itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.SystemArea)}}) ' Área de sistemas
+            itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categories)}}) ' Categoría
+            itemFields.Add("50907913", New JArray(podioItem.RequestorContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Solicitante
+            itemFields.Add("50907915", New JArray(podioItem.AssignedToContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Asignado a
+            itemFields.Add("50907916", New JObject From {{"value", Integer.Parse(podioItem.Priority)}}) ' Prioridad
+            itemFields.Add("50908150", New JObject From {{"value", Integer.Parse(podioItem.Status)}}) ' Estado
+
+
+            ' Condiciones para saber si esta vacio o es nulo, ya que no acepta valores nulos
+            If podioItem.DepartmentPriority <> Nothing Then
+                itemFields.Add("191362674", New JObject From {{"value", podioItem.DepartmentPriority}}) ' Orden de prioridad por departamento
             End If
-        Catch ex As TaskCanceledException
-            Console.WriteLine("La solicitud fue cancelada por timeout. Detalles: " & ex.Message)
-        Catch ex As HttpRequestException
-            Console.WriteLine("Error en la solicitud HTTP. Detalles: " & ex.Message)
+
+            If podioItem.AuthorizerContacts IsNot Nothing Then
+                itemFields.Add("50907914", New JArray(podioItem.AuthorizerContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Autorizante
+            End If
+
+            If podioItem.SystemPriority <> Nothing Then
+                itemFields.Add("189076789", New JObject From {{"value", podioItem.SystemPriority}}) ' Orden de prioridad de sistemas
+            End If
+
+            If podioItem.StartDate <> Nothing Then
+                itemFields.Add("10086320", New JObject From {{"start", podioItem.StartDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de inicio
+            End If
+
+            If podioItem.EndDate <> Nothing Then
+                itemFields.Add("50907917", New JObject From {{"start", podioItem.EndDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de fin
+            End If
+
+            If podioItem.WorkPlan <> Nothing Then
+                itemFields.Add("75115253", podioItem.WorkPlan) ' Plan de trabajo
+            End If
+
+            If podioItem.Progress <> Nothing Then
+                itemFields.Add("50907918", New JObject From {{"value", podioItem.Progress}}) ' Progreso
+            End If
+
+
+            If podioItem.SystemProject <> Nothing Then
+                itemFields.Add("50907910", New JObject From {{"value", Long.Parse(podioItem.SystemProject)}}) ' Proyecto de sistemas
+            End If
+
+            If podioItem.GeneralProject <> Nothing Then
+                itemFields.Add("104722848", New JObject From {{"value", Long.Parse(podioItem.GeneralProject)}}) ' Proyecto general
+            End If
+
+            If podioItem.HoursAccumulated <> Nothing Then
+                itemFields.Add("50907919", New JObject From {{"value", podioItem.HoursAccumulated}}) ' Horas acumuladas
+            End If
+
+            If podioItem.ExtraHours <> Nothing Then
+                itemFields.Add("51007152", New JObject From {{"value", podioItem.ExtraHours}}) ' Horas extras
+            End If
+
+            ' Preparar el objeto JSON final para la solicitud
+            Dim itemObject As New JObject From {{"fields", itemFields}}
+
+            Try
+                Dim content As New StringContent(itemObject.ToString(), Encoding.UTF8, "application/json")
+                Dim response = Await httpClient.PostAsync($"https://api.podio.com/item/app/{podioItem.PodioAppID}/", content).ConfigureAwait(False)
+                If response.IsSuccessStatusCode Then
+                    Dim resultString = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                    Dim result = JObject.Parse(resultString)
+                    Dim itemId = result("item_id").Value(Of Long)()
+                    Console.WriteLine("Item creado con ID: " & itemId)
+                    Return itemId
+                Else
+                    Dim errorDetails = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                    Console.WriteLine("Error creando item: " & response.StatusCode & " " & errorDetails)
+                    Throw New Exception("Failed to create item in Podio. Status: " & response.StatusCode)
+                End If
+            Catch ex As HttpRequestException
+                Console.WriteLine("Error en la solicitud HTTP. Detalles: " & ex.Message)
+            Catch ex As Exception
+                If ex.Message.Contains("Valor demasiado grande o demasiado pequeño para Int32.") Or ex.Message.Contains("La operación aritmética ha provocado un desbordamiento.") Or ex.Message.Contains("is too large or small for an") Or ex.Message.Contains("Arithmetic operation resulted in an overflow.") Then
+                    Return True
+                Else
+                    Console.WriteLine("Error general al intentar crear el ítem en Podio. Detalles: " & ex.Message)
+                    Return False
+                End If
+            End Try
         Catch ex As Exception
             Console.WriteLine("Error general al intentar crear el ítem en Podio. Detalles: " & ex.Message)
-            Throw ' Rethrows the exception to higher level exception handling
         End Try
     End Function
 

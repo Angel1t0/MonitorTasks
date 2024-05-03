@@ -23,15 +23,27 @@ Partial Class GestionEventos
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(GestionEventos))
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelEventos = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.tabEventosPropios = New System.Windows.Forms.TabPage()
+        Me.dgvDataEventos = New System.Windows.Forms.DataGridView()
+        Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
+        Me.tabEventosCompartidos = New System.Windows.Forms.TabPage()
+        Me.dgvDataEventosCompartidos = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.labelCantidadEventos = New System.Windows.Forms.Label()
+        Me.btnInsertarEvento = New FontAwesome.Sharp.IconButton()
+        Me.btnSincronizar = New System.Windows.Forms.Button()
+        Me.SearchTimer = New System.Windows.Forms.Timer(Me.components)
         Me.PanelDatosBasicos = New SistemasVentas.ControlPanel()
         Me.MenuStrip3 = New System.Windows.Forms.MenuStrip()
         Me.btnCrearEvento = New System.Windows.Forms.ToolStripMenuItem()
@@ -75,9 +87,8 @@ Partial Class GestionEventos
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label36 = New System.Windows.Forms.Label()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.tabEventosPropios = New System.Windows.Forms.TabPage()
         Me.panelDatosPodio = New SistemasVentas.ControlPanel()
+        Me.txtProyectoGeneral = New System.Windows.Forms.TextBox()
         Me.barraAvance = New System.Windows.Forms.NumericUpDown()
         Me.btnContinuarDatosPodio = New FontAwesome.Sharp.IconButton()
         Me.maskHorasExtras = New System.Windows.Forms.MaskedTextBox()
@@ -109,15 +120,6 @@ Partial Class GestionEventos
         Me.comboStatus = New System.Windows.Forms.ComboBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
-        Me.dgvDataEventos = New System.Windows.Forms.DataGridView()
-        Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
-        Me.tabEventosCompartidos = New System.Windows.Forms.TabPage()
-        Me.dgvDataEventosCompartidos = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewImageColumn1 = New System.Windows.Forms.DataGridViewImageColumn()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.labelCantidadEventos = New System.Windows.Forms.Label()
-        Me.btnInsertarEvento = New FontAwesome.Sharp.IconButton()
-        Me.btnSincronizar = New System.Windows.Forms.Button()
         Me.PanelNotificaciones = New SistemasVentas.ControlPanel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.btnEnviarAPI = New System.Windows.Forms.ToolStripMenuItem()
@@ -148,10 +150,14 @@ Partial Class GestionEventos
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
-        Me.txtProyectoGeneral = New System.Windows.Forms.TextBox()
-        Me.SearchTimer = New System.Windows.Forms.Timer(Me.components)
         Me.panelEventos.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
+        Me.tabEventosPropios.SuspendLayout()
+        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabEventosCompartidos.SuspendLayout()
+        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
         Me.PanelDatosBasicos.SuspendLayout()
         Me.MenuStrip3.SuspendLayout()
         Me.panel.SuspendLayout()
@@ -162,18 +168,12 @@ Partial Class GestionEventos
         CType(Me.pictureEliminarSolicitantes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
         CType(Me.btnVolverDatosPodio, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabControl1.SuspendLayout()
-        Me.tabEventosPropios.SuspendLayout()
         Me.panelDatosPodio.SuspendLayout()
         CType(Me.barraAvance, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericOrdenSistemas, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericOrdenDpt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
         CType(Me.btnVolverDatosBasicos, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tabEventosCompartidos.SuspendLayout()
-        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel1.SuspendLayout()
         Me.PanelNotificaciones.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.numericUpCantidad, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -193,25 +193,243 @@ Partial Class GestionEventos
         Me.panelEventos.Dock = System.Windows.Forms.DockStyle.Fill
         Me.panelEventos.Location = New System.Drawing.Point(0, 0)
         Me.panelEventos.Name = "panelEventos"
-        Me.panelEventos.Size = New System.Drawing.Size(1159, 683)
+        Me.panelEventos.Size = New System.Drawing.Size(1159, 953)
         Me.panelEventos.TabIndex = 9
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.PanelDatosBasicos)
-        Me.Panel2.Controls.Add(Me.PanelAsistentes)
         Me.Panel2.Controls.Add(Me.TabControl1)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 73)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Padding = New System.Windows.Forms.Padding(10)
-        Me.Panel2.Size = New System.Drawing.Size(1159, 610)
+        Me.Panel2.Size = New System.Drawing.Size(1159, 880)
         Me.Panel2.TabIndex = 106
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Controls.Add(Me.tabEventosPropios)
+        Me.TabControl1.Controls.Add(Me.tabEventosCompartidos)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl1.Location = New System.Drawing.Point(10, 10)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(1139, 860)
+        Me.TabControl1.TabIndex = 102
+        '
+        'tabEventosPropios
+        '
+        Me.tabEventosPropios.Controls.Add(Me.panelDatosPodio)
+        Me.tabEventosPropios.Controls.Add(Me.dgvDataEventos)
+        Me.tabEventosPropios.Location = New System.Drawing.Point(4, 25)
+        Me.tabEventosPropios.Name = "tabEventosPropios"
+        Me.tabEventosPropios.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabEventosPropios.Size = New System.Drawing.Size(1131, 831)
+        Me.tabEventosPropios.TabIndex = 0
+        Me.tabEventosPropios.Text = "Eventos Propios"
+        Me.tabEventosPropios.UseVisualStyleBackColor = True
+        '
+        'dgvDataEventos
+        '
+        Me.dgvDataEventos.AllowUserToAddRows = False
+        Me.dgvDataEventos.AllowUserToDeleteRows = False
+        Me.dgvDataEventos.AllowUserToResizeRows = False
+        Me.dgvDataEventos.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.dgvDataEventos.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgvDataEventos.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+        Me.dgvDataEventos.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.DarkSlateGray
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataEventos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvDataEventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDataEventos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataEventos.DefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvDataEventos.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvDataEventos.Location = New System.Drawing.Point(3, 3)
+        Me.dgvDataEventos.Margin = New System.Windows.Forms.Padding(10)
+        Me.dgvDataEventos.Name = "dgvDataEventos"
+        Me.dgvDataEventos.ReadOnly = True
+        Me.dgvDataEventos.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataEventos.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        Me.dgvDataEventos.RowHeadersVisible = False
+        Me.dgvDataEventos.RowHeadersWidth = 51
+        Me.dgvDataEventos.RowTemplate.Height = 40
+        Me.dgvDataEventos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvDataEventos.Size = New System.Drawing.Size(1125, 825)
+        Me.dgvDataEventos.TabIndex = 102
+        '
+        'Eli
+        '
+        Me.Eli.HeaderText = ""
+        Me.Eli.Image = CType(resources.GetObject("Eli.Image"), System.Drawing.Image)
+        Me.Eli.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.Eli.MinimumWidth = 6
+        Me.Eli.Name = "Eli"
+        Me.Eli.ReadOnly = True
+        Me.Eli.Width = 6
+        '
+        'tabEventosCompartidos
+        '
+        Me.tabEventosCompartidos.Controls.Add(Me.dgvDataEventosCompartidos)
+        Me.tabEventosCompartidos.Location = New System.Drawing.Point(4, 25)
+        Me.tabEventosCompartidos.Name = "tabEventosCompartidos"
+        Me.tabEventosCompartidos.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabEventosCompartidos.Size = New System.Drawing.Size(1131, 561)
+        Me.tabEventosCompartidos.TabIndex = 1
+        Me.tabEventosCompartidos.Text = "Eventos Compartidos"
+        Me.tabEventosCompartidos.UseVisualStyleBackColor = True
+        '
+        'dgvDataEventosCompartidos
+        '
+        Me.dgvDataEventosCompartidos.AllowUserToAddRows = False
+        Me.dgvDataEventosCompartidos.AllowUserToDeleteRows = False
+        Me.dgvDataEventosCompartidos.AllowUserToResizeRows = False
+        Me.dgvDataEventosCompartidos.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.dgvDataEventosCompartidos.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgvDataEventosCompartidos.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+        Me.dgvDataEventosCompartidos.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle4.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.DarkSlateGray
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataEventosCompartidos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvDataEventosCompartidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDataEventosCompartidos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewImageColumn1})
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle5.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataEventosCompartidos.DefaultCellStyle = DataGridViewCellStyle5
+        Me.dgvDataEventosCompartidos.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvDataEventosCompartidos.Location = New System.Drawing.Point(3, 3)
+        Me.dgvDataEventosCompartidos.Margin = New System.Windows.Forms.Padding(10)
+        Me.dgvDataEventosCompartidos.Name = "dgvDataEventosCompartidos"
+        Me.dgvDataEventosCompartidos.ReadOnly = True
+        Me.dgvDataEventosCompartidos.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDataEventosCompartidos.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvDataEventosCompartidos.RowHeadersVisible = False
+        Me.dgvDataEventosCompartidos.RowHeadersWidth = 51
+        Me.dgvDataEventosCompartidos.RowTemplate.Height = 40
+        Me.dgvDataEventosCompartidos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvDataEventosCompartidos.Size = New System.Drawing.Size(1125, 555)
+        Me.dgvDataEventosCompartidos.TabIndex = 103
+        '
+        'DataGridViewImageColumn1
+        '
+        Me.DataGridViewImageColumn1.HeaderText = ""
+        Me.DataGridViewImageColumn1.Image = CType(resources.GetObject("DataGridViewImageColumn1.Image"), System.Drawing.Image)
+        Me.DataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.DataGridViewImageColumn1.MinimumWidth = 6
+        Me.DataGridViewImageColumn1.Name = "DataGridViewImageColumn1"
+        Me.DataGridViewImageColumn1.ReadOnly = True
+        Me.DataGridViewImageColumn1.Visible = False
+        Me.DataGridViewImageColumn1.Width = 6
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.labelCantidadEventos)
+        Me.Panel1.Controls.Add(Me.btnInsertarEvento)
+        Me.Panel1.Controls.Add(Me.btnSincronizar)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1159, 73)
+        Me.Panel1.TabIndex = 105
+        '
+        'labelCantidadEventos
+        '
+        Me.labelCantidadEventos.AutoSize = True
+        Me.labelCantidadEventos.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.labelCantidadEventos.Location = New System.Drawing.Point(26, 32)
+        Me.labelCantidadEventos.Name = "labelCantidadEventos"
+        Me.labelCantidadEventos.Size = New System.Drawing.Size(19, 21)
+        Me.labelCantidadEventos.TabIndex = 108
+        Me.labelCantidadEventos.Text = "0"
+        '
+        'btnInsertarEvento
+        '
+        Me.btnInsertarEvento.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnInsertarEvento.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnInsertarEvento.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnInsertarEvento.FlatAppearance.BorderSize = 0
+        Me.btnInsertarEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnInsertarEvento.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnInsertarEvento.ForeColor = System.Drawing.Color.White
+        Me.btnInsertarEvento.IconChar = FontAwesome.Sharp.IconChar.Add
+        Me.btnInsertarEvento.IconColor = System.Drawing.Color.White
+        Me.btnInsertarEvento.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnInsertarEvento.IconSize = 16
+        Me.btnInsertarEvento.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnInsertarEvento.Location = New System.Drawing.Point(926, 23)
+        Me.btnInsertarEvento.Name = "btnInsertarEvento"
+        Me.btnInsertarEvento.Padding = New System.Windows.Forms.Padding(18, 1, 18, 0)
+        Me.btnInsertarEvento.Size = New System.Drawing.Size(177, 40)
+        Me.btnInsertarEvento.TabIndex = 106
+        Me.btnInsertarEvento.Text = "Nuevo Evento"
+        Me.btnInsertarEvento.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnInsertarEvento.UseVisualStyleBackColor = False
+        '
+        'btnSincronizar
+        '
+        Me.btnSincronizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSincronizar.BackColor = System.Drawing.Color.Transparent
+        Me.btnSincronizar.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnSincronizar.FlatAppearance.BorderSize = 0
+        Me.btnSincronizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSincronizar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSincronizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnSincronizar.Location = New System.Drawing.Point(793, 23)
+        Me.btnSincronizar.Name = "btnSincronizar"
+        Me.btnSincronizar.Size = New System.Drawing.Size(106, 40)
+        Me.btnSincronizar.TabIndex = 103
+        Me.btnSincronizar.Text = "Sincronizar"
+        Me.btnSincronizar.UseVisualStyleBackColor = False
+        '
+        'SearchTimer
+        '
+        Me.SearchTimer.Interval = 2000
         '
         'PanelDatosBasicos
         '
         Me.PanelDatosBasicos.BackColor = System.Drawing.Color.White
         Me.PanelDatosBasicos.BorderRadius = 12
+        Me.PanelDatosBasicos.Controls.Add(Me.PanelAsistentes)
         Me.PanelDatosBasicos.Controls.Add(Me.MenuStrip3)
         Me.PanelDatosBasicos.Controls.Add(Me.txtEventDescrip)
         Me.PanelDatosBasicos.Controls.Add(Me.Label23)
@@ -230,7 +448,7 @@ Partial Class GestionEventos
         Me.PanelDatosBasicos.Controls.Add(Me.comboEventVisibilidad)
         Me.PanelDatosBasicos.Controls.Add(Me.Label30)
         Me.PanelDatosBasicos.Controls.Add(Me.Label31)
-        Me.PanelDatosBasicos.Location = New System.Drawing.Point(1174, 626)
+        Me.PanelDatosBasicos.Location = New System.Drawing.Point(118, 92)
         Me.PanelDatosBasicos.Name = "PanelDatosBasicos"
         Me.PanelDatosBasicos.Size = New System.Drawing.Size(600, 625)
         Me.PanelDatosBasicos.TabIndex = 121
@@ -244,7 +462,7 @@ Partial Class GestionEventos
         Me.MenuStrip3.Location = New System.Drawing.Point(314, 554)
         Me.MenuStrip3.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip3.Name = "MenuStrip3"
-        Me.MenuStrip3.Size = New System.Drawing.Size(234, 44)
+        Me.MenuStrip3.Size = New System.Drawing.Size(382, 44)
         Me.MenuStrip3.TabIndex = 116
         Me.MenuStrip3.Text = "MenuStrip3"
         '
@@ -514,7 +732,7 @@ Partial Class GestionEventos
         Me.PanelAsistentes.Controls.Add(Me.Label34)
         Me.PanelAsistentes.Controls.Add(Me.Label35)
         Me.PanelAsistentes.Controls.Add(Me.Label36)
-        Me.PanelAsistentes.Location = New System.Drawing.Point(669, 606)
+        Me.PanelAsistentes.Location = New System.Drawing.Point(580, 540)
         Me.PanelAsistentes.Name = "PanelAsistentes"
         Me.PanelAsistentes.Size = New System.Drawing.Size(473, 450)
         Me.PanelAsistentes.TabIndex = 124
@@ -732,33 +950,11 @@ Partial Class GestionEventos
         Me.Label36.TabIndex = 87
         Me.Label36.Text = "Autoriza"
         '
-        'TabControl1
-        '
-        Me.TabControl1.Controls.Add(Me.tabEventosPropios)
-        Me.TabControl1.Controls.Add(Me.tabEventosCompartidos)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl1.Location = New System.Drawing.Point(10, 10)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1139, 590)
-        Me.TabControl1.TabIndex = 102
-        '
-        'tabEventosPropios
-        '
-        Me.tabEventosPropios.Controls.Add(Me.panelDatosPodio)
-        Me.tabEventosPropios.Controls.Add(Me.dgvDataEventos)
-        Me.tabEventosPropios.Location = New System.Drawing.Point(4, 25)
-        Me.tabEventosPropios.Name = "tabEventosPropios"
-        Me.tabEventosPropios.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEventosPropios.Size = New System.Drawing.Size(1131, 561)
-        Me.tabEventosPropios.TabIndex = 0
-        Me.tabEventosPropios.Text = "Eventos Propios"
-        Me.tabEventosPropios.UseVisualStyleBackColor = True
-        '
         'panelDatosPodio
         '
         Me.panelDatosPodio.BackColor = System.Drawing.Color.White
         Me.panelDatosPodio.BorderRadius = 12
+        Me.panelDatosPodio.Controls.Add(Me.PanelDatosBasicos)
         Me.panelDatosPodio.Controls.Add(Me.txtProyectoGeneral)
         Me.panelDatosPodio.Controls.Add(Me.barraAvance)
         Me.panelDatosPodio.Controls.Add(Me.btnContinuarDatosPodio)
@@ -789,10 +985,18 @@ Partial Class GestionEventos
         Me.panelDatosPodio.Controls.Add(Me.comboStatus)
         Me.panelDatosPodio.Controls.Add(Me.Label19)
         Me.panelDatosPodio.Controls.Add(Me.Label39)
-        Me.panelDatosPodio.Location = New System.Drawing.Point(132, 34)
+        Me.panelDatosPodio.Location = New System.Drawing.Point(121, 6)
         Me.panelDatosPodio.Name = "panelDatosPodio"
         Me.panelDatosPodio.Size = New System.Drawing.Size(877, 690)
         Me.panelDatosPodio.TabIndex = 126
+        '
+        'txtProyectoGeneral
+        '
+        Me.txtProyectoGeneral.Font = New System.Drawing.Font("Century Gothic", 9.0!)
+        Me.txtProyectoGeneral.Location = New System.Drawing.Point(314, 294)
+        Me.txtProyectoGeneral.Name = "txtProyectoGeneral"
+        Me.txtProyectoGeneral.Size = New System.Drawing.Size(250, 26)
+        Me.txtProyectoGeneral.TabIndex = 144
         '
         'barraAvance
         '
@@ -955,7 +1159,6 @@ Partial Class GestionEventos
         Me.comboProyectoSistemas.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.comboProyectoSistemas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.comboProyectoSistemas.FormattingEnabled = True
-        Me.comboProyectoSistemas.Items.AddRange(New Object() {"Default", "Público", "Privado"})
         Me.comboProyectoSistemas.Location = New System.Drawing.Point(33, 292)
         Me.comboProyectoSistemas.Name = "comboProyectoSistemas"
         Me.comboProyectoSistemas.Size = New System.Drawing.Size(250, 28)
@@ -1132,198 +1335,6 @@ Partial Class GestionEventos
         Me.Label39.TabIndex = 90
         Me.Label39.Text = "Avance"
         '
-        'dgvDataEventos
-        '
-        Me.dgvDataEventos.AllowUserToAddRows = False
-        Me.dgvDataEventos.AllowUserToDeleteRows = False
-        Me.dgvDataEventos.AllowUserToResizeRows = False
-        Me.dgvDataEventos.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.dgvDataEventos.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgvDataEventos.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-        Me.dgvDataEventos.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle13.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.DarkSlateGray
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDataEventos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
-        Me.dgvDataEventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvDataEventos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle14.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle14.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDataEventos.DefaultCellStyle = DataGridViewCellStyle14
-        Me.dgvDataEventos.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvDataEventos.Location = New System.Drawing.Point(3, 3)
-        Me.dgvDataEventos.Margin = New System.Windows.Forms.Padding(10)
-        Me.dgvDataEventos.Name = "dgvDataEventos"
-        Me.dgvDataEventos.ReadOnly = True
-        Me.dgvDataEventos.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDataEventos.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
-        Me.dgvDataEventos.RowHeadersVisible = False
-        Me.dgvDataEventos.RowHeadersWidth = 51
-        Me.dgvDataEventos.RowTemplate.Height = 40
-        Me.dgvDataEventos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDataEventos.Size = New System.Drawing.Size(1125, 555)
-        Me.dgvDataEventos.TabIndex = 102
-        '
-        'Eli
-        '
-        Me.Eli.HeaderText = ""
-        Me.Eli.Image = CType(resources.GetObject("Eli.Image"), System.Drawing.Image)
-        Me.Eli.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
-        Me.Eli.MinimumWidth = 6
-        Me.Eli.Name = "Eli"
-        Me.Eli.ReadOnly = True
-        Me.Eli.Width = 6
-        '
-        'tabEventosCompartidos
-        '
-        Me.tabEventosCompartidos.Controls.Add(Me.dgvDataEventosCompartidos)
-        Me.tabEventosCompartidos.Location = New System.Drawing.Point(4, 25)
-        Me.tabEventosCompartidos.Name = "tabEventosCompartidos"
-        Me.tabEventosCompartidos.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEventosCompartidos.Size = New System.Drawing.Size(1131, 561)
-        Me.tabEventosCompartidos.TabIndex = 1
-        Me.tabEventosCompartidos.Text = "Eventos Compartidos"
-        Me.tabEventosCompartidos.UseVisualStyleBackColor = True
-        '
-        'dgvDataEventosCompartidos
-        '
-        Me.dgvDataEventosCompartidos.AllowUserToAddRows = False
-        Me.dgvDataEventosCompartidos.AllowUserToDeleteRows = False
-        Me.dgvDataEventosCompartidos.AllowUserToResizeRows = False
-        Me.dgvDataEventosCompartidos.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.dgvDataEventosCompartidos.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgvDataEventosCompartidos.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-        Me.dgvDataEventosCompartidos.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle16.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle16.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle16.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.Color.DarkSlateGray
-        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDataEventosCompartidos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
-        Me.dgvDataEventosCompartidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvDataEventosCompartidos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewImageColumn1})
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle17.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDataEventosCompartidos.DefaultCellStyle = DataGridViewCellStyle17
-        Me.dgvDataEventosCompartidos.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvDataEventosCompartidos.Location = New System.Drawing.Point(3, 3)
-        Me.dgvDataEventosCompartidos.Margin = New System.Windows.Forms.Padding(10)
-        Me.dgvDataEventosCompartidos.Name = "dgvDataEventosCompartidos"
-        Me.dgvDataEventosCompartidos.ReadOnly = True
-        Me.dgvDataEventosCompartidos.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDataEventosCompartidos.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
-        Me.dgvDataEventosCompartidos.RowHeadersVisible = False
-        Me.dgvDataEventosCompartidos.RowHeadersWidth = 51
-        Me.dgvDataEventosCompartidos.RowTemplate.Height = 40
-        Me.dgvDataEventosCompartidos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDataEventosCompartidos.Size = New System.Drawing.Size(1125, 555)
-        Me.dgvDataEventosCompartidos.TabIndex = 103
-        '
-        'DataGridViewImageColumn1
-        '
-        Me.DataGridViewImageColumn1.HeaderText = ""
-        Me.DataGridViewImageColumn1.Image = CType(resources.GetObject("DataGridViewImageColumn1.Image"), System.Drawing.Image)
-        Me.DataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
-        Me.DataGridViewImageColumn1.MinimumWidth = 6
-        Me.DataGridViewImageColumn1.Name = "DataGridViewImageColumn1"
-        Me.DataGridViewImageColumn1.ReadOnly = True
-        Me.DataGridViewImageColumn1.Visible = False
-        Me.DataGridViewImageColumn1.Width = 6
-        '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.labelCantidadEventos)
-        Me.Panel1.Controls.Add(Me.btnInsertarEvento)
-        Me.Panel1.Controls.Add(Me.btnSincronizar)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1159, 73)
-        Me.Panel1.TabIndex = 105
-        '
-        'labelCantidadEventos
-        '
-        Me.labelCantidadEventos.AutoSize = True
-        Me.labelCantidadEventos.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.labelCantidadEventos.Location = New System.Drawing.Point(26, 32)
-        Me.labelCantidadEventos.Name = "labelCantidadEventos"
-        Me.labelCantidadEventos.Size = New System.Drawing.Size(19, 21)
-        Me.labelCantidadEventos.TabIndex = 108
-        Me.labelCantidadEventos.Text = "0"
-        '
-        'btnInsertarEvento
-        '
-        Me.btnInsertarEvento.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnInsertarEvento.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnInsertarEvento.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnInsertarEvento.FlatAppearance.BorderSize = 0
-        Me.btnInsertarEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnInsertarEvento.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnInsertarEvento.ForeColor = System.Drawing.Color.White
-        Me.btnInsertarEvento.IconChar = FontAwesome.Sharp.IconChar.Add
-        Me.btnInsertarEvento.IconColor = System.Drawing.Color.White
-        Me.btnInsertarEvento.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnInsertarEvento.IconSize = 16
-        Me.btnInsertarEvento.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnInsertarEvento.Location = New System.Drawing.Point(926, 23)
-        Me.btnInsertarEvento.Name = "btnInsertarEvento"
-        Me.btnInsertarEvento.Padding = New System.Windows.Forms.Padding(18, 1, 18, 0)
-        Me.btnInsertarEvento.Size = New System.Drawing.Size(177, 40)
-        Me.btnInsertarEvento.TabIndex = 106
-        Me.btnInsertarEvento.Text = "Nuevo Evento"
-        Me.btnInsertarEvento.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnInsertarEvento.UseVisualStyleBackColor = False
-        '
-        'btnSincronizar
-        '
-        Me.btnSincronizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSincronizar.BackColor = System.Drawing.Color.Transparent
-        Me.btnSincronizar.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnSincronizar.FlatAppearance.BorderSize = 0
-        Me.btnSincronizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnSincronizar.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSincronizar.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.btnSincronizar.Location = New System.Drawing.Point(793, 23)
-        Me.btnSincronizar.Name = "btnSincronizar"
-        Me.btnSincronizar.Size = New System.Drawing.Size(106, 40)
-        Me.btnSincronizar.TabIndex = 103
-        Me.btnSincronizar.Text = "Sincronizar"
-        Me.btnSincronizar.UseVisualStyleBackColor = False
-        '
         'PanelNotificaciones
         '
         Me.PanelNotificaciones.BackColor = System.Drawing.Color.White
@@ -1354,7 +1365,7 @@ Partial Class GestionEventos
         Me.MenuStrip1.Location = New System.Drawing.Point(159, 366)
         Me.MenuStrip1.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(274, 44)
+        Me.MenuStrip1.Size = New System.Drawing.Size(272, 44)
         Me.MenuStrip1.TabIndex = 130
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -1677,24 +1688,12 @@ Partial Class GestionEventos
         Me.Label22.TabIndex = 111
         Me.Label22.Text = "Ocurrencias"
         '
-        'txtProyectoGeneral
-        '
-        Me.txtProyectoGeneral.Font = New System.Drawing.Font("Century Gothic", 9.0!)
-        Me.txtProyectoGeneral.Location = New System.Drawing.Point(314, 294)
-        Me.txtProyectoGeneral.Name = "txtProyectoGeneral"
-        Me.txtProyectoGeneral.Size = New System.Drawing.Size(250, 26)
-        Me.txtProyectoGeneral.TabIndex = 144
-        '
-        'SearchTimer
-        '
-        Me.SearchTimer.Interval = 2000
-        '
         'GestionEventos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.DarkGray
-        Me.ClientSize = New System.Drawing.Size(1159, 683)
+        Me.ClientSize = New System.Drawing.Size(1159, 953)
         Me.Controls.Add(Me.panelEventos)
         Me.Controls.Add(Me.PanelNotificaciones)
         Me.Controls.Add(Me.PanelDatosRecurrencia)
@@ -1703,6 +1702,13 @@ Partial Class GestionEventos
         Me.Text = "GestionEventos"
         Me.panelEventos.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
+        Me.TabControl1.ResumeLayout(False)
+        Me.tabEventosPropios.ResumeLayout(False)
+        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabEventosCompartidos.ResumeLayout(False)
+        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.PanelDatosBasicos.ResumeLayout(False)
         Me.PanelDatosBasicos.PerformLayout()
         Me.MenuStrip3.ResumeLayout(False)
@@ -1718,8 +1724,6 @@ Partial Class GestionEventos
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
         CType(Me.btnVolverDatosPodio, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabControl1.ResumeLayout(False)
-        Me.tabEventosPropios.ResumeLayout(False)
         Me.panelDatosPodio.ResumeLayout(False)
         Me.panelDatosPodio.PerformLayout()
         CType(Me.barraAvance, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1728,11 +1732,6 @@ Partial Class GestionEventos
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
         CType(Me.btnVolverDatosBasicos, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvDataEventos, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.tabEventosCompartidos.ResumeLayout(False)
-        CType(Me.dgvDataEventosCompartidos, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
         Me.PanelNotificaciones.ResumeLayout(False)
         Me.PanelNotificaciones.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)

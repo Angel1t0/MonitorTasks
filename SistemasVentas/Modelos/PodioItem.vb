@@ -2,7 +2,7 @@
     Public Property PodioItemID As Integer  ' ID único para la base de datos local
     Public Property EventID As String  ' Vincula con la tabla de eventos
     Public Property PodioAppID As Integer = 1350510  ' ID de la aplicación en Podio
-    Public Property PodioAppItemID As Integer  ' ID del item en Podio
+    Public Property PodioAppItemID As Long  ' ID del item en Podio
     Public Property Title As String  ' Título del elemento
     Public Property Description As String  ' Descripción del elemento
     Public Property Company As String  ' Empresa solicitante
@@ -35,7 +35,19 @@
     Public categoryOptions As New Dictionary(Of String, Integer)()
     Public priorityOptions As New Dictionary(Of String, Integer)()
     Public statusOptions As New Dictionary(Of String, Integer)()
-    Public itemTitleToIdMap As New Dictionary(Of String, String)() ' Diccionario para mapear títulos a IDs
+
+    Public itemTitleToIdMap As New Dictionary(Of String, String)() ' Diccionario para mapear títulos a IDs de los proyectos de sistemas
+    Public reversedItemTitleToIdMap As New Dictionary(Of String, String)()
+
+    Public reversedCompanyOptions As New Dictionary(Of Integer, String)()
+    Public reversedDepartmentOptions As New Dictionary(Of Integer, String)()
+    Public reversedSystemAreaOptions As New Dictionary(Of Integer, String)()
+    Public reversedCategoryOptions As New Dictionary(Of Integer, String)()
+    Public reversedPriorityOptions As New Dictionary(Of Integer, String)()
+    Public reversedStatusOptions As New Dictionary(Of Integer, String)()
+
+    Public authorizerContactsDict As New Dictionary(Of String, Integer)() ' Diccionario para mapear correos de contactos a IDs
+    Public requestorContactsDict As New Dictionary(Of String, Integer)() ' Diccionario para mapear correos de contactos a IDs
 
     Public Function ConvertTimeToSeconds(time As String) As Integer
         Dim timeParts As String() = time.Split(":")
@@ -179,6 +191,34 @@
         statusOptions.Add("Publicado", 12)
         statusOptions.Add("Suspendida", 8)
         statusOptions.Add("Trabajando", 15)
+
+        reversedOptions()
+    End Sub
+
+    Public Sub reversedOptions()
+        For Each kvp As KeyValuePair(Of String, Integer) In companyOptions
+            reversedCompanyOptions.Add(kvp.Value, kvp.Key)
+        Next
+
+        For Each kvp As KeyValuePair(Of String, Integer) In departmentOptions
+            reversedDepartmentOptions.Add(kvp.Value, kvp.Key)
+        Next
+
+        For Each kvp As KeyValuePair(Of String, Integer) In systemAreaOptions
+            reversedSystemAreaOptions.Add(kvp.Value, kvp.Key)
+        Next
+
+        For Each kvp As KeyValuePair(Of String, Integer) In categoryOptions
+            reversedCategoryOptions.Add(kvp.Value, kvp.Key)
+        Next
+
+        For Each kvp As KeyValuePair(Of String, Integer) In priorityOptions
+            reversedPriorityOptions.Add(kvp.Value, kvp.Key)
+        Next
+
+        For Each kvp As KeyValuePair(Of String, Integer) In statusOptions
+            reversedStatusOptions.Add(kvp.Value, kvp.Key)
+        Next
     End Sub
 
     Public Sub LoadOptionsIntoComboBox(comboBoxOptions As ComboBox, dictionary As Dictionary(Of String, Integer))
@@ -196,4 +236,21 @@
         End If
     End Function
 
+    Public Function GetSelectedOptionName(selectedCompanyId As Integer, dictionary As Dictionary(Of Integer, String)) As String
+        Dim optionName As String = ""
+        If dictionary.TryGetValue(selectedCompanyId, optionName) Then
+            Return optionName
+        Else
+            Throw New Exception("La opción no está en el diccionario.")
+        End If
+    End Function
+
+    Public Function GetSystemProjectName(selectedName As String, dictionary As Dictionary(Of String, String)) As String
+        Dim systemProjectName As String = ""
+        If dictionary.TryGetValue(selectedName, systemProjectName) Then
+            Return systemProjectName
+        Else
+            Throw New Exception("La opción no está en el diccionario.")
+        End If
+    End Function
 End Class

@@ -33,30 +33,6 @@ Public Class GestionEventos
         podioItem.InitializeOptions()
         ConfigurarComponentes()
         _controlador.EstablecerCalendarioID(CalendarioID)
-        Dim newItem As New PodioItem()
-        With newItem
-            .Title = "Prueba 10"
-            .Description = "Esta es una prueba"
-            .Company = "3"
-            .Department = "5"
-            .DepartmentPriority = 3
-            .SystemArea = "1"
-            .Categories = "7"
-            .RequestorContacts = New List(Of Integer) From {3599090}
-            .AuthorizerContacts = New List(Of Integer) From {3599090}
-            .AssignedToContacts = New List(Of Integer) From {3599090}
-            .SystemPriority = 2
-            .Priority = "2"
-            .StartDate = DateTime.Parse("2023-03-14")
-            .EndDate = DateTime.Parse("2023-03-19")
-            .WorkPlan = "Este es un plan de trabajo"
-            .Status = "10"
-            .Progress = 50
-            .SystemProject = "2011085875"
-            .HoursAccumulated = 576000
-            .ExtraHours = 576000
-        End With
-        _controlador.EnviarItemAPodio(newItem)
     End Sub
 
     ' Manejadores de Eventos
@@ -283,6 +259,25 @@ Public Class GestionEventos
     End Sub
 
     'FALTA IMPLEMENTAR EL MÉTODO PARA CARGAR LOS SOLICITANTES Y AUTORIZANTES EN PREPARAR ACTUALIZAR
+    Public Sub CargarListaSolicitantes(podioItemID As Integer)
+        comboSolicitantes.Items.Clear()
+        podioItem.RequestorContacts.Clear()
+        Dim listaSolicitantes As List(Of String) = _controlador.ObtenerSolicitantes(podioItemID)
+        For Each solicitante In listaSolicitantes
+            comboSolicitantes.Items.Add(solicitante)
+            podioItem.RequestorContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(solicitante))
+        Next
+    End Sub
+
+    Public Sub CargarListaAutorizantes(podioItemID As Integer)
+        comboAutorizantes.Items.Clear()
+        podioItem.AuthorizerContacts.Clear()
+        Dim listaAutorizantes As List(Of String) = _controlador.ObtenerAutorizantes(podioItemID)
+        For Each autorizante In listaAutorizantes
+            comboAutorizantes.Items.Add(autorizante)
+            podioItem.AuthorizerContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(autorizante))
+        Next
+    End Sub
 
     Public Sub CargarListaNotificaciones(eventID As String)
         Dim listaNotificaciones As List(Of Notificacion) = _controlador.ObtenerNotificacionesActivas(eventID)
@@ -548,6 +543,7 @@ Public Class GestionEventos
         CentrarPanel(PanelDatosBasicos)
 
         PrepararActualizarEvento()
+        _inicializacionTerminada = True
     End Sub
 
     Private Sub dgvDataEventos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventos.CellClick
@@ -647,11 +643,14 @@ Public Class GestionEventos
         dgvData.Columns(19).Visible = False ' PodioAppItemID
         dgvData.Columns(23).Visible = False ' Fecha inicio podio
         dgvData.Columns(24).Visible = False ' Fecha fin podio
-        dgvData.Columns(29).Visible = False ' Horas acumuladas
-        dgvData.Columns(30).Visible = False ' Horas extras
-        dgvData.Columns(31).Visible = False ' Scrum
-        dgvData.Columns(32).Visible = False ' Fecha creación podio
-        dgvData.Columns(33).Visible = False ' Fecha modificación podio
+        dgvData.Columns(28).Visible = False ' Id del proyecto de sistemas
+        dgvData.Columns(30).Visible = False ' Id del proyecto general
+
+        dgvData.Columns(31).Visible = False ' Horas acumuladas
+        dgvData.Columns(32).Visible = False ' Horas extras
+        dgvData.Columns(33).Visible = False ' Scrum
+        dgvData.Columns(34).Visible = False ' Fecha creación podio
+        dgvData.Columns(35).Visible = False ' Fecha modificación podio
 
         dgvData.Columns(0).Width = 40
         dgvData.Columns(2).Width = 150 ' Titulo
@@ -671,11 +670,12 @@ Public Class GestionEventos
         dgvData.Columns(25).Width = 200 ' Plan de trabajo
         dgvData.Columns(26).Width = 100 ' Progreso
         dgvData.Columns(27).Width = 100 ' Proyecto sistemas
-        dgvData.Columns(28).Width = 100 ' Proyecto general
+        dgvData.Columns(29).Width = 100 ' Proyecto general
         dgvData.EnableHeadersVisualStyles = False
     End Sub
 
     Private Sub PrepararActualizarEvento()
+        _inicializacionTerminada = False
         EventoID = dgvDataEventos.SelectedCells.Item(1).Value.ToString()
         _controlador.GoogleEventID = EventoID
 
@@ -691,6 +691,7 @@ Public Class GestionEventos
         'DATOS PODIO
         podioItem.PodioItemID = dgvDataEventos.SelectedCells.Item(17).Value
         podioItem.PodioAppID = dgvDataEventos.SelectedCells.Item(18).Value
+        podioItem.PodioAppItemID = Long.Parse(dgvDataEventos.SelectedCells.Item(19).Value)
         comboEmpresa.SelectedItem = dgvDataEventos.SelectedCells.Item(7).Value
         comboDepartamento.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
         comboArea.SelectedItem = dgvDataEventos.SelectedCells.Item(10).Value
@@ -702,10 +703,12 @@ Public Class GestionEventos
         textPlanAccion.TextBox1.Text = dgvDataEventos.SelectedCells.Item(25).Value
         barraAvance.Value = dgvDataEventos.SelectedCells.Item(26).Value
         comboProyectoSistemas.SelectedItem = dgvDataEventos.SelectedCells.Item(27).Value
-        txtProyectoGeneral.Text = dgvDataEventos.SelectedCells.Item(28).Value
-        maskHorasAcumuladas.Text = dgvDataEventos.SelectedCells.Item(29).Value
-        maskHorasExtras.Text = dgvDataEventos.SelectedCells.Item(30).Value
+        txtProyectoGeneral.Text = dgvDataEventos.SelectedCells.Item(29).Value
+        maskHorasAcumuladas.Text = dgvDataEventos.SelectedCells.Item(31).Value
+        maskHorasExtras.Text = dgvDataEventos.SelectedCells.Item(32).Value
 
+        podioItem.itemTitleToIdMap.Add(dgvDataEventos.SelectedCells.Item(27).Value, dgvDataEventos.SelectedCells.Item(28).Value)
+        comboProyectoSistemas.Items.Add(dgvDataEventos.SelectedCells.Item(27).Value)
 
         'RECURRENCIA
         Dim rrule = dgvDataEventos.SelectedCells.Item(9).Value.ToString()
@@ -714,6 +717,12 @@ Public Class GestionEventos
 
         'ASITENTES
         CargarListaInvitados(EventoID)
+
+        'SOLICITANTES
+        CargarListaSolicitantes(podioItem.PodioItemID)
+
+        'AUTORIZANTES
+        CargarListaAutorizantes(podioItem.PodioItemID)
 
         'NOTIFICACIONES
         CargarListaNotificaciones(EventoID)
@@ -940,7 +949,6 @@ Public Class GestionEventos
         comboCategorias.SelectedIndex = 0
         comboPrioridad.SelectedIndex = 0
         comboStatus.SelectedIndex = 0
-        comboProyectoSistemas.SelectedIndex = 0
         txtProyectoGeneral.Text = ""
         numericOrdenSistemas.Value = 1
         numericOrdenDpt.Value = 1
@@ -1111,11 +1119,13 @@ Public Class GestionEventos
                 Dim results As JArray = Await _controlador.SearchItemPodio(comboProyectoSistemas.Text, 5) ' Ajusta appId y límites según necesites.
                 comboProyectoSistemas.Items.Clear()
                 podioItem.itemTitleToIdMap.Clear() ' Limpiar el diccionario antes de llenarlo de nuevo
+                podioItem.reversedItemTitleToIdMap.Clear()
 
                 For Each item As JObject In results
                     Dim title As String = item("title").ToString()
                     Dim itemId As String = item("id").ToString() ' Asegúrate de que "item_id" es el campo correcto
                     podioItem.itemTitleToIdMap.Add(title, itemId) ' Guardar la relación título-ID en el diccionario
+                    podioItem.reversedItemTitleToIdMap.Add(itemId, title)
                     comboProyectoSistemas.Items.Add(title)
                 Next
                 comboProyectoSistemas.DroppedDown = True ' Opcional: Muestra la lista desplegable.

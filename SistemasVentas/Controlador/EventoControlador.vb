@@ -88,14 +88,14 @@ Public Class EventoControlador
     End Sub
 
     Public Sub InsertarSolicitante(podioItem As PodioItem)
-        For Each solicitanteCorreo In podioItem.RequestorContacts
-            _datosEvento.InsertarSolicitante(podioItem.PodioItemID, _datosEvento.BuscarUserID(solicitanteCorreo))
+        For Each solicitanteProfileID In podioItem.RequestorContacts
+            _datosEvento.InsertarSolicitante(podioItem.PodioItemID, _datosEvento.ObtenerUserIDPorProfileID(solicitanteProfileID))
         Next
     End Sub
 
     Public Sub InsertarAutorizante(podioItem As PodioItem)
-        For Each autorizanteCorreo In podioItem.AuthorizerContacts
-            _datosEvento.InsertarAutorizante(podioItem.PodioItemID, _datosEvento.BuscarUserID(autorizanteCorreo))
+        For Each autorizanteProfileID In podioItem.AuthorizerContacts
+            _datosEvento.InsertarAutorizante(podioItem.PodioItemID, _datosEvento.ObtenerUserIDPorProfileID(autorizanteProfileID))
         Next
     End Sub
 
@@ -121,7 +121,7 @@ Public Class EventoControlador
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
     End Sub
 
-    Public Function EnviarItemAPodio(podioItem As PodioItem) As Integer
+    Public Function EnviarItemAPodio(podioItem As PodioItem) As Long
         Return _servicioPodio.CreateItem(podioItem).Result
     End Function
 
@@ -296,5 +296,13 @@ Public Class EventoControlador
 
     Public Function ObtenerPodioUserIDPorCorreo(email As String) As Integer
         Return _datosEvento.ObtenerPodioUserIDPorCorreo(email)
+    End Function
+
+    Public Function ObtenerSolicitantes(podioItemID As Integer) As List(Of String)
+        Return _datosEvento.ObtenerSolicitantes(podioItemID)
+    End Function
+
+    Public Function ObtenerAutorizantes(podioItemID As Integer) As List(Of String)
+        Return _datosEvento.ObtenerAutorizantes(podioItemID)
     End Function
 End Class
