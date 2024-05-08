@@ -74,9 +74,11 @@ Public Class EventoControlador
         Return True
     End Function
 
-    Public Sub EliminarEvento(eventID As String)
-        _datosEvento.EliminarEvento(eventID)
+    Public Sub EliminarEvento(eventID As String, podioAppItemID As Long)
+        _servicioPodio.DeletePodioItem(podioAppItemID)
         _servicioGoogleCalendar.EliminarEventoGoogle(eventID)
+        _datosEvento.EliminarEvento(eventID)
+
     End Sub
 
     Public Sub InsertarAsistente(mensaje As Mensaje)
@@ -304,5 +306,21 @@ Public Class EventoControlador
 
     Public Function ObtenerAutorizantes(podioItemID As Integer) As List(Of String)
         Return _datosEvento.ObtenerAutorizantes(podioItemID)
+    End Function
+
+    Public Sub EliminarAsistente(asistente As Asistente)
+        _datosEvento.EliminarAsistente(asistente)
+    End Sub
+
+    Public Sub EliminarSolicitante(correo As String, podioItemID As Integer)
+        _datosEvento.EliminarSolicitante(correo, podioItemID)
+    End Sub
+
+    Public Sub EliminarAutorizante(correo As String, podioItemID As Integer)
+        _datosEvento.EliminarAutorizante(correo, podioItemID)
+    End Sub
+
+    Public Function ObtenerUserIDPorProfileID(profileID As Integer) As Integer
+        Return _datosEvento.ObtenerUserIDPorProfileID(profileID)
     End Function
 End Class

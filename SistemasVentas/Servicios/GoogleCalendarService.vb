@@ -12,7 +12,7 @@ Public Class GoogleCalendarService
         _datosEvento = New EventoData()
     End Sub
 
-    ' ApplicationName es el nombre de tu aplicación. Este nombre se muestra durante el proceso de autenticación.
+    ' ApplicationName es el nombre de la aplicación. Este nombre se muestra durante el proceso de autenticación.
     Private ApplicationName As String = "Monitor task - Prueba"
 
     ' Método que maneja la autenticación y crea un servicio de Google Calendar.

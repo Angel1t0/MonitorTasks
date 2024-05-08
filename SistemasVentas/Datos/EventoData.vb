@@ -901,4 +901,38 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al obtener el ID del usuario por ProfileID.", ex)
         End Try
     End Function
+
+    Public Sub EliminarSolicitante(correo As String, podioItemID As Integer)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("eliminarPodioSolicitante", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", correo)
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al eliminar el solicitante de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al eliminar el solicitante.", ex)
+        End Try
+    End Sub
+
+    Public Sub EliminarAutorizante(correo As String, podioItemID As Integer)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("eliminarPodioAutorizante", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", correo)
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al eliminar el autorizante de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al eliminar el autorizante.", ex)
+        End Try
+    End Sub
 End Class

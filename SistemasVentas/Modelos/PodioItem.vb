@@ -57,6 +57,13 @@
         Return hours * 3600 + minutes * 60 + seconds
     End Function
 
+    Public Function ConvertSecondsToTime(seconds As Integer) As String
+        Dim hours As Integer = seconds \ 3600
+        Dim minutes As Integer = (seconds Mod 3600) \ 60
+        Dim remainingSeconds As Integer = seconds Mod 60
+        Return hours.ToString("00") & ":" & minutes.ToString("00") & ":" & remainingSeconds.ToString("00")
+    End Function
+
     Public Sub InitializeOptions()
         ' Inicializar las opciones de las categorías
         companyOptions.Add("Todas", 15)
@@ -246,11 +253,64 @@
     End Function
 
     Public Function GetSystemProjectName(selectedName As String, dictionary As Dictionary(Of String, String)) As String
+        If selectedName = "" Then
+            Return ""
+        End If
         Dim systemProjectName As String = ""
         If dictionary.TryGetValue(selectedName, systemProjectName) Then
             Return systemProjectName
         Else
             Throw New Exception("La opción no está en el diccionario.")
         End If
+    End Function
+
+    Public Function ValidarCampos() As List(Of String)
+        Dim errores As New List(Of String)
+
+        If String.IsNullOrWhiteSpace(Company) Then
+            errores.Add("El campo 'Empresa' es obligatorio.")
+        End If
+
+        If String.IsNullOrWhiteSpace(Department) Then
+            errores.Add("El campo 'Departamento' es obligatorio.")
+        End If
+
+        If String.IsNullOrWhiteSpace(SystemArea) Then
+            errores.Add("El campo 'Area Sistemas' es obligatorio.")
+        End If
+
+        If String.IsNullOrWhiteSpace(Categories) Then
+            errores.Add("El campo 'Categorias' es obligatorio.")
+        End If
+
+        If String.IsNullOrWhiteSpace(Priority) Then
+            errores.Add("El campo 'Prioridad' es obligatorio.")
+        End If
+
+        If String.IsNullOrWhiteSpace(Status) Then
+            errores.Add("El campo 'Status' es obligatorio.")
+        End If
+
+        'If Not String.IsNullOrWhiteSpace(SystemProject) Then
+        '    If Not reversedItemTitleToIdMap.ContainsKey(SystemProject) Then
+        '        errores.Add("El campo 'Proyecto/Actividades de Sistemas' no es válido, vuelva a buscar su proyecto")
+        '    End If
+        'End If
+
+        Return errores
+    End Function
+
+    Public Function ValidarCamposUsuarios() As List(Of String)
+        Dim errores As New List(Of String)
+
+        If RequestorContacts.Count = 0 Then
+            errores.Add("El campo 'Solicitante' es obligatorio.")
+        End If
+
+        If AssignedToContacts.Count = 0 Then
+            errores.Add("El campo 'Asignado a' es obligatorio.")
+        End If
+
+        Return errores
     End Function
 End Class

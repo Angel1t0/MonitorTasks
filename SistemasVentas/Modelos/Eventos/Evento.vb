@@ -30,6 +30,10 @@
             errores.Add("El campo 'Summary' es obligatorio.")
         End If
 
+        If String.IsNullOrWhiteSpace(Description) Then
+            errores.Add("El campo 'Description' es obligatorio.")
+        End If
+
         If StartDateTime = DateTime.MinValue Then
             errores.Add("El campo 'StartDateTime' es obligatorio.")
         End If

@@ -40,6 +40,11 @@ Partial Class Prueba
         Me.Label30 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.panelDatosPodio = New SistemasVentas.ControlPanel()
+        Me.panelSeleccionarEmpresas = New SistemasVentas.ControlPanel()
+        Me.btnCancelarEmpresas = New System.Windows.Forms.Button()
+        Me.btnEmpresas = New System.Windows.Forms.Button()
+        Me.listEmpresas = New System.Windows.Forms.CheckedListBox()
+        Me.Label41 = New System.Windows.Forms.Label()
         Me.txtProyectoSistemas = New System.Windows.Forms.TextBox()
         Me.barraAvance = New System.Windows.Forms.NumericUpDown()
         Me.btnContinuarDatosPodio = New FontAwesome.Sharp.IconButton()
@@ -55,8 +60,6 @@ Partial Class Prueba
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
-        Me.comboProyectoGeneral = New System.Windows.Forms.ComboBox()
-        Me.comboProyectoSistemas = New System.Windows.Forms.ComboBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.comboPrioridad = New System.Windows.Forms.ComboBox()
         Me.comboDepartamento = New System.Windows.Forms.ComboBox()
@@ -129,6 +132,22 @@ Partial Class Prueba
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
+        Me.panelProyectosSistemas = New SistemasVentas.ControlPanel()
+        Me.btnCancelarProyectosSistemas = New System.Windows.Forms.Button()
+        Me.btnProyectosSistemas = New System.Windows.Forms.Button()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.comboProyectosSistemas = New System.Windows.Forms.ComboBox()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.comboProyectoSistemas = New System.Windows.Forms.ComboBox()
+        Me.pictureEliminarSistemas = New FontAwesome.Sharp.IconPictureBox()
+        Me.panelProyectosGenerales = New SistemasVentas.ControlPanel()
+        Me.pictureEliminarGeneral = New FontAwesome.Sharp.IconPictureBox()
+        Me.comboProyectoGeneral = New System.Windows.Forms.ComboBox()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.comboProyectosGenerales = New System.Windows.Forms.ComboBox()
+        Me.btnCancelarProyectoGeneral = New System.Windows.Forms.Button()
+        Me.btnProyectosGenerales = New System.Windows.Forms.Button()
+        Me.Label44 = New System.Windows.Forms.Label()
         Me.PanelNotificaciones.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.numericUpCantidad, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -136,6 +155,7 @@ Partial Class Prueba
         Me.Panel3.SuspendLayout()
         CType(Me.btnVolverAsistente, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelDatosPodio.SuspendLayout()
+        Me.panelSeleccionarEmpresas.SuspendLayout()
         CType(Me.barraAvance, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericOrdenSistemas, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericOrdenDpt, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -153,6 +173,10 @@ Partial Class Prueba
         CType(Me.IconPictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelDatosRecurrencia.SuspendLayout()
         CType(Me.txtOcurrencias, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.panelProyectosSistemas.SuspendLayout()
+        CType(Me.pictureEliminarSistemas, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.panelProyectosGenerales.SuspendLayout()
+        CType(Me.pictureEliminarGeneral, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PanelNotificaciones
@@ -355,6 +379,9 @@ Partial Class Prueba
         '
         Me.panelDatosPodio.BackColor = System.Drawing.Color.White
         Me.panelDatosPodio.BorderRadius = 12
+        Me.panelDatosPodio.Controls.Add(Me.panelProyectosGenerales)
+        Me.panelDatosPodio.Controls.Add(Me.panelProyectosSistemas)
+        Me.panelDatosPodio.Controls.Add(Me.panelSeleccionarEmpresas)
         Me.panelDatosPodio.Controls.Add(Me.txtProyectoSistemas)
         Me.panelDatosPodio.Controls.Add(Me.barraAvance)
         Me.panelDatosPodio.Controls.Add(Me.btnContinuarDatosPodio)
@@ -370,8 +397,6 @@ Partial Class Prueba
         Me.panelDatosPodio.Controls.Add(Me.Label12)
         Me.panelDatosPodio.Controls.Add(Me.Label14)
         Me.panelDatosPodio.Controls.Add(Me.Label15)
-        Me.panelDatosPodio.Controls.Add(Me.comboProyectoGeneral)
-        Me.panelDatosPodio.Controls.Add(Me.comboProyectoSistemas)
         Me.panelDatosPodio.Controls.Add(Me.Label20)
         Me.panelDatosPodio.Controls.Add(Me.comboPrioridad)
         Me.panelDatosPodio.Controls.Add(Me.comboDepartamento)
@@ -390,6 +415,71 @@ Partial Class Prueba
         Me.panelDatosPodio.Name = "panelDatosPodio"
         Me.panelDatosPodio.Size = New System.Drawing.Size(877, 713)
         Me.panelDatosPodio.TabIndex = 127
+        '
+        'panelSeleccionarEmpresas
+        '
+        Me.panelSeleccionarEmpresas.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.panelSeleccionarEmpresas.BackColor = System.Drawing.Color.White
+        Me.panelSeleccionarEmpresas.BorderRadius = 8
+        Me.panelSeleccionarEmpresas.Controls.Add(Me.btnCancelarEmpresas)
+        Me.panelSeleccionarEmpresas.Controls.Add(Me.btnEmpresas)
+        Me.panelSeleccionarEmpresas.Controls.Add(Me.listEmpresas)
+        Me.panelSeleccionarEmpresas.Controls.Add(Me.Label41)
+        Me.panelSeleccionarEmpresas.Location = New System.Drawing.Point(847, 395)
+        Me.panelSeleccionarEmpresas.Name = "panelSeleccionarEmpresas"
+        Me.panelSeleccionarEmpresas.Size = New System.Drawing.Size(373, 408)
+        Me.panelSeleccionarEmpresas.TabIndex = 129
+        '
+        'btnCancelarEmpresas
+        '
+        Me.btnCancelarEmpresas.BackColor = System.Drawing.Color.Transparent
+        Me.btnCancelarEmpresas.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnCancelarEmpresas.FlatAppearance.BorderSize = 0
+        Me.btnCancelarEmpresas.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnCancelarEmpresas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCancelarEmpresas.ForeColor = System.Drawing.Color.Gray
+        Me.btnCancelarEmpresas.Location = New System.Drawing.Point(68, 350)
+        Me.btnCancelarEmpresas.Name = "btnCancelarEmpresas"
+        Me.btnCancelarEmpresas.Size = New System.Drawing.Size(106, 35)
+        Me.btnCancelarEmpresas.TabIndex = 122
+        Me.btnCancelarEmpresas.Text = "Cancelar"
+        Me.btnCancelarEmpresas.UseVisualStyleBackColor = False
+        '
+        'btnEmpresas
+        '
+        Me.btnEmpresas.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnEmpresas.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnEmpresas.FlatAppearance.BorderSize = 0
+        Me.btnEmpresas.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnEmpresas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEmpresas.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.btnEmpresas.Location = New System.Drawing.Point(191, 349)
+        Me.btnEmpresas.Name = "btnEmpresas"
+        Me.btnEmpresas.Size = New System.Drawing.Size(106, 35)
+        Me.btnEmpresas.TabIndex = 121
+        Me.btnEmpresas.Text = "Listo"
+        Me.btnEmpresas.UseVisualStyleBackColor = False
+        '
+        'listEmpresas
+        '
+        Me.listEmpresas.Enabled = False
+        Me.listEmpresas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.listEmpresas.FormattingEnabled = True
+        Me.listEmpresas.Items.AddRange(New Object() {"Todas", "Incorporated Express SA de CV", "FUNERA", "OrderExpress Inc", "OEPM", "OECC", "OE Financial Inc", "LOFT SA de CV", "JP Casa de Cambio Inc", "J&P Financial Inc", "JP SofiExpress", "REALIZA"})
+        Me.listEmpresas.Location = New System.Drawing.Point(49, 77)
+        Me.listEmpresas.Name = "listEmpresas"
+        Me.listEmpresas.Size = New System.Drawing.Size(275, 256)
+        Me.listEmpresas.TabIndex = 116
+        '
+        'Label41
+        '
+        Me.Label41.AutoSize = True
+        Me.Label41.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label41.Location = New System.Drawing.Point(101, 31)
+        Me.Label41.Name = "Label41"
+        Me.Label41.Size = New System.Drawing.Size(170, 20)
+        Me.Label41.TabIndex = 113
+        Me.Label41.Text = "Seleccionar empresas"
         '
         'txtProyectoSistemas
         '
@@ -553,30 +643,6 @@ Partial Class Prueba
         Me.Label15.Size = New System.Drawing.Size(210, 18)
         Me.Label15.TabIndex = 122
         Me.Label15.Text = "Orden de Prioridad del Dpt."
-        '
-        'comboProyectoGeneral
-        '
-        Me.comboProyectoGeneral.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.comboProyectoGeneral.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.comboProyectoGeneral.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.comboProyectoGeneral.FormattingEnabled = True
-        Me.comboProyectoGeneral.Items.AddRange(New Object() {"Default", "Público", "Privado"})
-        Me.comboProyectoGeneral.Location = New System.Drawing.Point(312, 292)
-        Me.comboProyectoGeneral.Name = "comboProyectoGeneral"
-        Me.comboProyectoGeneral.Size = New System.Drawing.Size(250, 28)
-        Me.comboProyectoGeneral.TabIndex = 121
-        '
-        'comboProyectoSistemas
-        '
-        Me.comboProyectoSistemas.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.comboProyectoSistemas.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.comboProyectoSistemas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.comboProyectoSistemas.FormattingEnabled = True
-        Me.comboProyectoSistemas.Items.AddRange(New Object() {"Default", "Público", "Privado"})
-        Me.comboProyectoSistemas.Location = New System.Drawing.Point(33, 292)
-        Me.comboProyectoSistemas.Name = "comboProyectoSistemas"
-        Me.comboProyectoSistemas.Size = New System.Drawing.Size(250, 28)
-        Me.comboProyectoSistemas.TabIndex = 120
         '
         'Label20
         '
@@ -785,7 +851,7 @@ Partial Class Prueba
         Me.MenuStrip2.Location = New System.Drawing.Point(314, 554)
         Me.MenuStrip2.Margin = New System.Windows.Forms.Padding(3)
         Me.MenuStrip2.Name = "MenuStrip2"
-        Me.MenuStrip2.Size = New System.Drawing.Size(232, 44)
+        Me.MenuStrip2.Size = New System.Drawing.Size(234, 44)
         Me.MenuStrip2.TabIndex = 116
         Me.MenuStrip2.Text = "MenuStrip2"
         '
@@ -1431,6 +1497,212 @@ Partial Class Prueba
         Me.Label22.TabIndex = 111
         Me.Label22.Text = "Ocurrencias"
         '
+        'panelProyectosSistemas
+        '
+        Me.panelProyectosSistemas.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.panelProyectosSistemas.BackColor = System.Drawing.Color.White
+        Me.panelProyectosSistemas.BorderRadius = 8
+        Me.panelProyectosSistemas.Controls.Add(Me.pictureEliminarSistemas)
+        Me.panelProyectosSistemas.Controls.Add(Me.comboProyectoSistemas)
+        Me.panelProyectosSistemas.Controls.Add(Me.Label42)
+        Me.panelProyectosSistemas.Controls.Add(Me.comboProyectosSistemas)
+        Me.panelProyectosSistemas.Controls.Add(Me.btnCancelarProyectosSistemas)
+        Me.panelProyectosSistemas.Controls.Add(Me.btnProyectosSistemas)
+        Me.panelProyectosSistemas.Controls.Add(Me.Label40)
+        Me.panelProyectosSistemas.Location = New System.Drawing.Point(468, 315)
+        Me.panelProyectosSistemas.Name = "panelProyectosSistemas"
+        Me.panelProyectosSistemas.Size = New System.Drawing.Size(373, 307)
+        Me.panelProyectosSistemas.TabIndex = 144
+        '
+        'btnCancelarProyectosSistemas
+        '
+        Me.btnCancelarProyectosSistemas.BackColor = System.Drawing.Color.Transparent
+        Me.btnCancelarProyectosSistemas.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnCancelarProyectosSistemas.FlatAppearance.BorderSize = 0
+        Me.btnCancelarProyectosSistemas.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnCancelarProyectosSistemas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCancelarProyectosSistemas.ForeColor = System.Drawing.Color.Gray
+        Me.btnCancelarProyectosSistemas.Location = New System.Drawing.Point(83, 239)
+        Me.btnCancelarProyectosSistemas.Name = "btnCancelarProyectosSistemas"
+        Me.btnCancelarProyectosSistemas.Size = New System.Drawing.Size(106, 35)
+        Me.btnCancelarProyectosSistemas.TabIndex = 122
+        Me.btnCancelarProyectosSistemas.Text = "Cancelar"
+        Me.btnCancelarProyectosSistemas.UseVisualStyleBackColor = False
+        '
+        'btnProyectosSistemas
+        '
+        Me.btnProyectosSistemas.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnProyectosSistemas.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnProyectosSistemas.FlatAppearance.BorderSize = 0
+        Me.btnProyectosSistemas.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnProyectosSistemas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnProyectosSistemas.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.btnProyectosSistemas.Location = New System.Drawing.Point(206, 238)
+        Me.btnProyectosSistemas.Name = "btnProyectosSistemas"
+        Me.btnProyectosSistemas.Size = New System.Drawing.Size(106, 35)
+        Me.btnProyectosSistemas.TabIndex = 121
+        Me.btnProyectosSistemas.Text = "Listo"
+        Me.btnProyectosSistemas.UseVisualStyleBackColor = False
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label40.Location = New System.Drawing.Point(75, 31)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(223, 20)
+        Me.Label40.TabIndex = 113
+        Me.Label40.Text = "Buscar proyectos de sistemas"
+        '
+        'comboProyectosSistemas
+        '
+        Me.comboProyectosSistemas.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.comboProyectosSistemas.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.comboProyectosSistemas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.comboProyectosSistemas.FormattingEnabled = True
+        Me.comboProyectosSistemas.Location = New System.Drawing.Point(43, 177)
+        Me.comboProyectosSistemas.Name = "comboProyectosSistemas"
+        Me.comboProyectosSistemas.Size = New System.Drawing.Size(250, 28)
+        Me.comboProyectosSistemas.TabIndex = 123
+        '
+        'Label42
+        '
+        Me.Label42.AutoSize = True
+        Me.Label42.ForeColor = System.Drawing.SystemColors.ControlDark
+        Me.Label42.Location = New System.Drawing.Point(61, 121)
+        Me.Label42.Name = "Label42"
+        Me.Label42.Size = New System.Drawing.Size(249, 16)
+        Me.Label42.TabIndex = 124
+        Me.Label42.Text = "Escribe el nombre del proyecto a buscar"
+        '
+        'comboProyectoSistemas
+        '
+        Me.comboProyectoSistemas.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.comboProyectoSistemas.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.comboProyectoSistemas.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.comboProyectoSistemas.FormattingEnabled = True
+        Me.comboProyectoSistemas.Items.AddRange(New Object() {"Default", "Público", "Privado"})
+        Me.comboProyectoSistemas.Location = New System.Drawing.Point(59, 80)
+        Me.comboProyectoSistemas.Name = "comboProyectoSistemas"
+        Me.comboProyectoSistemas.Size = New System.Drawing.Size(250, 28)
+        Me.comboProyectoSistemas.TabIndex = 125
+        '
+        'pictureEliminarSistemas
+        '
+        Me.pictureEliminarSistemas.BackColor = System.Drawing.Color.Transparent
+        Me.pictureEliminarSistemas.ForeColor = System.Drawing.Color.Red
+        Me.pictureEliminarSistemas.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
+        Me.pictureEliminarSistemas.IconColor = System.Drawing.Color.Red
+        Me.pictureEliminarSistemas.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.pictureEliminarSistemas.Location = New System.Drawing.Point(297, 174)
+        Me.pictureEliminarSistemas.Name = "pictureEliminarSistemas"
+        Me.pictureEliminarSistemas.Size = New System.Drawing.Size(32, 32)
+        Me.pictureEliminarSistemas.TabIndex = 126
+        Me.pictureEliminarSistemas.TabStop = False
+        '
+        'panelProyectosGenerales
+        '
+        Me.panelProyectosGenerales.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.panelProyectosGenerales.BackColor = System.Drawing.Color.White
+        Me.panelProyectosGenerales.BorderRadius = 8
+        Me.panelProyectosGenerales.Controls.Add(Me.pictureEliminarGeneral)
+        Me.panelProyectosGenerales.Controls.Add(Me.comboProyectoGeneral)
+        Me.panelProyectosGenerales.Controls.Add(Me.Label43)
+        Me.panelProyectosGenerales.Controls.Add(Me.comboProyectosGenerales)
+        Me.panelProyectosGenerales.Controls.Add(Me.btnCancelarProyectoGeneral)
+        Me.panelProyectosGenerales.Controls.Add(Me.btnProyectosGenerales)
+        Me.panelProyectosGenerales.Controls.Add(Me.Label44)
+        Me.panelProyectosGenerales.Location = New System.Drawing.Point(10, 224)
+        Me.panelProyectosGenerales.Name = "panelProyectosGenerales"
+        Me.panelProyectosGenerales.Size = New System.Drawing.Size(373, 307)
+        Me.panelProyectosGenerales.TabIndex = 145
+        '
+        'pictureEliminarGeneral
+        '
+        Me.pictureEliminarGeneral.BackColor = System.Drawing.Color.Transparent
+        Me.pictureEliminarGeneral.ForeColor = System.Drawing.Color.Red
+        Me.pictureEliminarGeneral.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
+        Me.pictureEliminarGeneral.IconColor = System.Drawing.Color.Red
+        Me.pictureEliminarGeneral.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.pictureEliminarGeneral.Location = New System.Drawing.Point(297, 174)
+        Me.pictureEliminarGeneral.Name = "pictureEliminarGeneral"
+        Me.pictureEliminarGeneral.Size = New System.Drawing.Size(32, 32)
+        Me.pictureEliminarGeneral.TabIndex = 126
+        Me.pictureEliminarGeneral.TabStop = False
+        '
+        'comboProyectoGeneral
+        '
+        Me.comboProyectoGeneral.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.comboProyectoGeneral.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.comboProyectoGeneral.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.comboProyectoGeneral.FormattingEnabled = True
+        Me.comboProyectoGeneral.Items.AddRange(New Object() {"Default", "Público", "Privado"})
+        Me.comboProyectoGeneral.Location = New System.Drawing.Point(59, 80)
+        Me.comboProyectoGeneral.Name = "comboProyectoGeneral"
+        Me.comboProyectoGeneral.Size = New System.Drawing.Size(250, 28)
+        Me.comboProyectoGeneral.TabIndex = 125
+        '
+        'Label43
+        '
+        Me.Label43.AutoSize = True
+        Me.Label43.ForeColor = System.Drawing.SystemColors.ControlDark
+        Me.Label43.Location = New System.Drawing.Point(61, 121)
+        Me.Label43.Name = "Label43"
+        Me.Label43.Size = New System.Drawing.Size(249, 16)
+        Me.Label43.TabIndex = 124
+        Me.Label43.Text = "Escribe el nombre del proyecto a buscar"
+        '
+        'comboProyectosGenerales
+        '
+        Me.comboProyectosGenerales.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.comboProyectosGenerales.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.comboProyectosGenerales.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.comboProyectosGenerales.FormattingEnabled = True
+        Me.comboProyectosGenerales.Location = New System.Drawing.Point(43, 177)
+        Me.comboProyectosGenerales.Name = "comboProyectosGenerales"
+        Me.comboProyectosGenerales.Size = New System.Drawing.Size(250, 28)
+        Me.comboProyectosGenerales.TabIndex = 123
+        '
+        'btnCancelarProyectoGeneral
+        '
+        Me.btnCancelarProyectoGeneral.BackColor = System.Drawing.Color.Transparent
+        Me.btnCancelarProyectoGeneral.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnCancelarProyectoGeneral.FlatAppearance.BorderSize = 0
+        Me.btnCancelarProyectoGeneral.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnCancelarProyectoGeneral.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCancelarProyectoGeneral.ForeColor = System.Drawing.Color.Gray
+        Me.btnCancelarProyectoGeneral.Location = New System.Drawing.Point(83, 239)
+        Me.btnCancelarProyectoGeneral.Name = "btnCancelarProyectoGeneral"
+        Me.btnCancelarProyectoGeneral.Size = New System.Drawing.Size(106, 35)
+        Me.btnCancelarProyectoGeneral.TabIndex = 122
+        Me.btnCancelarProyectoGeneral.Text = "Cancelar"
+        Me.btnCancelarProyectoGeneral.UseVisualStyleBackColor = False
+        '
+        'btnProyectosGenerales
+        '
+        Me.btnProyectosGenerales.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.btnProyectosGenerales.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnProyectosGenerales.FlatAppearance.BorderSize = 0
+        Me.btnProyectosGenerales.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnProyectosGenerales.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnProyectosGenerales.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.btnProyectosGenerales.Location = New System.Drawing.Point(206, 238)
+        Me.btnProyectosGenerales.Name = "btnProyectosGenerales"
+        Me.btnProyectosGenerales.Size = New System.Drawing.Size(106, 35)
+        Me.btnProyectosGenerales.TabIndex = 121
+        Me.btnProyectosGenerales.Text = "Listo"
+        Me.btnProyectosGenerales.UseVisualStyleBackColor = False
+        '
+        'Label44
+        '
+        Me.Label44.AutoSize = True
+        Me.Label44.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label44.Location = New System.Drawing.Point(75, 31)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(213, 20)
+        Me.Label44.TabIndex = 113
+        Me.Label44.Text = "Buscar proyectos generales"
+        '
         'Prueba
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -1455,6 +1727,8 @@ Partial Class Prueba
         CType(Me.btnVolverAsistente, System.ComponentModel.ISupportInitialize).EndInit()
         Me.panelDatosPodio.ResumeLayout(False)
         Me.panelDatosPodio.PerformLayout()
+        Me.panelSeleccionarEmpresas.ResumeLayout(False)
+        Me.panelSeleccionarEmpresas.PerformLayout()
         CType(Me.barraAvance, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numericOrdenSistemas, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numericOrdenDpt, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1479,6 +1753,12 @@ Partial Class Prueba
         Me.PanelDatosRecurrencia.ResumeLayout(False)
         Me.PanelDatosRecurrencia.PerformLayout()
         CType(Me.txtOcurrencias, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.panelProyectosSistemas.ResumeLayout(False)
+        Me.panelProyectosSistemas.PerformLayout()
+        CType(Me.pictureEliminarSistemas, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.panelProyectosGenerales.ResumeLayout(False)
+        Me.panelProyectosGenerales.PerformLayout()
+        CType(Me.pictureEliminarGeneral, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1551,8 +1831,6 @@ Partial Class Prueba
     Friend WithEvents Label12 As Label
     Friend WithEvents Label14 As Label
     Friend WithEvents Label15 As Label
-    Friend WithEvents comboProyectoGeneral As ComboBox
-    Friend WithEvents comboProyectoSistemas As ComboBox
     Friend WithEvents Label20 As Label
     Friend WithEvents comboPrioridad As ComboBox
     Friend WithEvents comboDepartamento As ComboBox
@@ -1589,4 +1867,25 @@ Partial Class Prueba
     Friend WithEvents Label32 As Label
     Friend WithEvents barraAvance As NumericUpDown
     Friend WithEvents txtProyectoSistemas As TextBox
+    Friend WithEvents panelSeleccionarEmpresas As ControlPanel
+    Friend WithEvents btnCancelarEmpresas As Button
+    Friend WithEvents btnEmpresas As Button
+    Friend WithEvents listEmpresas As CheckedListBox
+    Friend WithEvents Label41 As Label
+    Friend WithEvents panelProyectosSistemas As ControlPanel
+    Friend WithEvents btnCancelarProyectosSistemas As Button
+    Friend WithEvents btnProyectosSistemas As Button
+    Friend WithEvents Label40 As Label
+    Friend WithEvents Label42 As Label
+    Friend WithEvents comboProyectosSistemas As ComboBox
+    Friend WithEvents pictureEliminarSistemas As FontAwesome.Sharp.IconPictureBox
+    Friend WithEvents comboProyectoSistemas As ComboBox
+    Friend WithEvents panelProyectosGenerales As ControlPanel
+    Friend WithEvents pictureEliminarGeneral As FontAwesome.Sharp.IconPictureBox
+    Friend WithEvents comboProyectoGeneral As ComboBox
+    Friend WithEvents Label43 As Label
+    Friend WithEvents comboProyectosGenerales As ComboBox
+    Friend WithEvents btnCancelarProyectoGeneral As Button
+    Friend WithEvents btnProyectosGenerales As Button
+    Friend WithEvents Label44 As Label
 End Class
