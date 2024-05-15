@@ -94,6 +94,7 @@
     <Compile Include="Datos\EventoData.vb" />
     <Compile Include="Modelos\Calendario.vb" />
     <Compile Include="Modelos\EventoYMensajes.vb" />
+    <Compile Include="Modelos\PodioComentario.vb" />
     <Compile Include="Modelos\PodioItem.vb" />
     <Compile Include="Modelos\Mensaje.vb" />
     <Compile Include="Servicios\DesktopService.vb" />
@@ -123,6 +124,12 @@
       <DependentUpon>AcomodarFormularios.vb</DependentUpon>
     </Compile>
     <Compile Include="UI\Eventos\AcomodarFormularios.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Eventos\GestionComentarios.Designer.vb">
+      <DependentUpon>GestionComentarios.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Eventos\GestionComentarios.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\Eventos\GestionEventos.Designer.vb">
@@ -198,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Eventos\AcomodarFormularios.resx">
       <DependentUpon>AcomodarFormularios.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Eventos\GestionComentarios.resx">
+      <DependentUpon>GestionComentarios.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Eventos\GestionEventos.resx">
       <DependentUpon>GestionEventos.vb</DependentUpon>

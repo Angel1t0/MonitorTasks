@@ -62,7 +62,7 @@ Public Class PodioService
 
             itemFields.Add("10086319", podioItem.Title) ' Título
             itemFields.Add("50907911", podioItem.Description) ' Descripción
-            itemFields.Add("50907912", New JObject From {{"value", Integer.Parse(podioItem.Company)}}) ' Empresa
+            itemFields.Add("50907912", New JArray(podioItem.Company.Select(Function(company) New JObject From {{"value", Integer.Parse(company)}}))) ' Empresa
             itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Department)}}) ' Departamento
             itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.SystemArea)}}) ' Área de sistemas
             itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categories)}}) ' Categoría
@@ -101,9 +101,8 @@ Public Class PodioService
                 itemFields.Add("50907918", New JObject From {{"value", podioItem.Progress}}) ' Progreso
             End If
 
-
-            If podioItem.SystemProject <> Nothing Then
-                itemFields.Add("50907910", New JObject From {{"value", Long.Parse(podioItem.SystemProject)}}) ' Proyecto de sistemas
+            If podioItem.SystemProject IsNot Nothing Then
+                itemFields.Add("50907910", New JArray(podioItem.SystemProject.Select(Function(project) New JObject From {{"value", Long.Parse(project)}}))) ' Proyecto de sistemas
             End If
 
             If podioItem.GeneralProject <> Nothing Then
@@ -159,7 +158,7 @@ Public Class PodioService
 
             itemFields.Add("10086319", podioItem.Title) ' Título
             itemFields.Add("50907911", podioItem.Description) ' Descripción
-            itemFields.Add("50907912", New JObject From {{"value", Integer.Parse(podioItem.Company)}}) ' Empresa
+            itemFields.Add("50907912", New JArray(podioItem.Company.Select(Function(company) New JObject From {{"value", Integer.Parse(company)}}))) ' Empresa
             itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Department)}}) ' Departamento
             itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.SystemArea)}}) ' Área de sistemas
             itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categories)}}) ' Categoría
@@ -199,7 +198,7 @@ Public Class PodioService
             End If
 
             If podioItem.SystemProject IsNot Nothing Then
-                itemFields.Add("50907910", New JObject From {{"value", Long.Parse(podioItem.SystemProject)}}) ' Proyecto de sistemas
+                itemFields.Add("50907910", New JArray(podioItem.SystemProject.Select(Function(project) New JObject From {{"value", Long.Parse(project)}}))) ' Proyecto de sistemas
             Else
                 'Eliminar campo de proyecto de sistemas 50907910
                 itemFields.Add("50907910", New JArray()) ' Proyecto de sistemas
@@ -262,6 +261,31 @@ Public Class PodioService
             Dim errorDetails = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
             Console.WriteLine("Error eliminando item: " & response.StatusCode & " " & errorDetails)
             Throw New Exception("Failed to delete item in Podio. Status: " & response.StatusCode)
+        End If
+    End Function
+
+    Public Async Function GetCommentsByItem(itemId As Long) As Task(Of JArray)
+        Await EnsureAuthenticated().ConfigureAwait(False)
+        Dim response = Await httpClient.GetAsync($"https://api.podio.com/comment/item/{itemId}/").ConfigureAwait(False)
+        If response.IsSuccessStatusCode Then
+            Dim result = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+            Return JArray.Parse(result)
+        Else
+            Throw New Exception($"Error al obtener comentarios del ítem: {response.StatusCode}")
+        End If
+    End Function
+
+    Public Async Function AddCommentByItem(itemId As Long, comment As String) As Threading.Tasks.Task
+        Await EnsureAuthenticated().ConfigureAwait(False)
+        Dim commentObject As New JObject From {{"value", comment}}
+        Dim content As New StringContent(commentObject.ToString(), Encoding.UTF8, "application/json")
+        Dim response = Await httpClient.PostAsync($"https://api.podio.com/comment/item/{itemId}/", content).ConfigureAwait(False)
+        If response.IsSuccessStatusCode Then
+            Console.WriteLine("Comentario agregado correctamente")
+        Else
+            Dim errorDetails = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+            Console.WriteLine("Error agregando comentario: " & response.StatusCode & " " & errorDetails)
+            Throw New Exception("Failed to add comment in Podio. Status: " & response.StatusCode)
         End If
     End Function
 End Class

@@ -1,5 +1,6 @@
 ﻿
 Imports System.Diagnostics.Eventing.Reader
+Imports System.Globalization
 Imports Newtonsoft.Json.Linq
 
 Public Class GestionEventos
@@ -25,6 +26,7 @@ Public Class GestionEventos
         'Dim determinarRecurrencia As New DeterminarRecurrencia()
         'determinarRecurrencia.ParsearRRULE()
         CargarEventosEnDataGridView()
+        ConfigurarTabControlComentarios()
         PanelDatosBasicos.Visible = False
         panelDatosPodio.Visible = False
         PanelDatosRecurrencia.Visible = False
@@ -49,9 +51,18 @@ Public Class GestionEventos
         podioItem.PodioAppItemID = _controlador.EnviarItemAPodio(podioItem)
         podioItem.PodioItemID = _controlador.CrearPodioItem(podioItem)
 
+
         _controlador.InsertarAsistente(mensaje)
         _controlador.InsertarSolicitante(podioItem)
         _controlador.InsertarAutorizante(podioItem)
+
+        For Each empresa In podioItem.Company
+            _controlador.InsertarPodioEmpresa(podioItem, empresa)
+        Next
+
+        For Each proyectoID In podioItem.SystemProject
+            _controlador.InsertarPodioProyectoSistemas(podioItem.PodioItemID, proyectoID, podioItem.GetSystemProjectName(proyectoID, podioItem.reversedItemTitleToIdMap))
+        Next
     End Sub
 
     Private Sub ActualizarPodioItem()
@@ -85,7 +96,6 @@ Public Class GestionEventos
     End Sub
 
     Private Sub LlenarCamposPodioItem()
-        podioItem.Company = podioItem.GetSelectedOptionId(comboEmpresa.SelectedItem.ToString(), podioItem.companyOptions)
         podioItem.Department = podioItem.GetSelectedOptionId(comboDepartamento.SelectedItem.ToString(), podioItem.departmentOptions)
         podioItem.SystemArea = podioItem.GetSelectedOptionId(comboArea.SelectedItem.ToString(), podioItem.systemAreaOptions)
         podioItem.Categories = podioItem.GetSelectedOptionId(comboCategorias.SelectedItem.ToString(), podioItem.categoryOptions)
@@ -95,7 +105,6 @@ Public Class GestionEventos
         podioItem.WorkPlan = textPlanAccion.TextBox1.Text
         podioItem.Status = podioItem.GetSelectedOptionId(comboStatus.SelectedItem.ToString(), podioItem.statusOptions)
         podioItem.Progress = barraAvance.Value
-        podioItem.SystemProject = ObtenerIdSistemasProyecto()
         podioItem.GeneralProject = txtProyectoGeneral.Text.ToString()
         podioItem.HoursAccumulated = podioItem.ConvertTimeToSeconds(maskHorasAcumuladas.Text)
         podioItem.ExtraHours = podioItem.ConvertTimeToSeconds(maskHorasExtras.Text)
@@ -299,14 +308,32 @@ Public Class GestionEventos
         Next
     End Sub
 
+    Public Sub ClonarEvento(e)
+        If e.ColumnIndex = 0 Then
+            Dim respuesta = MessageBox.Show("¿Está seguro que desea clonar el evento?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If respuesta = DialogResult.No Then
+                Return
+            End If
+            Dim eventoID As String = dgvDataEventos.Rows(e.RowIndex).Cells(2).Value.ToString()
+            Dim podioAppItemID As Long
+            If Not Long.TryParse(dgvDataEventos.Rows(e.RowIndex).Cells(19).Value.ToString(), podioAppItemID) Then
+                Console.WriteLine("No se pudo obtener el podioAppItemID")
+            End If
+            _controlador.ClonarEvento(eventoID, podioAppItemID)
+        End If
+    End Sub
+
     Public Sub EliminarEvento(e)
         If e.ColumnIndex = 0 Then
             Dim respuesta = MessageBox.Show("¿Está seguro que desea eliminar el item y evento?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
             If respuesta = DialogResult.No Then
                 Return
             End If
-            Dim eventoID As String = dgvDataEventos.Rows(e.RowIndex).Cells(1).Value.ToString()
-            Dim podioAppItemID As Long = Long.Parse(dgvDataEventos.Rows(e.RowIndex).Cells(19).Value.ToString())
+            Dim eventoID As String = dgvDataEventos.Rows(e.RowIndex).Cells(2).Value.ToString()
+            Dim podioAppItemID As Long
+            If Not Long.TryParse(dgvDataEventos.Rows(e.RowIndex).Cells(19).Value.ToString(), podioAppItemID) Then
+                Console.WriteLine("No se pudo obtener el podioAppItemID")
+            End If
             _controlador.EliminarEvento(eventoID, podioAppItemID)
 
             MessageBox.Show("Evento eliminado correctamente")
@@ -387,14 +414,13 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnInsertarEvento_Click(sender As Object, e As EventArgs) Handles btnInsertarEvento.Click
+        TabControl2.Visible = True
         LimpiarCampos()
 
         panelEventos.Visible = False
         btnActualizarEvento.Visible = False
         btnContinuarActualizar.Visible = False
 
-        Panel2.Parent.Controls.Remove(PanelDatosBasicos)
-        Me.Controls.Add(PanelDatosBasicos)
         PanelDatosBasicos.Visible = True
         PanelDatosBasicos.BringToFront()
         CentrarPanel(PanelDatosBasicos)
@@ -543,6 +569,7 @@ Public Class GestionEventos
     End Sub
 
     Private Sub dgvDataEventos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventos.CellDoubleClick
+        TabControl2.Visible = True
         LimpiarCampos()
         btnActualizarEvento.Visible = True
         btnContinuarActualizar.Visible = True
@@ -566,6 +593,7 @@ Public Class GestionEventos
 
     Private Sub btnVolver_Click(sender As Object, e As EventArgs) Handles btnVolver.Click
         PanelDatosBasicos.Visible = False
+        TabControl2.Visible = False
         panelEventos.Visible = True
     End Sub
 
@@ -647,8 +675,8 @@ Public Class GestionEventos
     End Sub
 
     Private Sub EstilizarTabla(dgvData As DataGridView)
-        dgvData.Columns(1).Visible = False ' Oculta el ID del evento
-        dgvData.Columns(3).Visible = False ' Oculta la ubicacion
+        dgvData.Columns(2).Visible = False ' Oculta el ID del evento
+        dgvData.Columns(4).Visible = False ' Oculta la ubicacion
         dgvData.Columns(13).Visible = False ' Visibilidad
         dgvData.Columns(14).Visible = False ' Disponibilidad
         dgvData.Columns(16).Visible = False ' Id usuario
@@ -657,21 +685,19 @@ Public Class GestionEventos
         dgvData.Columns(19).Visible = False ' PodioAppItemID
         dgvData.Columns(23).Visible = False ' Fecha inicio podio
         dgvData.Columns(24).Visible = False ' Fecha fin podio
-        dgvData.Columns(28).Visible = False ' Id del proyecto de sistemas
-        dgvData.Columns(30).Visible = False ' Id del proyecto general
 
-        dgvData.Columns(31).Visible = False ' Horas acumuladas
-        dgvData.Columns(32).Visible = False ' Horas extras
-        dgvData.Columns(33).Visible = False ' Scrum
-        dgvData.Columns(34).Visible = False ' Fecha creación podio
-        dgvData.Columns(35).Visible = False ' Fecha modificación podio
+        dgvData.Columns(27).Visible = False ' Horas acumuladas
+        dgvData.Columns(28).Visible = False ' Horas extras
+        dgvData.Columns(29).Visible = False ' Scrum
+        dgvData.Columns(30).Visible = False ' Fecha creación podio
+        dgvData.Columns(31).Visible = False ' Fecha modificación podio
 
         dgvData.Columns(0).Width = 40
-        dgvData.Columns(2).Width = 150 ' Titulo
-        dgvData.Columns(4).Width = 200 ' Descripcion
-        dgvData.Columns(5).Width = 200 ' Fecha inicio
-        dgvData.Columns(6).Width = 200 ' Fecha fin
-        dgvData.Columns(7).Width = 100 ' Empresa
+        dgvData.Columns(1).Width = 40
+        dgvData.Columns(3).Width = 150 ' Titulo
+        dgvData.Columns(5).Width = 200 ' Descripcion
+        dgvData.Columns(6).Width = 200 ' Fecha inicio
+        dgvData.Columns(7).Width = 200 ' Fecha fin
         dgvData.Columns(8).Width = 100 ' Departamenteo
         dgvData.Columns(9).Width = 100 ' Recurrenccia
         dgvData.Columns(10).Width = 100 ' Area de sistemas
@@ -683,8 +709,8 @@ Public Class GestionEventos
         dgvData.Columns(22).Width = 100 ' Prioridad
         dgvData.Columns(25).Width = 200 ' Plan de trabajo
         dgvData.Columns(26).Width = 100 ' Progreso
-        dgvData.Columns(27).Width = 100 ' Proyecto sistemas
-        dgvData.Columns(29).Width = 100 ' Proyecto general
+        'dgvData.Columns(28).Width = 100 ' Proyecto sistemas
+        'dgvData.Columns(30).Width = 100 ' Proyecto general
         dgvData.EnableHeadersVisualStyles = False
     End Sub
 
@@ -692,15 +718,15 @@ Public Class GestionEventos
         _inicializacionTerminada = False
 
         Try
-            EventoID = dgvDataEventos.SelectedCells.Item(1).Value.ToString()
+            EventoID = dgvDataEventos.SelectedCells.Item(2).Value.ToString()
             _controlador.GoogleEventID = EventoID
 
             'DATOS BÁSICOS
-            txtEventName.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(2).Value), "", dgvDataEventos.SelectedCells.Item(2).Value)
-            txtEventUbicacion.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
-            txtEventDescrip.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
-            eventFechaInicio.Value = If(IsDBNull(dgvDataEventos.SelectedCells.Item(5).Value), DateTime.Now, dgvDataEventos.SelectedCells.Item(5).Value)
-            eventFechaFinal.Value = If(IsDBNull(dgvDataEventos.SelectedCells.Item(6).Value), DateTime.Now, dgvDataEventos.SelectedCells.Item(6).Value)
+            txtEventName.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(3).Value), "", dgvDataEventos.SelectedCells.Item(3).Value)
+            txtEventUbicacion.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(4).Value), "", dgvDataEventos.SelectedCells.Item(4).Value)
+            txtEventDescrip.TextBox1.Text = If(IsDBNull(dgvDataEventos.SelectedCells.Item(5).Value), "", dgvDataEventos.SelectedCells.Item(5).Value)
+            eventFechaInicio.Value = If(IsDBNull(dgvDataEventos.SelectedCells.Item(6).Value), DateTime.Now, dgvDataEventos.SelectedCells.Item(6).Value)
+            eventFechaFinal.Value = If(IsDBNull(dgvDataEventos.SelectedCells.Item(7).Value), DateTime.Now, dgvDataEventos.SelectedCells.Item(7).Value)
             comboEventVisibilidad.SelectedItem = dgvDataEventos.SelectedCells.Item(13).Value
             comboEventDispo.SelectedItem = dgvDataEventos.SelectedCells.Item(14).Value
 
@@ -708,7 +734,7 @@ Public Class GestionEventos
             podioItem.PodioItemID = dgvDataEventos.SelectedCells.Item(17).Value
             podioItem.PodioAppID = dgvDataEventos.SelectedCells.Item(18).Value
             podioItem.PodioAppItemID = Long.Parse(dgvDataEventos.SelectedCells.Item(19).Value)
-            comboEmpresa.SelectedItem = dgvDataEventos.SelectedCells.Item(7).Value
+
             comboDepartamento.SelectedItem = dgvDataEventos.SelectedCells.Item(8).Value
             comboArea.SelectedItem = dgvDataEventos.SelectedCells.Item(10).Value
             comboCategorias.SelectedItem = dgvDataEventos.SelectedCells.Item(11).Value
@@ -718,20 +744,14 @@ Public Class GestionEventos
             comboPrioridad.SelectedItem = dgvDataEventos.SelectedCells.Item(22).Value
             textPlanAccion.TextBox1.Text = dgvDataEventos.SelectedCells.Item(25).Value
             barraAvance.Value = dgvDataEventos.SelectedCells.Item(26).Value
-            txtProyectoGeneral.Text = dgvDataEventos.SelectedCells.Item(29).Value
-            maskHorasAcumuladas.Text = podioItem.ConvertSecondsToTime(dgvDataEventos.SelectedCells.Item(31).Value)
-            maskHorasExtras.Text = podioItem.ConvertSecondsToTime(dgvDataEventos.SelectedCells.Item(32).Value)
+            maskHorasAcumuladas.Text = podioItem.ConvertSecondsToTime(dgvDataEventos.SelectedCells.Item(27).Value)
+            maskHorasExtras.Text = podioItem.ConvertSecondsToTime(dgvDataEventos.SelectedCells.Item(28).Value)
 
-            If Not IsDBNull(dgvDataEventos.SelectedCells.Item(28).Value) Then
-                Dim value = dgvDataEventos.SelectedCells.Item(27).Value
-                podioItem.itemTitleToIdMap.Add(value, dgvDataEventos.SelectedCells.Item(28).Value)
-                podioItem.reversedItemTitleToIdMap.Add(dgvDataEventos.SelectedCells.Item(28).Value, value)
-                comboProyectoSistemas.Items.Add(value)
-            End If
+            ' DATOS PODIO - EMPRESAS
+            CargarListaEmpresas()
 
-            If comboProyectoSistemas.Items.Count > 0 Then
-                comboProyectoSistemas.SelectedIndex = 0
-            End If
+            ' DATOS PODIO - PROYECTOS SISTEMAS
+            CargarListaProyectosSistemas()
 
             'RECURRENCIA
             Dim rrule = dgvDataEventos.SelectedCells.Item(9).Value.ToString()
@@ -981,7 +1001,9 @@ Public Class GestionEventos
         txtOcurrencias.Value = 1
         dateRecuFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
 
-        comboEmpresa.SelectedIndex = 0
+        comboEmpresa.SelectedItem = ""
+        comboSeleccionarSistemas.SelectedItem = ""
+        listEmpresas.ClearSelected()
         comboDepartamento.SelectedIndex = 0
         comboArea.SelectedIndex = 0
         comboCategorias.SelectedIndex = 0
@@ -994,6 +1016,7 @@ Public Class GestionEventos
         maskHorasExtras.Text = "00:00:00"
         barraAvance.Value = 0
         comboProyectoSistemas.Items.Clear()
+        comboProyectosSistemas.Items.Clear()
         podioItem.itemTitleToIdMap.Clear()
         podioItem.reversedItemTitleToIdMap.Clear()
 
@@ -1159,17 +1182,16 @@ Public Class GestionEventos
             Try
                 Dim results As JArray = Await _controlador.SearchItemPodio(comboProyectoSistemas.Text, 5) ' Ajusta appId y límites según necesites.
                 comboProyectoSistemas.Items.Clear()
-                podioItem.itemTitleToIdMap.Clear() ' Limpiar el diccionario antes de llenarlo de nuevo
-                podioItem.reversedItemTitleToIdMap.Clear()
+
+                podioItem.temporaryTitleToIdMap.Clear() ' Limpiar el diccionario temporal
 
                 For Each item As JObject In results
                     Dim title As String = item("title").ToString()
                     Dim itemId As String = item("id").ToString() ' Asegúrate de que "item_id" es el campo correcto
-                    podioItem.itemTitleToIdMap.Add(title, itemId) ' Guardar la relación título-ID en el diccionario
-                    podioItem.reversedItemTitleToIdMap.Add(itemId, title)
+                    podioItem.temporaryTitleToIdMap.Add(title, itemId) ' Guardar la relación título-ID en el diccionario
                     comboProyectoSistemas.Items.Add(title)
                 Next
-                comboProyectoSistemas.DroppedDown = True ' Opcional: Muestra la lista desplegable.
+                comboProyectoSistemas.DroppedDown = True
             Catch ex As Exception
                 MessageBox.Show("Error buscando items: " & ex.Message)
             End Try
@@ -1178,12 +1200,11 @@ Public Class GestionEventos
         End If
     End Sub
 
-    Private Function ObtenerIdSistemasProyecto() As String
-        If comboProyectoSistemas.SelectedItem IsNot Nothing Then
-            Dim selectedTitle As String = comboProyectoSistemas.SelectedItem.ToString()
-            If podioItem.itemTitleToIdMap.ContainsKey(selectedTitle) Then
-                Return podioItem.itemTitleToIdMap(selectedTitle)
-            End If
+    Private Function ObtenerIdSistemasProyecto(title As String) As String
+        If podioItem.temporaryTitleToIdMap.ContainsKey(title) Then
+            Return podioItem.temporaryTitleToIdMap(title)
+        Else
+            Return ""
         End If
     End Function
 
@@ -1195,5 +1216,216 @@ Public Class GestionEventos
         podioItem.LoadOptionsIntoComboBox(comboPrioridad, podioItem.priorityOptions)
         podioItem.LoadOptionsIntoComboBox(comboStatus, podioItem.statusOptions)
     End Sub
-End Class
 
+    Private Sub comboEmpresa_Click(sender As Object, e As EventArgs) Handles comboEmpresa.Click
+        panelDatosPodio.Visible = False
+        Panel2.Parent.Controls.Remove(panelSeleccionarEmpresas)
+        Me.Controls.Add(panelSeleccionarEmpresas)
+        panelSeleccionarEmpresas.Visible = True
+        panelSeleccionarEmpresas.BringToFront()
+        CentrarPanel(panelSeleccionarEmpresas)
+    End Sub
+
+    Private Sub btnCancelarEmpresas_Click(sender As Object, e As EventArgs) Handles btnCancelarEmpresas.Click
+        panelSeleccionarEmpresas.Visible = False
+        Panel2.Parent.Controls.Remove(panelDatosPodio)
+        Me.Controls.Add(panelDatosPodio)
+        panelDatosPodio.Visible = True
+        panelDatosPodio.BringToFront()
+        CentrarPanel(panelDatosPodio)
+
+        listEmpresas.ClearSelected()
+    End Sub
+
+    Private Sub btnEmpresas_Click(sender As Object, e As EventArgs) Handles btnEmpresas.Click
+        panelSeleccionarEmpresas.Visible = False
+        Panel2.Parent.Controls.Remove(panelDatosPodio)
+        Me.Controls.Add(panelDatosPodio)
+        panelDatosPodio.Visible = True
+        panelDatosPodio.BringToFront()
+        CentrarPanel(panelDatosPodio)
+        GuardarListaEmpresas()
+    End Sub
+
+    Private Sub CargarListaEmpresas()
+        Dim listaEmpresas As List(Of String) = _controlador.ObtenerListaEmpresasActivas(podioItem.PodioItemID)
+        For Each empresaID In listaEmpresas
+            Dim nombreEmpresa As String = podioItem.GetSelectedOptionName(empresaID, podioItem.reversedCompanyOptions)
+            Dim index As Integer = listEmpresas.Items.IndexOf(nombreEmpresa)
+            If index <> -1 Then
+                listEmpresas.SetItemChecked(index, True)
+            End If
+            podioItem.Company.Add(empresaID)
+        Next
+
+        If listEmpresas.CheckedItems.Count = 0 Then
+            comboEmpresa.Text = ""
+        ElseIf listEmpresas.CheckedItems.Count = 1 Then
+            comboEmpresa.Text = listEmpresas.CheckedItems.Item(0)
+        Else
+            comboEmpresa.Text = listEmpresas.CheckedItems.Item(0) & " (" & listEmpresas.CheckedItems.Count & ")"
+        End If
+
+    End Sub
+
+    Private Sub GuardarListaEmpresas()
+        Dim empresas As List(Of String) = listEmpresas.CheckedItems.Cast(Of String)().ToList()
+        For Each empresa In empresas
+            podioItem.Company.Add(podioItem.GetSelectedOptionId(empresa, podioItem.companyOptions).ToString())
+        Next
+        If empresas.Count = 0 Then
+            comboEmpresa.Text = ""
+        ElseIf empresas.Count = 1 Then
+            comboEmpresa.Text = empresas(0)
+        Else
+            comboEmpresa.Text = empresas(0) & " (" & empresas.Count & ")"
+        End If
+    End Sub
+
+    Private Sub comboSeleccionarSistemas_Click(sender As Object, e As EventArgs) Handles comboSeleccionarSistemas.Click
+        panelDatosPodio.Visible = False
+        Panel2.Parent.Controls.Remove(panelProyectosSistemas)
+        Me.Controls.Add(panelProyectosSistemas)
+        panelProyectosSistemas.Visible = True
+        panelProyectosSistemas.BringToFront()
+        CentrarPanel(panelProyectosSistemas)
+    End Sub
+
+    Private Sub btnCancelarProyectosSistemas_Click(sender As Object, e As EventArgs) Handles btnCancelarProyectosSistemas.Click
+        panelProyectosSistemas.Visible = False
+        Panel2.Parent.Controls.Remove(panelDatosPodio)
+        Me.Controls.Add(panelDatosPodio)
+        panelDatosPodio.Visible = True
+        panelDatosPodio.BringToFront()
+        CentrarPanel(panelDatosPodio)
+    End Sub
+
+    Private Sub btnProyectosSistemas_Click(sender As Object, e As EventArgs) Handles btnProyectosSistemas.Click
+        panelProyectosSistemas.Visible = False
+        Panel2.Parent.Controls.Remove(panelDatosPodio)
+        Me.Controls.Add(panelDatosPodio)
+        panelDatosPodio.Visible = True
+        panelDatosPodio.BringToFront()
+        CentrarPanel(panelDatosPodio)
+
+        ' Agregar los proyectos a la lista de proyectos de sistemas
+        If mensaje.MessageType.Contains("Actualización") Then
+            For Each proyecto In comboProyectosSistemas.Items
+                _controlador.InsertarPodioProyectoSistemas(podioItem.PodioItemID, ObtenerIdSistemasProyecto(proyecto), proyecto)
+            Next
+        End If
+        If podioItem.SystemProject.Count = 0 Then
+            comboSeleccionarSistemas.SelectedItem = ""
+        ElseIf podioItem.SystemProject.Count = 1 Then
+            comboSeleccionarSistemas.Text = comboProyectosSistemas.Items(0)
+        Else
+            comboSeleccionarSistemas.Text = comboProyectosSistemas.Items(0) & " (" & comboProyectosSistemas.Items.Count & ")"
+        End If
+    End Sub
+
+    Private Sub CargarListaProyectosSistemas()
+        Dim diccionarioProyectosSistemas As Dictionary(Of String, String) = _controlador.ObtenerListaProyectosSistemas(podioItem.PodioItemID)
+
+        If Not IsDBNull(diccionarioProyectosSistemas) Then
+            podioItem.itemTitleToIdMap = diccionarioProyectosSistemas
+            ' Agregar el id y nombre de los proyectos al reverse dictionary
+            For Each value In diccionarioProyectosSistemas
+                podioItem.reversedItemTitleToIdMap.Add(value.Value, value.Key)
+                podioItem.SystemProject.Add(value.Key)
+                comboProyectosSistemas.Items.Add(value.Value)
+            Next
+        End If
+
+        If comboProyectosSistemas.Items.Count > 0 Then
+            comboProyectosSistemas.SelectedIndex = 0
+            If podioItem.SystemProject.Count = 1 Then
+                comboSeleccionarSistemas.Text = comboProyectosSistemas.Items(0)
+            Else
+                comboSeleccionarSistemas.Text = comboProyectosSistemas.Items(0) & " (" & comboProyectosSistemas.Items.Count & ")"
+            End If
+        End If
+    End Sub
+
+    Private Sub pictureEliminarSistemas_Click(sender As Object, e As EventArgs) Handles pictureEliminarSistemas.Click
+        If comboProyectosSistemas.Text = "" Then
+            MessageBox.Show("No hay proyectos para eliminar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        Dim proyecto As String = comboProyectosSistemas.SelectedItem.ToString()
+
+        If mensaje.MessageType.Contains("Actualización") Then
+            _controlador.EliminarProyectoSistemas(ObtenerIdSistemasProyecto(proyecto), podioItem.PodioItemID)
+        End If
+
+        podioItem.SystemProject.Remove(ObtenerIdSistemasProyecto(proyecto))
+        comboProyectosSistemas.Items.Remove(proyecto)
+        MessageBox.Show("Proyecto eliminado correctamente")
+    End Sub
+
+    Private Sub comboProyectoSistemas_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboProyectoSistemas.SelectedIndexChanged
+        If comboProyectoSistemas.Text = "" Then
+            Return
+        End If
+        Dim proyecto As String = comboProyectoSistemas.SelectedItem.ToString()
+        If Not comboProyectosSistemas.Items.Contains(proyecto) Then
+            podioItem.itemTitleToIdMap.Add(proyecto, ObtenerIdSistemasProyecto(proyecto)) ' Guardar la relación título-ID en el diccionario
+            podioItem.reversedItemTitleToIdMap.Add(ObtenerIdSistemasProyecto(proyecto), proyecto)
+
+            comboProyectosSistemas.Items.Add(proyecto)
+            podioItem.SystemProject.Add(ObtenerIdSistemasProyecto(proyecto))
+            comboProyectosSistemas.SelectedIndex = 0
+        End If
+    End Sub
+
+    Private Sub ConfigurarTabControlComentarios() ' TabControl2
+        Panel2.Parent.Controls.Remove(TabControl2)
+        Me.Controls.Add(TabControl2)
+        TabControl2.Dock = DockStyle.Fill
+
+        ' Añadir los paneles necesarios para insertar y editar items
+        Panel2.Parent.Controls.Remove(PanelDatosBasicos)
+        TabControl2.TabPages(0).Controls.Add(PanelDatosBasicos)
+        TabControl2.TabPages(0).Controls.Add(PanelDatosRecurrencia)
+        TabControl2.TabPages(0).Controls.Add(panelDatosPodio)
+        TabControl2.TabPages(0).Controls.Add(panelSeleccionarEmpresas)
+        TabControl2.TabPages(0).Controls.Add(panelProyectosSistemas)
+        TabControl2.TabPages(0).Controls.Add(PanelAsistentes)
+        TabControl2.TabPages(0).Controls.Add(PanelNotificaciones)
+
+
+        ' Ocultar por el momento hasta que se inserte o actualice un evento/item
+        TabControl2.Visible = False
+    End Sub
+
+    Private Sub TabControl2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl2.SelectedIndexChanged
+        If TabControl2.SelectedTab.Text = "Actualizar Item" Then
+            ' Manejar que cada que cambie de pestaña se oculten los paneles, pero cuando regrese a esta pestaña, vuelva a aparece el panel que estaba antes de cambiar de pestaña
+            PanelDatosBasicos.Visible = True
+            panelDatosPodio.Visible = False
+            PanelAsistentes.Visible = False
+            PanelNotificaciones.Visible = False
+            PanelDatosRecurrencia.Visible = False
+            panelSeleccionarEmpresas.Visible = False
+            panelProyectosSistemas.Visible = False
+
+            ' Ocultar Formulario de comentarios
+            TabControl2.TabPages(1).Controls.Clear()
+        Else
+            ' Abrir el formulario de comentarios
+            PanelDatosBasicos.Visible = False
+            panelDatosPodio.Visible = False
+            PanelAsistentes.Visible = False
+            PanelNotificaciones.Visible = False
+            PanelDatosRecurrencia.Visible = False
+            panelSeleccionarEmpresas.Visible = False
+            panelProyectosSistemas.Visible = False
+
+            Dim formularioComentarios As New GestionComentarios(podioItem.PodioAppItemID)
+            formularioComentarios.TopLevel = False
+            formularioComentarios.FormBorderStyle = FormBorderStyle.None
+            formularioComentarios.Dock = DockStyle.Fill
+            TabControl2.TabPages(1).Controls.Add(formularioComentarios)
+            formularioComentarios.Show()
+        End If
+    End Sub
+End Class

@@ -1,11 +1,11 @@
 ﻿Public Class PodioItem
-    Public Property PodioItemID As Integer  ' ID único para la base de datos local
-    Public Property EventID As String  ' Vincula con la tabla de eventos
+    Public Property PodioItemID As Integer ' ID único para la base de datos local
+    Public Property EventID As String ' Vincula con la tabla de eventos
     Public Property PodioAppID As Integer = 1350510  ' ID de la aplicación en Podio
-    Public Property PodioAppItemID As Long  ' ID del item en Podio
-    Public Property Title As String  ' Título del elemento
-    Public Property Description As String  ' Descripción del elemento
-    Public Property Company As String  ' Empresa solicitante
+    Public Property PodioAppItemID As Long ' ID del item en Podio
+    Public Property Title As String ' Título del elemento
+    Public Property Description As String ' Descripción del elemento
+    Public Property Company As New List(Of String) ' Empresa solicitante
     Public Property Department As String  ' Departamento solicitante
     Public Property DepartmentPriority As Integer  ' Orden de prioridad del departamento
     Public Property SystemArea As String  ' Área de sistemas
@@ -20,7 +20,7 @@
     Public Property WorkPlan As String  ' Plan de trabajo o acción
     Public Property Status As String  ' Estatus
     Public Property Progress As Integer  ' Progreso (en porcentaje)
-    Public Property SystemProject As String  ' Proyecto/Actividades de Sistemas
+    Public Property SystemProject As New List(Of String)  ' Proyecto/Actividades de Sistemas
     Public Property GeneralProject As String  ' Proyecto general
     Public Property HoursAccumulated As Integer  ' Horas acumuladas
     Public Property ExtraHours As Integer  ' Horas extras
@@ -36,6 +36,7 @@
     Public priorityOptions As New Dictionary(Of String, Integer)()
     Public statusOptions As New Dictionary(Of String, Integer)()
 
+    Public temporaryTitleToIdMap As New Dictionary(Of String, String)() ' Diccionario temporal para mapear títulos a IDs de los proyectos de sistemas
     Public itemTitleToIdMap As New Dictionary(Of String, String)() ' Diccionario para mapear títulos a IDs de los proyectos de sistemas
     Public reversedItemTitleToIdMap As New Dictionary(Of String, String)()
 
@@ -264,10 +265,22 @@
         End If
     End Function
 
+    Public Function GetSystemProjectId(selectedName As String, dictionary As Dictionary(Of String, String)) As String
+        If selectedName = "" Then
+            Return ""
+        End If
+        Dim systemProjectId As String = ""
+        If dictionary.TryGetValue(selectedName, systemProjectId) Then
+            Return systemProjectId
+        Else
+            Throw New Exception("La opción no está en el diccionario.")
+        End If
+    End Function
+
     Public Function ValidarCampos() As List(Of String)
         Dim errores As New List(Of String)
 
-        If String.IsNullOrWhiteSpace(Company) Then
+        If Company.Count = 0 Then
             errores.Add("El campo 'Empresa' es obligatorio.")
         End If
 

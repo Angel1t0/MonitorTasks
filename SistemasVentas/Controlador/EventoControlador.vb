@@ -74,6 +74,10 @@ Public Class EventoControlador
         Return True
     End Function
 
+    Public Sub ClonarEvento(podioAppItemID As Long)
+        Dim _servicioPodio.ClonarPodioItem(podioAppItemID)
+    End Sub
+
     Public Sub EliminarEvento(eventID As String, podioAppItemID As Long)
         _servicioPodio.DeletePodioItem(podioAppItemID)
         _servicioGoogleCalendar.EliminarEventoGoogle(eventID)
@@ -129,6 +133,13 @@ Public Class EventoControlador
 
     Public Sub ActualizarItemEnPodio(podioItem As PodioItem)
         _servicioPodio.UpdatePodioItem(podioItem)
+
+        ' Actualizar empresas en BD
+        Dim empresasActualesActivas As List(Of String) = _datosEvento.ObtenerListaEmpresas(podioItem.PodioItemID, "Activo")
+        Dim empresasActualesEliminadas As List(Of String) = _datosEvento.ObtenerListaEmpresas(podioItem.PodioItemID, "Eliminado")
+        Dim empresasNuevas As List(Of String) = podioItem.Company
+
+        ActualizarYCompararEmpresas(podioItem, empresasActualesActivas, empresasActualesEliminadas, empresasNuevas)
     End Sub
 
     Public Async Sub AgregarInformacionEvento(evento As Evento, userID As Integer)
@@ -322,5 +333,67 @@ Public Class EventoControlador
 
     Public Function ObtenerUserIDPorProfileID(profileID As Integer) As Integer
         Return _datosEvento.ObtenerUserIDPorProfileID(profileID)
+    End Function
+
+    Public Sub InsertarPodioEmpresa(podioItem As PodioItem, empresa As Integer)
+        _datosEvento.InsertarPodioEmpresa(podioItem, empresa)
+    End Sub
+
+    Public Sub ActualizarPodioItemEmpresas(podioItem As PodioItem, empresa As Integer, status As String)
+        _datosEvento.ActualizarPodioItemEmpresas(podioItem, empresa, status)
+    End Sub
+
+    Public Sub InsertarPodioProyectoSistemas(podioItemID As Integer, podioProjectSystemID As String, name As String)
+        _datosEvento.InsertarProyectoSistemas(podioItemID, podioProjectSystemID, name)
+    End Sub
+
+    Public Sub EliminarProyectoSistemas(proyectoID As String, podioItemID As Integer)
+        _datosEvento.EliminarProyectoSistemas(proyectoID, podioItemID)
+    End Sub
+
+    Public Sub ActualizarYCompararEmpresas(podioItem As PodioItem, empresasActualesActivas As List(Of String), empresasActualesEliminadas As List(Of String), empresasNuevas As List(Of String))
+
+        ' Salir de la función si no hay cambios
+        If empresasActualesActivas.Count = empresasNuevas.Count Then
+            Dim iguales As Boolean = True
+            For Each empresa In empresasActualesActivas
+                If empresasNuevas.Contains(empresa) = False Then
+                    iguales = False
+                    Exit For
+                End If
+            Next
+            If iguales Then
+                Return
+            End If
+        End If
+
+        ' Insertar nuevas empresas que no están en la lista actual
+        For Each empresa In empresasNuevas
+            If empresasActualesActivas.Contains(empresa) = False And empresasActualesEliminadas.Contains(empresa) = False Then
+                InsertarPodioEmpresa(podioItem, empresa)
+            End If
+        Next
+
+        ' Marcar como eliminadas las empresas que no están en la nueva lista
+        For Each empresa In empresasActualesActivas
+            If empresasNuevas.Contains(empresa) = False Then
+                ActualizarPodioItemEmpresas(podioItem, empresa, "Eliminado")
+            End If
+        Next
+
+        ' Reactivar empresas que estaban eliminadas y ahora están seleccionadas de nuevo
+        For Each empresa In empresasNuevas
+            If empresasActualesActivas.Contains(empresa) = False And empresasActualesEliminadas.Contains(empresa) Then
+                ActualizarPodioItemEmpresas(podioItem, empresa, "Activo")
+            End If
+        Next
+    End Sub
+
+    Public Function ObtenerListaProyectosSistemas(podioItemID As Integer) As Dictionary(Of String, String)
+        Return _datosEvento.ObtenerProyectosPorItem(podioItemID)
+    End Function
+
+    Public Function ObtenerListaEmpresasActivas(podioItemID As Integer) As List(Of String)
+        Return _datosEvento.ObtenerListaEmpresas(podioItemID, "Activo")
     End Function
 End Class

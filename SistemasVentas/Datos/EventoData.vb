@@ -764,7 +764,6 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@PodioAppItemID", podioItem.PodioAppItemID.ToString())
                 comando.Parameters.AddWithValue("@Title", podioItem.Title)
                 comando.Parameters.AddWithValue("@Description", podioItem.Description)
-                comando.Parameters.AddWithValue("@Company", podioItem.GetSelectedOptionName((podioItem.Company), podioItem.reversedCompanyOptions))
                 comando.Parameters.AddWithValue("@Department", podioItem.GetSelectedOptionName((podioItem.Department), podioItem.reversedDepartmentOptions))
                 comando.Parameters.AddWithValue("@DepartmentPriority", podioItem.DepartmentPriority)
                 comando.Parameters.AddWithValue("@SystemArea", podioItem.GetSelectedOptionName((podioItem.SystemArea), podioItem.reversedSystemAreaOptions))
@@ -776,10 +775,6 @@ Public Class EventoData
                 comando.Parameters.AddWithValue("@WorkPlan", podioItem.WorkPlan)
                 comando.Parameters.AddWithValue("@Status", podioItem.GetSelectedOptionName((podioItem.Status), podioItem.reversedStatusOptions))
                 comando.Parameters.AddWithValue("@Progress", podioItem.Progress)
-                comando.Parameters.AddWithValue("@SystemProject", podioItem.GetSystemProjectName((podioItem.SystemProject), podioItem.reversedItemTitleToIdMap))
-                comando.Parameters.AddWithValue("@SystemProjectID", podioItem.SystemProject)
-                comando.Parameters.AddWithValue("@GeneralProject", podioItem.GeneralProject)
-                'comando.Parameters.AddWithValue("@GeneralProjectID", Nothing)
                 comando.Parameters.AddWithValue("@HoursAccumulated", podioItem.HoursAccumulated)
                 comando.Parameters.AddWithValue("@ExtraHours", podioItem.ExtraHours)
                 comando.Parameters.AddWithValue("@ScrumDaily", podioItem.ScrumDaily)
@@ -935,4 +930,144 @@ Public Class EventoData
             Throw New ApplicationException("Error inesperado al eliminar el autorizante.", ex)
         End Try
     End Sub
+
+    Public Sub InsertarProyectoSistemas(podioItemID As Integer, podioProjectSystemID As String, name As String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarPodioProyectoSistemas", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.Parameters.AddWithValue("@PodioProjectSystemID", Long.Parse(podioProjectSystemID))
+                comando.Parameters.AddWithValue("@Name", name)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar el proyecto de sistemas en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar el proyecto de sistemas.", ex)
+        End Try
+    End Sub
+
+    Public Sub EliminarProyectoSistemas(proyectoID As String, podioItemID As Integer)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("eliminarPodioProyectoSistemas", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.Parameters.AddWithValue("@PodioProjectSystemID", Long.Parse(proyectoID))
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al eliminar el proyecto de sistemas de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al eliminar el proyecto de sistemas.", ex)
+        End Try
+    End Sub
+
+    Public Sub InsertarPodioEmpresa(podioItem As PodioItem, podioItemCompanyID As Integer)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("insertarPodioItemEmpresa", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItem.PodioItemID)
+                comando.Parameters.AddWithValue("@PodioItemCompanyID", podioItemCompanyID)
+                comando.Parameters.AddWithValue("@Name", podioItem.GetSelectedOptionName(podioItemCompanyID, podioItem.reversedCompanyOptions))
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al insertar la empresa en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al insertar la empresa.", ex)
+        End Try
+    End Sub
+
+    Public Sub ActualizarPodioItemEmpresas(podioItem As PodioItem, podioItemCompanyID As Integer, status As String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("editarPodioItemEmpresas", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItem.PodioItemID)
+                comando.Parameters.AddWithValue("@PodioItemCompanyID", podioItemCompanyID)
+                comando.Parameters.AddWithValue("@Status", status)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al actualizar el estado de la empresa en el item de Podio en la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al actualizar la empresa en el item de Podio.", ex)
+        End Try
+    End Sub
+
+    Public Function ObtenerListaEmpresas(podioItemID As Integer, status As String) As List(Of String)
+        Dim empresas As New List(Of String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerListaEmpresas", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.Parameters.AddWithValue("@Status", status)
+                Dim reader As SqlDataReader = comando.ExecuteReader
+                While (reader.Read())
+                    empresas.Add(reader(0))
+                End While
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener empresas de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener empresas.", ex)
+        End Try
+        Return empresas
+    End Function
+
+    Public Function ObtenerProyectosPorItem(podioItemID As Integer) As Dictionary(Of String, String)
+        Dim proyectos As New Dictionary(Of String, String)()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Using comando As New SqlCommand("obtenerProyectosPorItem", conexion)
+                    comando.CommandType = CommandType.StoredProcedure
+                    comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+
+                    Using reader As SqlDataReader = comando.ExecuteReader()
+                        While reader.Read()
+                            Dim id As Long = (reader("PodioProjectSystemID")).ToString()
+                            Dim name As String = reader("Name").ToString()
+                            proyectos.Add(id, name)
+                        End While
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            Throw New ApplicationException("Error al obtener proyectos de la base de datos.", ex)
+        End Try
+        Return proyectos
+    End Function
+
+    Public Function ObtenerPodioUserIDYNombre() As Dictionary(Of String, Integer)
+        Dim podioUsers As New Dictionary(Of String, Integer)()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Using comando As New SqlCommand("obtenerPodioUserIDYNombre", conexion)
+                    comando.CommandType = CommandType.StoredProcedure
+
+                    Using reader As SqlDataReader = comando.ExecuteReader()
+                        While reader.Read()
+                            Dim name As String = reader("NombreApellidos").ToString()
+                            Dim id As Integer = Integer.Parse(reader("PodioUserID"))
+                            podioUsers.Add(name, id)
+                        End While
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            Throw New ApplicationException("Error al obtener usuarios de Podio de la base de datos.", ex)
+        End Try
+        Return podioUsers
+    End Function
 End Class

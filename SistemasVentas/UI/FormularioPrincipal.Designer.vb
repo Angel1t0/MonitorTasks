@@ -66,7 +66,7 @@ Partial Class FormularioPrincipal
         Me.PanelMenu.Dock = System.Windows.Forms.DockStyle.Left
         Me.PanelMenu.Location = New System.Drawing.Point(0, 0)
         Me.PanelMenu.Name = "PanelMenu"
-        Me.PanelMenu.Size = New System.Drawing.Size(262, 735)
+        Me.PanelMenu.Size = New System.Drawing.Size(262, 773)
         Me.PanelMenu.TabIndex = 0
         '
         'BtnConfiguracion
@@ -343,14 +343,14 @@ Partial Class FormularioPrincipal
         Me.PanelEscritorio.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelEscritorio.Location = New System.Drawing.Point(262, 60)
         Me.PanelEscritorio.Name = "PanelEscritorio"
-        Me.PanelEscritorio.Size = New System.Drawing.Size(1150, 675)
+        Me.PanelEscritorio.Size = New System.Drawing.Size(1150, 713)
         Me.PanelEscritorio.TabIndex = 2
         '
         'Panel1
         '
         Me.Panel1.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.Panel1.Location = New System.Drawing.Point(400, 341)
+        Me.Panel1.Location = New System.Drawing.Point(400, 360)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(396, 2)
         Me.Panel1.TabIndex = 3
@@ -361,7 +361,7 @@ Partial Class FormularioPrincipal
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("HelveticaNowText Light", 25.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(389, 282)
+        Me.Label1.Location = New System.Drawing.Point(389, 301)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(420, 62)
         Me.Label1.TabIndex = 2
@@ -371,7 +371,7 @@ Partial Class FormularioPrincipal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1412, 735)
+        Me.ClientSize = New System.Drawing.Size(1412, 773)
         Me.Controls.Add(Me.PanelEscritorio)
         Me.Controls.Add(Me.PanelTitulo)
         Me.Controls.Add(Me.PanelMenu)
