@@ -98,6 +98,7 @@ Public Class FormularioPrincipal
     End Sub
     Private Sub BtnImportar_Click(sender As Object, e As EventArgs) Handles BtnImportar.Click
         ActivateButton(sender, Color.FromArgb(211, 130, 101))
+        OpenChildForm(New GestionImportar With {.CalendarioID = _CalendarioID, .UsuarioID = _UsuarioID})
     End Sub
     Private Sub BtnNotificaciones_Click(sender As Object, e As EventArgs) Handles BtnNotificaciones.Click
         ActivateButton(sender, Color.FromArgb(193, 110, 153))

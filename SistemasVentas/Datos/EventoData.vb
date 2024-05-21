@@ -761,7 +761,7 @@ Public Class EventoData
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@EventID", podioItem.EventID)
                 comando.Parameters.AddWithValue("@PodioAppID", podioItem.PodioAppID)
-                comando.Parameters.AddWithValue("@PodioAppItemID", podioItem.PodioAppItemID.ToString())
+                comando.Parameters.AddWithValue("@PodioAppItemID", podioItem.PodioAppItemID)
                 comando.Parameters.AddWithValue("@Title", podioItem.Title)
                 comando.Parameters.AddWithValue("@Description", podioItem.Description)
                 comando.Parameters.AddWithValue("@Department", podioItem.GetSelectedOptionName((podioItem.Department), podioItem.reversedDepartmentOptions))
@@ -988,7 +988,7 @@ Public Class EventoData
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
-                Dim comando As New SqlCommand("editarPodioItemEmpresas", conexion)
+                Dim comando As New SqlCommand("editarPodioItemEmpresa", conexion)
                 comando.CommandType = CommandType.StoredProcedure
                 comando.Parameters.AddWithValue("@PodioItemID", podioItem.PodioItemID)
                 comando.Parameters.AddWithValue("@PodioItemCompanyID", podioItemCompanyID)
@@ -1069,5 +1069,66 @@ Public Class EventoData
             Throw New ApplicationException("Error al obtener usuarios de Podio de la base de datos.", ex)
         End Try
         Return podioUsers
+    End Function
+
+    Public Sub ClonarEvento(eventID As String, podioItemID As Integer, podioAppItemID As Long, copyEventID As String, copyPodioAppItemID As Long)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("duplicarEventosYPodio", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@oldPodioItemID", podioItemID)
+                comando.Parameters.AddWithValue("@oldPodioAppItemID", podioAppItemID)
+                comando.Parameters.AddWithValue("@oldEventID", eventID)
+                comando.Parameters.AddWithValue("@newPodioAppItemID", copyPodioAppItemID)
+                comando.Parameters.AddWithValue("@newEventID", copyEventID)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As Exception
+            Throw New ApplicationException("Error al clonar el evento en la base de datos.", ex)
+        End Try
+    End Sub
+
+    Public Sub ActualizarPodioAppItemID(podioItemID As Integer, podioAppItemID As Long)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("actualizarPodioAppItemID", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioAppItemID", podioAppItemID)
+                comando.Parameters.AddWithValue("@PodioItemID", podioItemID)
+                comando.ExecuteNonQuery()
+            End Using
+        Catch ex As Exception
+            Throw New ApplicationException("Error al actualizar el AppItemID del item de Podio en la base de datos.", ex)
+        End Try
+    End Sub
+
+    Public Function ObtenerPodioUserID(userID As Integer) As String
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerUserID", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@IdUsuario", userID)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As Exception
+            Throw New ApplicationException("Error al obtener el podioUserID de usuario de Podio en la base de datos.", ex)
+        End Try
+    End Function
+
+    Public Function ObtenerCorreoPorProfileID(profileID As Integer) As String
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerCorreoPorProfileID", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@PodioProfileID", profileID)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As Exception
+            Throw New ApplicationException("Error al obtener el correo de usuario de Podio en la base de datos.", ex)
+        End Try
     End Function
 End Class

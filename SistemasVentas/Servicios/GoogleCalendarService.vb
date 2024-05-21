@@ -3,6 +3,7 @@ Imports Google.Apis.Calendar.v3
 Imports Google.Apis.Calendar.v3.Data
 Imports Google.Apis.Services
 Imports System.Threading.Tasks
+Imports System.IO
 
 ' Clase para manejar la autenticación y creación del servicio de Google Calendar.
 Public Class GoogleCalendarService
@@ -321,6 +322,30 @@ Public Class GoogleCalendarService
         Catch ex As Exception
             Console.WriteLine($"Error al obtener eventos de Google: {ex.Message}")
             Return Nothing
+        End Try
+    End Function
+
+    Public Function DuplicarEventoGoogle(eventID As String) As String
+        Try
+            Dim service As CalendarService = Authenticate()
+            Dim eventoGoogleOriginal As [Event] = service.Events.Get(CalendarioID, eventID).Execute()
+            Dim eventoGoogleNuevo As [Event] = New [Event] With {
+                .Summary = eventoGoogleOriginal.Summary,
+                .Location = eventoGoogleOriginal.Location,
+                .Description = eventoGoogleOriginal.Description,
+                .Start = eventoGoogleOriginal.Start,
+                .End = eventoGoogleOriginal.End,
+                .Recurrence = eventoGoogleOriginal.Recurrence,
+                .Attendees = eventoGoogleOriginal.Attendees,
+                .Reminders = eventoGoogleOriginal.Reminders,
+                .Visibility = eventoGoogleOriginal.Visibility,
+                .Transparency = eventoGoogleOriginal.Transparency
+            }
+
+            Dim createdEvent As [Event] = service.Events.Insert(eventoGoogleNuevo, CalendarioID).Execute()
+            Return createdEvent.Id
+        Catch ex As Exception
+            Console.WriteLine($"Error al duplicar evento de Google: {ex.Message}")
         End Try
     End Function
 

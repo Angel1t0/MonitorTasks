@@ -2,7 +2,7 @@
     Public Property PodioItemID As Integer ' ID único para la base de datos local
     Public Property EventID As String ' Vincula con la tabla de eventos
     Public Property PodioAppID As Integer = 1350510  ' ID de la aplicación en Podio
-    Public Property PodioAppItemID As Long ' ID del item en Podio
+    Public Property PodioAppItemID As Long = 0 ' ID del item en Podio
     Public Property Title As String ' Título del elemento
     Public Property Description As String ' Descripción del elemento
     Public Property Company As New List(Of String) ' Empresa solicitante
@@ -50,6 +50,9 @@
     Public authorizerContactsDict As New Dictionary(Of String, Integer)() ' Diccionario para mapear correos de contactos a IDs
     Public requestorContactsDict As New Dictionary(Of String, Integer)() ' Diccionario para mapear correos de contactos a IDs
 
+    Public Sub New()
+        InitializeOptions()
+    End Sub
     Public Function ConvertTimeToSeconds(time As String) As Integer
         Dim timeParts As String() = time.Split(":")
         Dim hours As Integer = Integer.Parse(timeParts(0))

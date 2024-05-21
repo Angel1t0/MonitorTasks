@@ -33,7 +33,6 @@ Public Class GestionEventos
         PanelAsistentes.Visible = False
         PanelNotificaciones.Visible = False
         CargarAsistentes()
-        podioItem.InitializeOptions()
         ConfigurarComponentes()
         _controlador.EstablecerCalendarioID(CalendarioID)
     End Sub
@@ -52,7 +51,7 @@ Public Class GestionEventos
         podioItem.PodioItemID = _controlador.CrearPodioItem(podioItem)
 
 
-        _controlador.InsertarAsistente(mensaje)
+        _controlador.InsertarAsistente(mensaje, podioItem.PodioItemID)
         _controlador.InsertarSolicitante(podioItem)
         _controlador.InsertarAutorizante(podioItem)
 
@@ -150,8 +149,7 @@ Public Class GestionEventos
         Dim asistente As New Asistente() With {
             .EventID = EventoID,
             .Email = correoAsistente,
-            .PhoneNumber = _controlador.ObtenerTelefonoAsistente(correoAsistente),
-            .PodioItemID = podioItem.PodioItemID
+            .PhoneNumber = _controlador.ObtenerTelefonoAsistente(correoAsistente)
         }
         Dim indice As Integer = comboAsignados.FindString(asistente.Email)
         If indice >= 0 Then
@@ -309,17 +307,19 @@ Public Class GestionEventos
     End Sub
 
     Public Sub ClonarEvento(e)
-        If e.ColumnIndex = 0 Then
-            Dim respuesta = MessageBox.Show("¿Está seguro que desea clonar el evento?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If e.ColumnIndex = 1 Then
+            Dim respuesta = MessageBox.Show("¿Desea clonar la tarea?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
             If respuesta = DialogResult.No Then
                 Return
             End If
             Dim eventoID As String = dgvDataEventos.Rows(e.RowIndex).Cells(2).Value.ToString()
+            Dim podioItemID As Integer = dgvDataEventos.Rows(e.RowIndex).Cells(17).Value
             Dim podioAppItemID As Long
             If Not Long.TryParse(dgvDataEventos.Rows(e.RowIndex).Cells(19).Value.ToString(), podioAppItemID) Then
                 Console.WriteLine("No se pudo obtener el podioAppItemID")
             End If
-            _controlador.ClonarEvento(eventoID, podioAppItemID)
+            _controlador.ClonarEvento(eventoID, podioItemID, podioAppItemID)
+            CargarEventosEnDataGridView()
         End If
     End Sub
 
@@ -410,11 +410,17 @@ Public Class GestionEventos
     ' Manejadores de Eventos UI
     Private Async Sub btnSincronizar_Click(sender As Object, e As EventArgs) Handles btnSincronizar.Click
         Await _controlador.SincronizarEventosAsync()
+        Await _controlador.SincronizarItemsAsync(_controlador.ObtenerEventosConPodio(CalendarioID))
         CargarEventosEnDataGridView()
     End Sub
 
     Private Sub btnInsertarEvento_Click(sender As Object, e As EventArgs) Handles btnInsertarEvento.Click
-        TabControl2.Visible = True
+        ' Ocultar el tab ya que solo es para cuando se actualiza y mover el panel a panel2
+        TabControl2.Visible = False
+        TabControl2.Parent.Controls.Remove(PanelDatosBasicos)
+        Me.Controls.Add(PanelDatosBasicos)
+        CentrarPanel(PanelDatosBasicos)
+
         LimpiarCampos()
 
         panelEventos.Visible = False
@@ -431,6 +437,13 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
+        TabControl2.Visible = True
+        TabControl2.Controls.Add(PanelDatosBasicos)
+        PanelDatosBasicos.Visible = True
+        PanelDatosBasicos.BringToFront()
+        CentrarPanel(PanelDatosBasicos)
+
+
         LlenarCamposEventos("Actualización")
         LlenarCamposPodioItem()
         DeterminarRecurrencia()
@@ -505,6 +518,7 @@ Public Class GestionEventos
         MessageBox.Show("Evento creado exitosamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information)
         CerrarVentanas()
         CargarEventosEnDataGridView()
+        _inicializacionTerminada = False
     End Sub
 
     Private Sub comboFrecuencia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboFrecuencia.SelectedIndexChanged
@@ -589,6 +603,7 @@ Public Class GestionEventos
 
     Private Sub dgvDataEventos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventos.CellClick
         EliminarEvento(e)
+        ClonarEvento(e)
     End Sub
 
     Private Sub btnVolver_Click(sender As Object, e As EventArgs) Handles btnVolver.Click
@@ -1001,8 +1016,9 @@ Public Class GestionEventos
         txtOcurrencias.Value = 1
         dateRecuFinal.Value = New DateTime(DateTime.Now.Year, 12, 31)
 
-        comboEmpresa.SelectedItem = ""
-        comboSeleccionarSistemas.SelectedItem = ""
+        comboEmpresa.Text = ""
+        comboSeleccionarSistemas.Text = ""
+        listEmpresas.SelectedItems.Clear()
         listEmpresas.ClearSelected()
         comboDepartamento.SelectedIndex = 0
         comboArea.SelectedIndex = 0
@@ -1016,7 +1032,9 @@ Public Class GestionEventos
         maskHorasExtras.Text = "00:00:00"
         barraAvance.Value = 0
         comboProyectoSistemas.Items.Clear()
+        comboProyectoSistemas.Text = ""
         comboProyectosSistemas.Items.Clear()
+        comboProyectosSistemas.Text = ""
         podioItem.itemTitleToIdMap.Clear()
         podioItem.reversedItemTitleToIdMap.Clear()
 

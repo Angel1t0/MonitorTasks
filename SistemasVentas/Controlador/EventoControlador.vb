@@ -29,7 +29,7 @@ Public Class EventoControlador
         _servicioWhatsapp = New WhatsAppService()
         _servicioDesktop = New DesktopService()
         _datosEvento = New EventoData()
-        _servicioPodio = New PodioService()
+        _servicioPodio = New PodioService(Me)
     End Sub
 
     Public Sub CrearEvento(evento As Evento, isVisible As Boolean)
@@ -44,12 +44,12 @@ Public Class EventoControlador
         _datosEvento.InsertarMensaje(mensaje)
     End Sub
 
-    Public Function CrearPodioItem(podioItem As PodioItem)
+    Public Function CrearPodioItem(podioItem As PodioItem) As Integer
         Return _datosEvento.InsertarPodioItem(podioItem)
     End Function
 
     Public Async Function SearchItemPodio(query As String, limit As Integer) As Task(Of JArray)
-        Return Await _servicioPodio.SearchAppByQuery(query, limit)
+        Return Await _servicioPodio.SearchAppByQuery(query, limit).ConfigureAwait(False)
     End Function
 
     Public Sub EnviarMensaje(mensaje As Mensaje, userID As Integer)
@@ -74,8 +74,20 @@ Public Class EventoControlador
         Return True
     End Function
 
-    Public Sub ClonarEvento(podioAppItemID As Long)
-        Dim _servicioPodio.ClonarPodioItem(podioAppItemID)
+    Public Sub ClonarEvento(eventID As String, podioItemID As Integer, podioAppItemID As Long)
+        Try
+            Dim copyPodioAppItemID As Long = _servicioPodio.ClonarPodioItem(podioAppItemID).Result
+            Dim copyEventID As String = _servicioGoogleCalendar.DuplicarEventoGoogle(eventID)
+
+            ' Condición para evitar error si copyPodioAppItemID regresa un null o copyEventID también
+            If copyPodioAppItemID = 0 Or copyEventID = "" Then
+                MessageBox.Show("Error al clonar el evento.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return
+            End If
+            _datosEvento.ClonarEvento(eventID, podioItemID, podioAppItemID, copyEventID, copyPodioAppItemID)
+        Catch ex As Exception
+            MessageBox.Show("Error al clonar el evento.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Public Sub EliminarEvento(eventID As String, podioAppItemID As Long)
@@ -85,8 +97,9 @@ Public Class EventoControlador
 
     End Sub
 
-    Public Sub InsertarAsistente(mensaje As Mensaje)
+    Public Sub InsertarAsistente(mensaje As Mensaje, podioItemID As Integer)
         For Each attendee In mensaje.Attendees
+            attendee.PodioItemID = podioItemID
             _datosEvento.InsertarAsistente(attendee)
             mensaje.UserID = _datosEvento.BuscarUserID(attendee.Email)
             CrearMensaje(mensaje)
@@ -117,15 +130,16 @@ Public Class EventoControlador
         _datosEvento.EliminarNotificacion(reminderID)
     End Sub
 
-    Public Sub EnviarEventoAGoogleCalendar(evento As Evento)
+    Public Function EnviarEventoAGoogleCalendar(evento As Evento) As String
         Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
         Dim eventoGoogle As [Event] = _servicioGoogleCalendar.ConvertirAModeloGoogleCalendar(evento)
 
         Dim calendarId As String = GoogleCalendarID
-        Dim createdEvent As [Event] = service.Events.Insert(eventoGoogle, calendarId).Execute()
+        Dim createdEvent As [Event] = service.Events.Insert(eventoGoogle, If(calendarId Is Nothing, evento.CalendarID, calendarId)).Execute()
         GoogleEventID = createdEvent.Id
+        Return GoogleEventID
         Console.WriteLine($"Evento creado: {createdEvent.HtmlLink}")
-    End Sub
+    End Function
 
     Public Function EnviarItemAPodio(podioItem As PodioItem) As Long
         Return _servicioPodio.CreateItem(podioItem).Result
@@ -134,12 +148,8 @@ Public Class EventoControlador
     Public Sub ActualizarItemEnPodio(podioItem As PodioItem)
         _servicioPodio.UpdatePodioItem(podioItem)
 
-        ' Actualizar empresas en BD
-        Dim empresasActualesActivas As List(Of String) = _datosEvento.ObtenerListaEmpresas(podioItem.PodioItemID, "Activo")
-        Dim empresasActualesEliminadas As List(Of String) = _datosEvento.ObtenerListaEmpresas(podioItem.PodioItemID, "Eliminado")
-        Dim empresasNuevas As List(Of String) = podioItem.Company
 
-        ActualizarYCompararEmpresas(podioItem, empresasActualesActivas, empresasActualesEliminadas, empresasNuevas)
+        ActualizarYCompararEmpresas(podioItem)
     End Sub
 
     Public Async Sub AgregarInformacionEvento(evento As Evento, userID As Integer)
@@ -185,6 +195,12 @@ Public Class EventoControlador
         Dim eventosGoogle As IList(Of [Event]) = Await ObtenerEventosAsync()
 
         _servicioGoogleCalendar.SincronizarEventos(eventosGoogle, eventosLocales)
+    End Function
+
+    Public Async Function SincronizarItemsAsync(itemsLocales As DataTable) As Task
+        Dim podioItems As JArray = Await _servicioPodio.ObtenerItemsByUser().ConfigureAwait(False)
+
+        Await _servicioPodio.SincronizarItems(podioItems, itemsLocales).ConfigureAwait(False)
     End Function
 
     Public Sub SincronizarCalendarios()
@@ -351,7 +367,12 @@ Public Class EventoControlador
         _datosEvento.EliminarProyectoSistemas(proyectoID, podioItemID)
     End Sub
 
-    Public Sub ActualizarYCompararEmpresas(podioItem As PodioItem, empresasActualesActivas As List(Of String), empresasActualesEliminadas As List(Of String), empresasNuevas As List(Of String))
+    Public Sub ActualizarYCompararEmpresas(podioItem As PodioItem)
+        ' Actualizar empresas en BD
+        Dim empresasActualesActivas As List(Of String) = _datosEvento.ObtenerListaEmpresas(podioItem.PodioItemID, "Activo")
+        Dim empresasActualesEliminadas As List(Of String) = _datosEvento.ObtenerListaEmpresas(podioItem.PodioItemID, "Eliminado")
+        Dim empresasNuevas As List(Of String) = podioItem.Company
+
 
         ' Salir de la función si no hay cambios
         If empresasActualesActivas.Count = empresasNuevas.Count Then
@@ -395,5 +416,13 @@ Public Class EventoControlador
 
     Public Function ObtenerListaEmpresasActivas(podioItemID As Integer) As List(Of String)
         Return _datosEvento.ObtenerListaEmpresas(podioItemID, "Activo")
+    End Function
+
+    Public Sub ActualizarPodioAppItemID(podioItemID As Integer, podioAppItemID As Long)
+        _datosEvento.ActualizarPodioAppItemID(podioItemID, podioAppItemID)
+    End Sub
+
+    Public Function ObtenerCorreoPorProfileID(profileID As Integer) As String
+        Return _datosEvento.ObtenerCorreoPorProfileID(profileID)
     End Function
 End Class
