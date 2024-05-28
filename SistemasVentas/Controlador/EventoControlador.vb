@@ -158,6 +158,10 @@ Public Class EventoControlador
         Await _servicioGoogleCalendar.ActualizarEventoGoogleAsync(service, GoogleEventID, evento)
     End Sub
 
+    Public Async Sub ActualizarEvento(evento As Evento)
+        _servicioGoogleCalendar.ActualizarEventoV2(evento)
+    End Sub
+
     Public Sub EnviarEmail(mensaje As Mensaje)
         Dim service As GmailService = _googleServicesAuthenticator.ObtenerServicioGmail()
         _servicioGoogleGmail.EnviarMensajeMail(service, mensaje)
@@ -424,5 +428,37 @@ Public Class EventoControlador
 
     Public Function ObtenerCorreoPorProfileID(profileID As Integer) As String
         Return _datosEvento.ObtenerCorreoPorProfileID(profileID)
+    End Function
+
+    Public Function ObtenerTareasPendientes() As DataTable
+        Return _datosEvento.ObtenerTareasPendientes()
+    End Function
+
+    Public Function ObtenerTareasPendientesPodio(limite As Integer, intervaloInicio As DateTime, intervaloFin As DateTime) As DataTable
+        Return _servicioPodio.ObtenerTareasPendientes(limite, intervaloInicio, intervaloFin).Result
+    End Function
+
+    Public Function ObtenerTareasFinalizadas() As DataTable
+        Return _datosEvento.ObtenerTareasFinalizadas()
+    End Function
+
+    Public Function ObtenerTareasCreadas() As DataTable
+        Return _datosEvento.ObtenerTareasCreadas()
+    End Function
+
+    Public Function ObtenerTareasPorUsuario(email As String) As DataTable
+        Return _datosEvento.ObtenerTareasPorUsuario(email)
+    End Function
+
+    Public Function ObtenerCorreos() As List(Of String)
+        Return _datosEvento.ObtenerCorreos()
+    End Function
+
+    Public Function ObtenerCantidadItemsPorEstado() As DataTable
+        Return _datosEvento.ObtenerCantidadItemsPorEstado()
+    End Function
+
+    Public Function ObtenerCantidadItemsPorSystemArea() As DataTable
+        Return _datosEvento.ObtenerCantidadItemsPorSystemArea()
     End Function
 End Class

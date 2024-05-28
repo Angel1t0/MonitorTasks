@@ -84,6 +84,7 @@ Public Class FormularioPrincipal
     ' Events
     Private Sub BtnDash_Click(sender As Object, e As EventArgs) Handles BtnDash.Click
         ActivateButton(sender, Color.FromArgb(231, 197, 90))
+        OpenChildForm(New GestionDashboard)
     End Sub
     Private Sub BtnUsuarios_Click(sender As Object, e As EventArgs) Handles BtnUsuarios.Click
         ActivateButton(sender, Color.FromArgb(118, 193, 201))
@@ -106,6 +107,8 @@ Public Class FormularioPrincipal
     End Sub
     Private Sub BtnConfiguracion_Click(sender As Object, e As EventArgs) Handles BtnConfiguracion.Click
         ActivateButton(sender, Color.FromArgb(157, 173, 173))
+        ' Cerrar Sesión
+        Application.Restart()
     End Sub
 
     Private Sub LbLogo_Click(sender As Object, e As EventArgs) Handles LbLogo.Click

@@ -66,6 +66,45 @@ Public Class GoogleCalendarService
         Return eventoGoogle
     End Function
 
+    Public Async Sub ActualizarEventoV2(evento As Evento)
+        Try
+            Dim service As CalendarService = Authenticate()
+            Dim eventoGoogle As [Event] = ConvertirAModeloGoogleCalendar(evento)
+            ' Actualizar los campos del evento
+            eventoGoogle.Summary = evento.Summary
+            eventoGoogle.Location = evento.Location
+            eventoGoogle.Description = evento.Description
+            eventoGoogle.Start = New EventDateTime() With {.DateTime = evento.StartDateTime, .TimeZone = "America/Mexico_City"}
+            eventoGoogle.End = New EventDateTime() With {.DateTime = evento.EndDateTime, .TimeZone = "America/Mexico_City"}
+            eventoGoogle.Visibility = evento.Visibility
+            eventoGoogle.Transparency = evento.Transparency
+
+            If evento.RRULE = "" Then
+                eventoGoogle.Recurrence = Nothing
+            Else
+                eventoGoogle.Recurrence = New List(Of String) From {evento.RRULE}
+            End If
+
+            eventoGoogle.Attendees = evento.Attendees.Select(Function(a) New EventAttendee() With {.Email = a.Email, .ResponseStatus = a.Status}).ToList()
+            ' Configurar asistentes
+            'If evento.Attendees IsNot Nothing AndAlso evento.Attendees.Count > 0 Then
+            '    eventoGoogle.Attendees = evento.Attendees.Select(Function(a) New EventAttendee() With {.Email = a.Email}).ToList()
+            'End If
+
+            ' Configurar notificaciones
+            If evento.Reminders IsNot Nothing Then
+                eventoGoogle.Reminders = New [Event].RemindersData() With {
+                    .UseDefault = False,
+                    .Overrides = evento.Reminders.Select(Function(r) New EventReminder() With {.Method = r.Method, .Minutes = r.Minutes}).ToList()
+                }
+            End If
+            Dim updatedEvent As [Event] = Await service.Events.Update(eventoGoogle, CalendarioID, evento.EventID).ExecuteAsync()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
     Public Async Function ActualizarEventoGoogleAsync(service As CalendarService, googleEventId As String, evento As Evento) As Task
         Try
             ' Obtener el evento existente

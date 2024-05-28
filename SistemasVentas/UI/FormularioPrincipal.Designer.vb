@@ -76,7 +76,7 @@ Partial Class FormularioPrincipal
         Me.BtnConfiguracion.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.BtnConfiguracion.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.BtnConfiguracion.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.BtnConfiguracion.IconChar = FontAwesome.Sharp.IconChar.Wrench
+        Me.BtnConfiguracion.IconChar = FontAwesome.Sharp.IconChar.DoorOpen
         Me.BtnConfiguracion.IconColor = System.Drawing.Color.FromArgb(CType(CType(236, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(232, Byte), Integer))
         Me.BtnConfiguracion.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnConfiguracion.IconSize = 32
@@ -86,7 +86,7 @@ Partial Class FormularioPrincipal
         Me.BtnConfiguracion.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BtnConfiguracion.Size = New System.Drawing.Size(262, 60)
         Me.BtnConfiguracion.TabIndex = 8
-        Me.BtnConfiguracion.Text = "Configuraciones"
+        Me.BtnConfiguracion.Text = "Cerrar Sesión"
         Me.BtnConfiguracion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.BtnConfiguracion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.BtnConfiguracion.UseVisualStyleBackColor = True

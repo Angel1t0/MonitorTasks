@@ -70,7 +70,6 @@ Public Class GestionRecurrenciaMensajes
 
                     End If
                 Next
-                'Await Task.Delay(2000) ' Esperar 2 segundos entre cada envío
             Next
         Catch ex As Exception
             Console.WriteLine("Error al verificar y enviar correos: " & ex.Message)

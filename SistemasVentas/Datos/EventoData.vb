@@ -1131,4 +1131,139 @@ Public Class EventoData
             Throw New ApplicationException("Error al obtener el correo de usuario de Podio en la base de datos.", ex)
         End Try
     End Function
+
+    Public Function ObtenerTareasPendientes() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerItemsPendientes", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar tareas pendientes de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar tareas pendientes.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerTareasFinalizadas() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerItemsFinalizados", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar tareas finalizadas de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar tareas finalizadas.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerTareasCreadas() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerItemsCreados", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar tareas creadas de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar tareas creadas.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerTareasPorUsuario(email As String) As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerItemsPorUsuario", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", email)
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al mostrar tareas por usuario de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al mostrar tareas por usuario.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerCorreos() As List(Of String)
+        Dim correos As New List(Of String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerCorreos", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim reader As SqlDataReader = comando.ExecuteReader
+                While (reader.Read())
+                    correos.Add(reader(0))
+                End While
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener correos de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener correos.", ex)
+        End Try
+        Return correos
+    End Function
+
+    Public Function ObtenerCantidadItemsPorEstado() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerCantidadItemsPorEstado", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener la cantidad de ítems por estado de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener la cantidad de ítems por estado.", ex)
+        End Try
+        Return dataTable
+    End Function
+
+    Public Function ObtenerCantidadItemsPorSystemArea() As DataTable
+        Dim dataTable As New DataTable()
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                Dim comando As New SqlCommand("obtenerCantidadItemsPorSystemArea", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim sqlAdaptador As New SqlDataAdapter(comando)
+
+                conexion.Open()
+                sqlAdaptador.Fill(dataTable)
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener la cantidad de ítems por SystemArea de la base de datos.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener la cantidad de ítems por SystemArea.", ex)
+        End Try
+        Return dataTable
+    End Function
 End Class

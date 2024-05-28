@@ -5,8 +5,8 @@
     Public Property Summary As String = String.Empty ' Valor por defecto vacío
     Public Property Location As String = String.Empty
     Public Property Description As String = String.Empty
-    Public Property StartDateTime As DateTime = DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ssZ")
-    Public Property EndDateTime As DateTime? = DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ssZ")
+    Public Property StartDateTime As DateTime = DateTime.Now ' Valor por defecto
+    Public Property EndDateTime As DateTime? = New DateTime(DateTime.Now.Year, 12, 31) ' Valor por defecto
     Public Property RRULE As String = String.Empty
     Public Property Attendees As List(Of Asistente)
     Public Property Reminders As List(Of Notificacion)

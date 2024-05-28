@@ -17,9 +17,9 @@
     Public Property Priority As String  ' Prioridad (texto)
     Public Property StartDate As DateTime  ' Fecha de inicio
     Public Property EndDate As DateTime  ' Fecha de entrega
-    Public Property WorkPlan As String  ' Plan de trabajo o acción
+    Public Property WorkPlan As String = ""  ' Plan de trabajo o acción
     Public Property Status As String  ' Estatus
-    Public Property Progress As Integer  ' Progreso (en porcentaje)
+    Public Property Progress As Integer ' Progreso (en porcentaje)
     Public Property SystemProject As New List(Of String)  ' Proyecto/Actividades de Sistemas
     Public Property GeneralProject As String  ' Proyecto general
     Public Property HoursAccumulated As Integer  ' Horas acumuladas

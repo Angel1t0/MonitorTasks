@@ -409,8 +409,8 @@ Public Class GestionEventos
 
     ' Manejadores de Eventos UI
     Private Async Sub btnSincronizar_Click(sender As Object, e As EventArgs) Handles btnSincronizar.Click
-        Await _controlador.SincronizarEventosAsync()
         Await _controlador.SincronizarItemsAsync(_controlador.ObtenerEventosConPodio(CalendarioID))
+        Await _controlador.SincronizarEventosAsync()
         CargarEventosEnDataGridView()
     End Sub
 
@@ -437,8 +437,8 @@ Public Class GestionEventos
     End Sub
 
     Private Sub btnActualizarEvento_Click(sender As Object, e As EventArgs) Handles btnActualizarEvento.Click
-        TabControl2.Visible = True
-        TabControl2.Controls.Add(PanelDatosBasicos)
+        'TabControl2.Visible = True
+        'TabControl2.TabPages.Add(PanelDatosBasicos)
         PanelDatosBasicos.Visible = True
         PanelDatosBasicos.BringToFront()
         CentrarPanel(PanelDatosBasicos)
