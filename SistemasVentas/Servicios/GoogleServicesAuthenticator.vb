@@ -9,8 +9,8 @@ Imports System.Threading
 Public Class GoogleServicesAuthenticator
     Private ReadOnly Scopes As String() = {GmailService.Scope.GmailSend, CalendarService.Scope.Calendar}
     Private ReadOnly ApplicationName As String = "Monitor task - Prueba"
-    Private ReadOnly ClientSecretPath As String = "D:\angel\Downloads\client_secret_904108627701-bc7vsuctjhehlpou2tjof9g6c483s9n6.apps.googleusercontent.com.json"
-    Private ReadOnly TokenPath As String = "D:\angel\Documentos\Residencias\SistemasVentas\SistemasVentas\Recursos\token.json"
+    Private ReadOnly ClientSecretPath As String = "../../Recursos/client_secret_904108627701-bc7vsuctjhehlpou2tjof9g6c483s9n6.apps.googleusercontent.com.json"
+    Private ReadOnly TokenPath As String = "../../Recursos/token.json"
     Private credential As UserCredential ' Almacena las credenciales como propiedad de instancia
 
     ' Método que maneja la autenticación y devuelve credenciales de usuario, si no han sido ya obtenidas.

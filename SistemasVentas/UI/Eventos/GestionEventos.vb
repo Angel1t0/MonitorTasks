@@ -949,12 +949,12 @@ Public Class GestionEventos
 
     Private Sub btnContinuarDatosPodio_Click(sender As Object, e As EventArgs) Handles btnContinuarDatosPodio.Click
         'AQUI DEBERÍA IR UNA VALIDACION DE LOS CAMPOS DE PODIO
-        'LlenarCamposPodioItem()
-        'Dim errores As List(Of String) = podioItem.ValidarCampos()
-        'If errores.Count > 0 Then
-        '    MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        '    Return
-        'End If
+        LlenarCamposPodioItem()
+        Dim errores As List(Of String) = podioItem.ValidarCampos()
+        If errores.Count > 0 Then
+            MessageBox.Show(String.Join(Environment.NewLine, errores), "Errores de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
         panelDatosPodio.Visible = False
         Panel2.Parent.Controls.Remove(PanelAsistentes)
         Me.Controls.Add(PanelAsistentes)

@@ -62,34 +62,39 @@ Public Class GestionImportar
             For Each row As DataGridViewRow In dgvDataExcel.Rows
                 If Not row.IsNewRow Then
                     ' Validar correos de asistentes
-                    Dim asistentesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(18).Value?.ToString()), Nothing, row.Cells(18).Value.ToString().Split(",").ToList())
+                    Dim asistentesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(18).Value?.ToString()), Nothing, row.Cells(18).Value.ToString().Trim().Split(",").ToList())
                     If asistentesEmail Is Nothing OrElse asistentesEmail.All(Function(email) String.IsNullOrWhiteSpace(email)) Then
                         Continue For ' Saltar al siguiente registro si está vacío
                     End If
 
                     ' Validar correos de solicitantes
-                    Dim solicitantesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(19).Value?.ToString()), Nothing, row.Cells(19).Value.ToString().Split(",").ToList())
+                    Dim solicitantesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(19).Value?.ToString()), Nothing, row.Cells(19).Value.ToString().Trim().Split(",").ToList())
                     If solicitantesEmail Is Nothing OrElse solicitantesEmail.All(Function(email) String.IsNullOrWhiteSpace(email)) Then
                         Continue For ' Saltar al siguiente registro si está vacío
                     End If
 
                     ' Validar nombres de empresas
-                    Dim empresas As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(21).Value?.ToString()), Nothing, row.Cells(21).Value.ToString().Split(",").ToList())
+                    Dim empresas As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(21).Value?.ToString()), Nothing, row.Cells(21).Value.ToString().Trim().Split(",").ToList())
                     If empresas Is Nothing OrElse empresas.All(Function(empresa) String.IsNullOrWhiteSpace(empresa)) Then
                         Continue For ' Saltar al siguiente registro si está vacío
                     End If
 
-                    Dim autorizantesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(20).Value.ToString()), New List(Of String)(), row.Cells(20).Value.ToString().Split(",").ToList())
-                    Dim proyectosSistemas As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(22).Value.ToString()), New List(Of String)(), row.Cells(22).Value.ToString().Split(",").ToList())
+                    If asistentesEmail Is Nothing OrElse solicitantesEmail Is Nothing OrElse empresas Is Nothing Then
+                        MessageBox.Show("Algunos campos obligatorios no son válidos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return
+                    End If
+
+                    Dim autorizantesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(20).Value.ToString()), New List(Of String)(), row.Cells(20).Value.ToString().Trim().Split(",").ToList())
+                    Dim proyectosSistemas As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(22).Value.ToString()), New List(Of String)(), row.Cells(22).Value.ToString().Trim().Split(",").ToList())
 
                     ' Crear el evento
                     Dim evento As New Evento() With {
                     .CalendarID = CalendarioID,
                     .Summary = If(String.IsNullOrWhiteSpace(row.Cells(0).Value?.ToString()), "Sin titulo", row.Cells(0).Value.ToString()),
-                    .Location = If(String.IsNullOrWhiteSpace(row.Cells(1).Value?.ToString()), "", row.Cells(1).Value.ToString()),
+                    .Location = If(String.IsNullOrWhiteSpace(row.Cells(1).Value?.ToString()), "", row.Cells(1).Value.ToString().Trim()),
                     .Description = If(String.IsNullOrWhiteSpace(row.Cells(2).Value?.ToString()), "Sin descripcion", row.Cells(2).Value.ToString()),
-                    .StartDateTime = If(DateTime.TryParse(row.Cells(3).Value?.ToString(), Nothing), DateTime.Parse(row.Cells(3).Value.ToString()), DateTime.Now),
-                    .EndDateTime = If(DateTime.TryParse(row.Cells(4).Value?.ToString(), Nothing), DateTime.Parse(row.Cells(4).Value.ToString()), New DateTime(DateTime.Now.Year, 12, 31)),
+                    .StartDateTime = If(DateTime.TryParse(row.Cells(3).Value?.ToString(), Nothing), DateTime.Parse(row.Cells(3).Value.ToString().Trim()), DateTime.Now),
+                    .EndDateTime = If(DateTime.TryParse(row.Cells(4).Value?.ToString(), Nothing), DateTime.Parse(row.Cells(4).Value.ToString().Trim()), New DateTime(DateTime.Now.Year, 12, 31)),
                     .RRULE = If(String.IsNullOrWhiteSpace(row.Cells(5).Value?.ToString()), "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z", "RRULE:" & row.Cells(5).Value.ToString())
                 }
 
@@ -105,51 +110,51 @@ Public Class GestionImportar
                     podioItem.Description = evento.Description
 
                     ' Validación para Department (obligatorio)
-                    Dim departmentValue = row.Cells(7).Value?.ToString()
+                    Dim departmentValue = row.Cells(7).Value?.ToString().Trim()
                     podioItem.Department = If(String.IsNullOrWhiteSpace(departmentValue), podioItem.GetSelectedOptionId("Sistemas", podioItem.departmentOptions), podioItem.GetSelectedOptionId(departmentValue, podioItem.departmentOptions))
 
                     ' Validación para DepartmentPriority (obligatorio)
-                    Dim departmentPriorityValue = row.Cells(8).Value?.ToString()
+                    Dim departmentPriorityValue = row.Cells(8).Value?.ToString().Trim()
                     podioItem.DepartmentPriority = If(String.IsNullOrWhiteSpace(departmentPriorityValue), 0, Integer.Parse(departmentPriorityValue))
 
                     ' Validación para SystemArea (obligatorio)
-                    Dim systemAreaValue = row.Cells(9).Value?.ToString()
+                    Dim systemAreaValue = row.Cells(9).Value?.ToString().Trim()
                     podioItem.SystemArea = If(String.IsNullOrWhiteSpace(systemAreaValue), podioItem.GetSelectedOptionId("Desarrollo", podioItem.systemAreaOptions), podioItem.GetSelectedOptionId(systemAreaValue, podioItem.systemAreaOptions))
 
                     ' Validación para Categories (obligatorio)
-                    Dim categoryValue = row.Cells(10).Value?.ToString()
+                    Dim categoryValue = row.Cells(10).Value?.ToString().Trim()
                     podioItem.Categories = If(String.IsNullOrWhiteSpace(categoryValue), podioItem.GetSelectedOptionId("[DESARROLLO] Desarrollo General", podioItem.categoryOptions), podioItem.GetSelectedOptionId(categoryValue, podioItem.categoryOptions))
 
                     ' Validación para SystemPriority (obligatorio)
-                    Dim systemPriorityValue = row.Cells(11).Value?.ToString()
+                    Dim systemPriorityValue = row.Cells(11).Value?.ToString().Trim()
                     podioItem.SystemPriority = If(String.IsNullOrWhiteSpace(systemPriorityValue), 0, Integer.Parse(systemPriorityValue))
 
                     ' Validación para Priority (opcional)
-                    Dim priorityValue = row.Cells(12).Value?.ToString()
-                    podioItem.Priority = If(String.IsNullOrWhiteSpace(priorityValue), Nothing, podioItem.GetSelectedOptionId(priorityValue, podioItem.priorityOptions))
+                    Dim priorityValue = row.Cells(12).Value?.ToString().Trim()
+                    podioItem.Priority = If(String.IsNullOrWhiteSpace(priorityValue), podioItem.GetSelectedOptionId("De Acuerdo a Fecha de Entrega", podioItem.priorityOptions), podioItem.GetSelectedOptionId(priorityValue, podioItem.priorityOptions))
 
                     ' StartDate y EndDate (obligatorios)
                     podioItem.StartDate = If(evento.StartDateTime = DateTime.MinValue, DateTime.Now, evento.StartDateTime)
-                    podioItem.EndDate = If(evento.EndDateTime = DateTime.MinValue, DateTime.Now.AddHours(1), evento.EndDateTime)
+                    podioItem.EndDate = If(evento.EndDateTime = DateTime.MinValue, DateTime.Now, evento.EndDateTime)
 
                     ' Validación para WorkPlan (opcional)
                     Dim workPlanValue = row.Cells(13).Value?.ToString()
-                    podioItem.WorkPlan = If(String.IsNullOrWhiteSpace(workPlanValue), Nothing, workPlanValue)
+                    podioItem.WorkPlan = If(String.IsNullOrWhiteSpace(workPlanValue), "", workPlanValue)
 
                     ' Validación para Status (obligatorio)
-                    Dim statusValue = row.Cells(17).Value?.ToString()
+                    Dim statusValue = row.Cells(17).Value?.ToString().Trim()
                     podioItem.Status = If(String.IsNullOrWhiteSpace(statusValue), podioItem.GetSelectedOptionId("No comenzada / Pendiente", podioItem.statusOptions), podioItem.GetSelectedOptionId(statusValue, podioItem.statusOptions))
 
                     ' Validación para Progress (opcional)
-                    Dim progressValue = row.Cells(14).Value?.ToString()
-                    podioItem.Progress = If(String.IsNullOrWhiteSpace(progressValue), Nothing, Integer.Parse(progressValue))
+                    Dim progressValue = row.Cells(14).Value?.ToString().Trim()
+                    podioItem.Progress = If(String.IsNullOrWhiteSpace(progressValue), 0, Integer.Parse(progressValue))
 
                     ' Validación para HoursAccumulated (opcional)
-                    Dim hoursAccumulatedValue = row.Cells(15).Value?.ToString()
+                    Dim hoursAccumulatedValue = row.Cells(15).Value?.ToString().Trim()
                     podioItem.HoursAccumulated = If(String.IsNullOrWhiteSpace(hoursAccumulatedValue), Nothing, Integer.Parse(hoursAccumulatedValue))
 
                     ' Validación para ExtraHours (opcional)
-                    Dim extraHoursValue = row.Cells(16).Value?.ToString()
+                    Dim extraHoursValue = row.Cells(16).Value?.ToString().Trim()
                     podioItem.ExtraHours = If(String.IsNullOrWhiteSpace(extraHoursValue), Nothing, Integer.Parse(extraHoursValue))
 
 
@@ -158,11 +163,11 @@ Public Class GestionImportar
 
                     ' Creal el mensaje a enviar a cada asistente
                     For Each email As String In asistentesEmail
-                        podioItem.AssignedToContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email))
+                        podioItem.AssignedToContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
                         Dim mensaje As New Mensaje() With {
                         .EventID = eventoID,
-                        .UserID = _controlador.BuscarUserID(email),
-                        .MessageType = If(String.IsNullOrWhiteSpace(row.Cells(6).Value?.ToString()), "Nuevo Evento", row.Cells(6).Value.ToString()),
+                        .UserID = _controlador.BuscarUserID(email.Trim()),
+                        .MessageType = If(String.IsNullOrWhiteSpace(row.Cells(6).Value?.ToString()), "Nuevo Evento", row.Cells(6).Value.ToString().Trim()),
                         .RRULE = evento.RRULE
                         }
 
@@ -178,26 +183,26 @@ Public Class GestionImportar
 
                     ' Crear a los solicitantes
                     For Each email As String In solicitantesEmail
-                        podioItem.RequestorContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email))
+                        podioItem.RequestorContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
                     Next
                     _controlador.InsertarSolicitante(podioItem)
 
                     ' Crear a los autorizantes
                     For Each email As String In autorizantesEmail
-                        podioItem.AuthorizerContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email))
+                        podioItem.AuthorizerContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
                     Next
                     _controlador.InsertarAutorizante(podioItem)
 
                     ' Crear a las empresas
                     For Each empresa As String In empresas
-                        Dim empresaID = podioItem.GetSelectedOptionId(empresa, podioItem.companyOptions).ToString()
+                        Dim empresaID = podioItem.GetSelectedOptionId(empresa.Trim(), podioItem.companyOptions).ToString()
                         podioItem.Company.Add(empresaID)
                         ' Insertar empresa en BD
                         _controlador.InsertarPodioEmpresa(podioItem, empresaID)
                     Next
 
                     For Each proyecto As String In proyectosSistemas
-                        Dim proyectoID As JArray = SearchItemPodio(proyecto).Result
+                        Dim proyectoID As JArray = SearchItemPodio(proyecto.Trim()).Result
                         If proyectoID.Count > 0 Then
                             podioItem.SystemProject.Add(proyectoID(0)("id").ToString())
                             _controlador.InsertarPodioProyectoSistemas(podioItemID, proyectoID(0)("id").ToString(), proyecto)
@@ -206,9 +211,6 @@ Public Class GestionImportar
 
                     Dim podioAppItemID As Long = _controlador.EnviarItemAPodio(podioItem)
                     _controlador.ActualizarPodioAppItemID(podioItemID, podioAppItemID)
-
-                    ' Aquí puedes llamar a los métodos para crear el evento en Google Calendar,
-                    ' crear el ítem en Podio y luego insertar los datos en la base de datos.
                 End If
             Next
             MessageBox.Show("La importación se realizó con éxito", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)

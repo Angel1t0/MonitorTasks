@@ -26,7 +26,68 @@ Public Class FormularioPrincipal
         Dim gestionRecurrenciaMensajes As New GestionRecurrenciaMensajes(_CalendarioID)
         Dim podioService As New PodioService
         gestionRecurrenciaMensajes.Iniciar()
-        'podioService.CreateItem()
+
+        ' Configurar NotifyIcon
+        notifyIcon.Icon = New Drawing.Icon("../../Recursos/iconoNotify.ico")
+        notifyIcon.Text = "MWT"
+        notifyIcon.Visible = True
+
+        ' Configurar ContextMenuStrip
+        Dim contextMenu As New ContextMenuStrip()
+        contextMenu.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular)
+        contextMenu.Items.Add("Crear ítem", Nothing, AddressOf CrearItem)
+        contextMenu.Items.Add("Ver Dashboard", Nothing, AddressOf VerDashboard)
+        contextMenu.Items.Add("Ver Notificaciones", Nothing, AddressOf VerNotificaciones)
+        contextMenu.Items.Add("Salir", Nothing, AddressOf Salir)
+
+        notifyIcon.ContextMenuStrip = contextMenu
+
+        ' Manejador para restaurar la aplicación al hacer doble clic
+        AddHandler notifyIcon.DoubleClick, AddressOf NotifyIcon1_DoubleClick
+    End Sub
+
+    ' Métodos para el NotifyIcon y las opciones del menú
+    Private Sub CrearItem(sender As Object, e As EventArgs)
+        RestoreFromTray()
+        ActivateButton(BtnEventos, Color.FromArgb(34, 209, 98))
+        OpenChildForm(New GestionEventos With {.CalendarioID = _CalendarioID, .UsuarioID = _UsuarioID})
+    End Sub
+
+    Private Sub VerDashboard(sender As Object, e As EventArgs)
+        RestoreFromTray()
+        ActivateButton(BtnDash, Color.FromArgb(231, 197, 90))
+        OpenChildForm(New GestionDashboard)
+    End Sub
+
+    Private Sub VerNotificaciones(sender As Object, e As EventArgs)
+        RestoreFromTray()
+        ActivateButton(BtnNotificaciones, Color.FromArgb(193, 110, 153))
+        OpenChildForm(New GestionMensajes(_CalendarioID))
+    End Sub
+
+    Private Sub Salir(sender As Object, e As EventArgs)
+        Application.Exit()
+    End Sub
+
+    ' Restaurar la aplicación desde el tray
+    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs)
+        RestoreFromTray()
+    End Sub
+
+    ' Método para restaurar el formulario desde el área de notificaciones
+    Private Sub RestoreFromTray()
+        Me.WindowState = FormWindowState.Normal
+        Me.Size = New Size(1430, 800)
+        Me.ShowInTaskbar = True
+        notifyIcon.Visible = False
+    End Sub
+
+    ' Evento de minimización del formulario
+    Private Sub FormularioPrincipal_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
+        If WindowState = FormWindowState.Minimized Then
+            Me.ShowInTaskbar = False
+            notifyIcon.Visible = True
+        End If
     End Sub
 
     ' Este metodo se encarga de resaltar el boton que se ha seleccionado
@@ -89,9 +150,6 @@ Public Class FormularioPrincipal
     Private Sub BtnUsuarios_Click(sender As Object, e As EventArgs) Handles BtnUsuarios.Click
         ActivateButton(sender, Color.FromArgb(118, 193, 201))
         OpenChildForm(New FormularioGestionUsuarios)
-    End Sub
-    Private Sub BtnTareas_Click(sender As Object, e As EventArgs) Handles BtnTareas.Click
-        ActivateButton(sender, Color.FromArgb(223, 73, 110))
     End Sub
     Private Sub BtnEventos_Click(sender As Object, e As EventArgs) Handles BtnEventos.Click
         ActivateButton(sender, Color.FromArgb(34, 209, 98))

@@ -22,12 +22,12 @@ Partial Class FormularioPrincipal
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.PanelMenu = New System.Windows.Forms.Panel()
         Me.BtnConfiguracion = New FontAwesome.Sharp.IconButton()
         Me.BtnNotificaciones = New FontAwesome.Sharp.IconButton()
         Me.BtnImportar = New FontAwesome.Sharp.IconButton()
         Me.BtnEventos = New FontAwesome.Sharp.IconButton()
-        Me.BtnTareas = New FontAwesome.Sharp.IconButton()
         Me.BtnUsuarios = New FontAwesome.Sharp.IconButton()
         Me.BtnDash = New FontAwesome.Sharp.IconButton()
         Me.Panel2 = New System.Windows.Forms.Panel()
@@ -42,6 +42,8 @@ Partial Class FormularioPrincipal
         Me.PanelEscritorio = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.notifyIcon = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.menuStripItems = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.PanelMenu.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.PanelTitulo.SuspendLayout()
@@ -59,7 +61,6 @@ Partial Class FormularioPrincipal
         Me.PanelMenu.Controls.Add(Me.BtnNotificaciones)
         Me.PanelMenu.Controls.Add(Me.BtnImportar)
         Me.PanelMenu.Controls.Add(Me.BtnEventos)
-        Me.PanelMenu.Controls.Add(Me.BtnTareas)
         Me.PanelMenu.Controls.Add(Me.BtnUsuarios)
         Me.PanelMenu.Controls.Add(Me.BtnDash)
         Me.PanelMenu.Controls.Add(Me.Panel2)
@@ -81,7 +82,7 @@ Partial Class FormularioPrincipal
         Me.BtnConfiguracion.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnConfiguracion.IconSize = 32
         Me.BtnConfiguracion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnConfiguracion.Location = New System.Drawing.Point(0, 485)
+        Me.BtnConfiguracion.Location = New System.Drawing.Point(0, 425)
         Me.BtnConfiguracion.Name = "BtnConfiguracion"
         Me.BtnConfiguracion.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BtnConfiguracion.Size = New System.Drawing.Size(262, 60)
@@ -103,7 +104,7 @@ Partial Class FormularioPrincipal
         Me.BtnNotificaciones.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnNotificaciones.IconSize = 32
         Me.BtnNotificaciones.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnNotificaciones.Location = New System.Drawing.Point(0, 425)
+        Me.BtnNotificaciones.Location = New System.Drawing.Point(0, 365)
         Me.BtnNotificaciones.Name = "BtnNotificaciones"
         Me.BtnNotificaciones.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BtnNotificaciones.Size = New System.Drawing.Size(262, 60)
@@ -125,7 +126,7 @@ Partial Class FormularioPrincipal
         Me.BtnImportar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnImportar.IconSize = 32
         Me.BtnImportar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnImportar.Location = New System.Drawing.Point(0, 365)
+        Me.BtnImportar.Location = New System.Drawing.Point(0, 305)
         Me.BtnImportar.Name = "BtnImportar"
         Me.BtnImportar.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BtnImportar.Size = New System.Drawing.Size(262, 60)
@@ -147,7 +148,7 @@ Partial Class FormularioPrincipal
         Me.BtnEventos.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.BtnEventos.IconSize = 32
         Me.BtnEventos.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnEventos.Location = New System.Drawing.Point(0, 305)
+        Me.BtnEventos.Location = New System.Drawing.Point(0, 245)
         Me.BtnEventos.Name = "BtnEventos"
         Me.BtnEventos.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BtnEventos.Size = New System.Drawing.Size(262, 60)
@@ -156,28 +157,6 @@ Partial Class FormularioPrincipal
         Me.BtnEventos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.BtnEventos.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.BtnEventos.UseVisualStyleBackColor = True
-        '
-        'BtnTareas
-        '
-        Me.BtnTareas.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnTareas.FlatAppearance.BorderSize = 0
-        Me.BtnTareas.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.BtnTareas.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnTareas.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.BtnTareas.IconChar = FontAwesome.Sharp.IconChar.ListAlt
-        Me.BtnTareas.IconColor = System.Drawing.Color.FromArgb(CType(CType(236, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(232, Byte), Integer))
-        Me.BtnTareas.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.BtnTareas.IconSize = 32
-        Me.BtnTareas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnTareas.Location = New System.Drawing.Point(0, 245)
-        Me.BtnTareas.Name = "BtnTareas"
-        Me.BtnTareas.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
-        Me.BtnTareas.Size = New System.Drawing.Size(262, 60)
-        Me.BtnTareas.TabIndex = 4
-        Me.BtnTareas.Text = "Tareas"
-        Me.BtnTareas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnTareas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.BtnTareas.UseVisualStyleBackColor = True
         '
         'BtnUsuarios
         '
@@ -367,6 +346,18 @@ Partial Class FormularioPrincipal
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Monitor Work Time"
         '
+        'notifyIcon
+        '
+        Me.notifyIcon.Text = "NotifyIcon1"
+        Me.notifyIcon.Visible = True
+        '
+        'menuStripItems
+        '
+        Me.menuStripItems.Font = New System.Drawing.Font("Century Gothic", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.menuStripItems.ImageScalingSize = New System.Drawing.Size(20, 20)
+        Me.menuStripItems.Name = "menuStripItems"
+        Me.menuStripItems.Size = New System.Drawing.Size(61, 4)
+        '
         'FormularioPrincipal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -375,7 +366,8 @@ Partial Class FormularioPrincipal
         Me.Controls.Add(Me.PanelEscritorio)
         Me.Controls.Add(Me.PanelTitulo)
         Me.Controls.Add(Me.PanelMenu)
-        Me.MinimumSize = New System.Drawing.Size(1100, 600)
+        Me.MaximumSize = New System.Drawing.Size(1430, 820)
+        Me.MinimumSize = New System.Drawing.Size(1430, 820)
         Me.Name = "FormularioPrincipal"
         Me.Text = "FormularioPrincipal"
         Me.PanelMenu.ResumeLayout(False)
@@ -402,7 +394,6 @@ Partial Class FormularioPrincipal
     Friend WithEvents BtnNotificaciones As FontAwesome.Sharp.IconButton
     Friend WithEvents BtnImportar As FontAwesome.Sharp.IconButton
     Friend WithEvents BtnEventos As FontAwesome.Sharp.IconButton
-    Friend WithEvents BtnTareas As FontAwesome.Sharp.IconButton
     Friend WithEvents BtnUsuarios As FontAwesome.Sharp.IconButton
     Friend WithEvents PanelTitulo As Panel
     Friend WithEvents IconFormActual As FontAwesome.Sharp.IconPictureBox
@@ -413,4 +404,6 @@ Partial Class FormularioPrincipal
     Friend WithEvents BtnCerrar As FontAwesome.Sharp.IconPictureBox
     Friend WithEvents BtnMaximizar As FontAwesome.Sharp.IconPictureBox
     Friend WithEvents BtnMinimizar As FontAwesome.Sharp.IconPictureBox
+    Friend WithEvents notifyIcon As NotifyIcon
+    Friend WithEvents menuStripItems As ContextMenuStrip
 End Class

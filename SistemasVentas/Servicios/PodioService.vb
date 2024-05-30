@@ -100,7 +100,7 @@ Public Class PodioService
                 itemFields.Add("50907917", New JObject From {{"start", podioItem.EndDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de fin
             End If
 
-            If podioItem.WorkPlan <> Nothing Then
+            If Not String.IsNullOrWhiteSpace(podioItem.WorkPlan) Then
                 itemFields.Add("75115253", podioItem.WorkPlan) ' Plan de trabajo
             End If
 

@@ -224,7 +224,7 @@ Partial Class FormularioGestionUsuarios
         Me.Panel5.Controls.Add(Me.Label4)
         Me.Panel5.Controls.Add(Me.Label3)
         Me.Panel5.Controls.Add(Me.Label2)
-        Me.Panel5.Location = New System.Drawing.Point(103, 82)
+        Me.Panel5.Location = New System.Drawing.Point(102, 44)
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(971, 473)
         Me.Panel5.TabIndex = 0
@@ -412,9 +412,9 @@ Partial Class FormularioGestionUsuarios
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(66, 65)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(174, 25)
+        Me.Label2.Size = New System.Drawing.Size(171, 25)
         Me.Label2.TabIndex = 0
-        Me.Label2.Text = "Nombre y apellido:"
+        Me.Label2.Text = "Nombre completo:"
         '
         'FormularioGestionUsuarios
         '
