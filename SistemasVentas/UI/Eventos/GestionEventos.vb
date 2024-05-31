@@ -1131,56 +1131,6 @@ Public Class GestionEventos
         panelEventos.Visible = True
     End Sub
 
-    ' GESTION EVENTOS COMPARTIDOS
-    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
-        If TabControl1.SelectedTab.Text = "Eventos Compartidos" Then
-            ' Llama a la función que carga los eventos compartidos en dgvEventosCompartidos
-            CargarEventosCompartidosEnDataGridView()
-        ElseIf TabControl1.SelectedTab.Text = "Eventos Propios" Then
-            ' Para recargar los eventos propios si es necesario
-            CargarEventosEnDataGridView()
-        End If
-    End Sub
-
-    Private Sub CargarEventosCompartidosEnDataGridView()
-        dgvDataEventosCompartidos.DataSource = _controlador.ObtenerEventosCompartidos()
-        labelCantidadEventos.Text = $"Cantidad de eventos: {dgvDataEventosCompartidos.Rows.Count}"
-        'EstilizarTabla(dgvDataEventosCompartidos)
-        dgvDataEventosCompartidos.Columns(12).Visible = False
-        ComprobarStatusAsistentes()
-    End Sub
-
-    Private Sub ComprobarStatusAsistentes()
-        ' Si el status del asistente es "needsAction" el color de fondo de esa fila se pondra en amarillo y tambien cambia el color al seleccionar la fila
-        For Each row As DataGridViewRow In dgvDataEventosCompartidos.Rows
-            If row.Cells(13).Value.ToString() = "needsAction" Then
-                row.DefaultCellStyle.BackColor = Color.Yellow
-                row.DefaultCellStyle.SelectionBackColor = Color.Yellow
-            End If
-        Next
-    End Sub
-
-    Private Async Sub dgvDataEventosCompartidos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDataEventosCompartidos.CellDoubleClick
-        ' Si la celda no tiene el status "needsAction" no se le preguntará al usuario si desea confirmar su asistencia
-        If dgvDataEventosCompartidos.SelectedCells.Item(13).Value.ToString() <> "needsAction" Then
-            Return
-        End If
-
-        ' Si el usuario hace doble clic en una celda, se le preguntará si desea confirmar su asistencia
-        Dim respuesta = MessageBox.Show("¿Confirmar asistencia?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-        If respuesta = DialogResult.No Then
-            Return
-        End If
-        Dim asistente As New Asistente() With {
-            .EventID = dgvDataEventosCompartidos.SelectedCells.Item(1).Value.ToString(),
-            .Email = dgvDataEventosCompartidos.SelectedCells.Item(12).Value.ToString(),
-            .Status = "accepted"
-        }
-
-        Await _controlador.ActualizarStatusAsistente(asistente)
-        CargarEventosCompartidosEnDataGridView()
-    End Sub
-
     Private Sub comboProyectoSistemas_TextChanged(sender As Object, e As EventArgs) Handles comboProyectoSistemas.TextChanged
         If Not _inicializacionTerminada Then
             Return

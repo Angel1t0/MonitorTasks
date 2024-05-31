@@ -7,8 +7,8 @@ Module ValidadorFormularios
         Return Regex.IsMatch(correo, "[0-9a-zA-Z]([-.w]*[0-9a-zA-Z_+]) *@([0-9a-zA-Z][-w]*[0-9a-zA-Z].)+[a-zA-Z]{2,9}$")
     End Function
 
-    Public Function ValidarEntradasUsuario(name As String, user As String, pass As String, login As String, rol As String, icono As Label) As Boolean
-        If name = "" OrElse user = "" OrElse pass = "" OrElse rol = "" Then
+    Public Function ValidarEntradasUsuario(name As String, user As String, pass As String, login As String, cel As String) As Boolean
+        If name = "" OrElse user = "" OrElse pass = "" Then
             MessageBox.Show("Los campos de texto no pueden estar vacios", "Campos de entrada", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
@@ -23,8 +23,9 @@ Module ValidadorFormularios
             Return False
         End If
 
-        If icono.Visible = True Then
-            MessageBox.Show("Elije un icono", "Icono", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        ' comprobar si cel es menor a 10 digitos y si no son numeros
+        If cel.Length < 10 OrElse Not IsNumeric(cel) Then
+            MessageBox.Show("El campo de celular debe tener 10 digitos y ser numerico", "Celular", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         Return True

@@ -47,30 +47,30 @@ Public Class FormularioPrincipal
     End Sub
 
     ' Métodos para el NotifyIcon y las opciones del menú
-    Private Sub CrearItem(sender As Object, e As EventArgs)
+    Private Sub CrearItem(sender As Object, e As EventArgs) Handles BtnEventos.Click
         RestoreFromTray()
         ActivateButton(BtnEventos, Color.FromArgb(34, 209, 98))
         OpenChildForm(New GestionEventos With {.CalendarioID = _CalendarioID, .UsuarioID = _UsuarioID})
     End Sub
 
-    Private Sub VerDashboard(sender As Object, e As EventArgs)
+    Private Sub VerDashboard(sender As Object, e As EventArgs) Handles BtnDash.Click
         RestoreFromTray()
         ActivateButton(BtnDash, Color.FromArgb(231, 197, 90))
         OpenChildForm(New GestionDashboard)
     End Sub
 
-    Private Sub VerNotificaciones(sender As Object, e As EventArgs)
+    Private Sub VerNotificaciones(sender As Object, e As EventArgs) Handles BtnNotificaciones.Click
         RestoreFromTray()
         ActivateButton(BtnNotificaciones, Color.FromArgb(193, 110, 153))
         OpenChildForm(New GestionMensajes(_CalendarioID))
     End Sub
 
-    Private Sub Salir(sender As Object, e As EventArgs)
+    Private Sub Salir(sender As Object, e As EventArgs) Handles BtnCerrar.Click
         Application.Exit()
     End Sub
 
     ' Restaurar la aplicación desde el tray
-    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs)
+    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs) Handles notifyIcon.DoubleClick
         RestoreFromTray()
     End Sub
 

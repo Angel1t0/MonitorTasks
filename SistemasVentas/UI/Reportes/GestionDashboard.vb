@@ -81,46 +81,6 @@ Public Class GestionDashboard
         End Try
     End Sub
 
-    'Private Sub LlenarGraficoBarras()
-    '    Try
-    '        Dim dt As DataTable = _controlador.ObtenerCantidadItemsPorSystemArea()
-
-    '        ' Limpiar el gráfico antes de llenarlo
-    '        chartItemsPorArea.Series.Clear()
-
-    '        ' Añadir una serie al gráfico
-    '        Dim series As New Series("SystemArea")
-    '        series.ChartType = SeriesChartType.Bar
-    '        series.Font = New Font("Century Gothic", 10)
-    '        series.LabelForeColor = Color.White
-    '        chartItemsPorArea.Series.Add(series)
-
-    '        ' Llenar la serie con datos
-    '        For Each row As DataRow In dt.Rows
-    '            Dim point As New DataPoint()
-    '            point.SetValueXY(row("SystemArea").ToString(), Convert.ToInt32(row("Cantidad")))
-    '            point.Label = row("Cantidad").ToString() ' Mostrar la cantidad en la etiqueta
-    '            point.Font = New Font("Century Gothic", 10)
-    '            point.LabelForeColor = Color.White
-    '            series.Points.Add(point)
-    '        Next
-
-    '        ' Configurar el área del gráfico
-    '        chartItemsPorArea.ChartAreas(0).BackColor = Color.Transparent
-    '        chartItemsPorArea.ChartAreas(0).AxisX.LabelStyle.ForeColor = Color.White
-    '        chartItemsPorArea.ChartAreas(0).AxisX.LabelStyle.Font = New Font("Century Gothic", 10)
-    '        chartItemsPorArea.ChartAreas(0).AxisY.LabelStyle.ForeColor = Color.White
-    '        chartItemsPorArea.ChartAreas(0).AxisY.LabelStyle.Font = New Font("Century Gothic", 10)
-
-    '        ' Configurar la leyenda
-    '        chartItemsPorArea.Legends(0).BackColor = Color.Transparent
-    '        chartItemsPorArea.Legends(0).ForeColor = Color.White
-    '        chartItemsPorArea.Legends(0).Font = New Font("Century Gothic", 10)
-    '    Catch ex As Exception
-    '        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-    '    End Try
-    'End Sub
-
     Private Sub LlenarGraficoBarras()
         Try
             Dim dt As DataTable = _controlador.ObtenerCantidadItemsPorSystemArea()

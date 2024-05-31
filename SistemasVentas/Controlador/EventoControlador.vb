@@ -307,10 +307,6 @@ Public Class EventoControlador
         Return _datosEvento.ObtenerDatosNotificacion(eventID, userID)
     End Function
 
-    Public Function ObtenerEventosCompartidos() As DataTable
-        Return _datosEvento.ObtenerEventosCompartidos()
-    End Function
-
     Public Async Function ActualizarStatusAsistente(asistente As Asistente) As Task
         Dim service As CalendarService = _googleServicesAuthenticator.ObtenerServicioCalendar()
 

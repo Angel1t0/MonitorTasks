@@ -696,27 +696,6 @@ Public Class EventoData
         End Try
     End Sub
 
-    ' GESTION EVENTOS COMPARTIDOS
-    Public Function ObtenerEventosCompartidos() As DataTable
-        Dim dataTable As New DataTable()
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                Dim comando As New SqlCommand("obtenerEventosCompartidos", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@Email", ObtenerCorreoUsuario())
-                Dim sqlAdaptador As New SqlDataAdapter(comando)
-
-                conexion.Open()
-                sqlAdaptador.Fill(dataTable)
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al mostrar eventos compartidos de la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al mostrar eventos compartidos.", ex)
-        End Try
-        Return dataTable
-    End Function
-
     Public Function ObtenerTelefonoAsistente(email As String) As String
         Try
             Using conexion As SqlConnection = CrearConexionSQL()

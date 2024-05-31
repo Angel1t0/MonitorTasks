@@ -9,10 +9,8 @@ Public Class UsuarioData
                 comando.Parameters.AddWithValue("@NombreApellidos", usuario.NombreApellidos)
                 comando.Parameters.AddWithValue("@Login", usuario.Login)
                 comando.Parameters.AddWithValue("@Pass", usuario.Pass)
-                comando.Parameters.AddWithValue("@Icono", usuario.Icono)
-                comando.Parameters.AddWithValue("@NombreIcono", usuario.NombreIcono)
                 comando.Parameters.AddWithValue("@Correo", usuario.Correo)
-                comando.Parameters.AddWithValue("@Rol", usuario.Rol)
+                comando.Parameters.AddWithValue("@Telefono", usuario.Telefono)
                 comando.Parameters.AddWithValue("@Estado", usuario.Estado)
 
                 conexion.Open()
@@ -32,7 +30,7 @@ Public Class UsuarioData
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
-                Dim comando As New SqlCommand("Select IdUsuario As 'ID', NombreApellidos AS 'Nombre y Apellidos', Login AS 'Usuario', Pass AS 'Contraseña', Icono, NombreIcono AS 'Nombre Icono', Correo, Rol, Estado FROM Usuario2", conexion)
+                Dim comando As New SqlCommand("Select IdUsuario As 'ID', NombreApellidos AS 'Nombre y Apellidos', Login AS 'Usuario', Pass AS 'Contraseña', Correo, Telefono, Estado FROM Usuario2 WHERE Estado <> 'Eliminado'", conexion)
                 Dim sqlAdaptador As New SqlDataAdapter(comando)
 
                 sqlAdaptador.Fill(dataTable)
@@ -55,10 +53,8 @@ Public Class UsuarioData
                 comando.Parameters.AddWithValue("@NombreApellidos", usuario.NombreApellidos)
                 comando.Parameters.AddWithValue("@Login", usuario.Login)
                 comando.Parameters.AddWithValue("@Pass", usuario.Pass)
-                comando.Parameters.AddWithValue("@Icono", usuario.Icono)
-                comando.Parameters.AddWithValue("@NombreIcono", usuario.NombreIcono)
                 comando.Parameters.AddWithValue("@Correo", usuario.Correo)
-                comando.Parameters.AddWithValue("@Rol", usuario.Rol)
+                comando.Parameters.AddWithValue("Telefono", usuario.Telefono)
                 comando.Parameters.AddWithValue("@Estado", usuario.Estado)
 
                 conexion.Open()
@@ -89,26 +85,6 @@ Public Class UsuarioData
             Throw New ApplicationException("Error inesperado al eliminar el usuario.", ex)
         End Try
     End Sub
-
-    Public Function BuscarUsuarios(textoIngresado) As DataTable
-        Dim dataTable As New DataTable()
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                Dim comando As New SqlCommand("buscarUsuarios", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                comando.Parameters.AddWithValue("@textoIngresado", textoIngresado)
-                Dim sqlAdaptador As New SqlDataAdapter(comando)
-
-                conexion.Open()
-                sqlAdaptador.Fill(dataTable)
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al buscar usuarios de la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado al buscar usuarios.", ex)
-        End Try
-        Return dataTable
-    End Function
 
     ' --- LOGIN ---
     Public Function ValidarLogin(login As String, pass As String) As DataTable
@@ -146,23 +122,5 @@ Public Class UsuarioData
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado.", ex)
         End Try
-    End Function
-
-    Public Function mostrarUsuariosRegistrados() As DataTable
-        Dim dataTable As New DataTable()
-        Try
-            Using conexion As SqlConnection = CrearConexionSQL()
-                Dim comando As New SqlCommand("mostrarUsuarios", conexion)
-                comando.CommandType = CommandType.StoredProcedure
-                Dim sqlAdaptador As New SqlDataAdapter(comando)
-                conexion.Open()
-                sqlAdaptador.Fill(dataTable)
-            End Using
-        Catch ex As SqlException
-            Throw New ApplicationException("Error al mostrar usuarios de la base de datos.", ex)
-        Catch ex As Exception
-            Throw New ApplicationException("Error inesperado.", ex)
-        End Try
-        Return dataTable
     End Function
 End Class
