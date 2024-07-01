@@ -22,7 +22,7 @@ Partial Class Prueba
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.PanelNotificaciones = New SistemasVentas.ControlPanel()
+        Me.PanelNotificaciones = New MonitorTasks.ControlPanel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.btnEnviarAPI = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnActualizarEvento = New System.Windows.Forms.ToolStripMenuItem()
@@ -39,8 +39,8 @@ Partial Class Prueba
         Me.Label29 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
-        Me.panelDatosPodio = New SistemasVentas.ControlPanel()
-        Me.panelProyectosGenerales = New SistemasVentas.ControlPanel()
+        Me.panelDatosPodio = New MonitorTasks.ControlPanel()
+        Me.panelProyectosGenerales = New MonitorTasks.ControlPanel()
         Me.pictureEliminarGeneral = New FontAwesome.Sharp.IconPictureBox()
         Me.comboProyectoGeneral = New System.Windows.Forms.ComboBox()
         Me.Label43 = New System.Windows.Forms.Label()
@@ -48,7 +48,7 @@ Partial Class Prueba
         Me.btnCancelarProyectoGeneral = New System.Windows.Forms.Button()
         Me.btnProyectosGenerales = New System.Windows.Forms.Button()
         Me.Label44 = New System.Windows.Forms.Label()
-        Me.panelProyectosSistemas = New SistemasVentas.ControlPanel()
+        Me.panelProyectosSistemas = New MonitorTasks.ControlPanel()
         Me.pictureEliminarSistemas = New FontAwesome.Sharp.IconPictureBox()
         Me.comboProyectoSistemas = New System.Windows.Forms.ComboBox()
         Me.Label42 = New System.Windows.Forms.Label()
@@ -56,7 +56,7 @@ Partial Class Prueba
         Me.btnCancelarProyectosSistemas = New System.Windows.Forms.Button()
         Me.btnProyectosSistemas = New System.Windows.Forms.Button()
         Me.Label40 = New System.Windows.Forms.Label()
-        Me.panelSeleccionarEmpresas = New SistemasVentas.ControlPanel()
+        Me.panelSeleccionarEmpresas = New MonitorTasks.ControlPanel()
         Me.btnCancelarEmpresas = New System.Windows.Forms.Button()
         Me.btnEmpresas = New System.Windows.Forms.Button()
         Me.listEmpresas = New System.Windows.Forms.CheckedListBox()
@@ -68,7 +68,7 @@ Partial Class Prueba
         Me.maskHorasAcumuladas = New System.Windows.Forms.MaskedTextBox()
         Me.numericOrdenSistemas = New System.Windows.Forms.NumericUpDown()
         Me.numericOrdenDpt = New System.Windows.Forms.NumericUpDown()
-        Me.textPlanAccion = New SistemasVentas.ControlTextBox()
+        Me.textPlanAccion = New MonitorTasks.ControlTextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.comboCategorias = New System.Windows.Forms.ComboBox()
         Me.comboArea = New System.Windows.Forms.ComboBox()
@@ -92,16 +92,16 @@ Partial Class Prueba
         Me.comboStatus = New System.Windows.Forms.ComboBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.PanelDatosBasicos = New SistemasVentas.ControlPanel()
+        Me.PanelDatosBasicos = New MonitorTasks.ControlPanel()
         Me.MenuStrip2 = New System.Windows.Forms.MenuStrip()
         Me.btnCrearEvento = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnContinuarActualizar = New System.Windows.Forms.ToolStripMenuItem()
-        Me.txtEventDescrip = New SistemasVentas.ControlTextBox()
+        Me.txtEventDescrip = New MonitorTasks.ControlTextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.comboRecurrencia = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.txtEventUbicacion = New SistemasVentas.ControlTextBox()
-        Me.txtEventName = New SistemasVentas.ControlTextBox()
+        Me.txtEventUbicacion = New MonitorTasks.ControlTextBox()
+        Me.txtEventName = New MonitorTasks.ControlTextBox()
         Me.panel = New System.Windows.Forms.Panel()
         Me.btnVolver = New FontAwesome.Sharp.IconPictureBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -115,7 +115,7 @@ Partial Class Prueba
         Me.comboEventVisibilidad = New System.Windows.Forms.ComboBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
-        Me.PanelAsistentes = New SistemasVentas.ControlPanel()
+        Me.PanelAsistentes = New MonitorTasks.ControlPanel()
         Me.pictureEliminarAsignados = New FontAwesome.Sharp.IconPictureBox()
         Me.pictureEliminarAutorizantes = New FontAwesome.Sharp.IconPictureBox()
         Me.Label38 = New System.Windows.Forms.Label()
@@ -135,7 +135,7 @@ Partial Class Prueba
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label36 = New System.Windows.Forms.Label()
-        Me.PanelDatosRecurrencia = New SistemasVentas.ControlPanel()
+        Me.PanelDatosRecurrencia = New MonitorTasks.ControlPanel()
         Me.btnCancelarRecurrencia = New System.Windows.Forms.Button()
         Me.btnListoRecurrencia = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -411,7 +411,7 @@ Partial Class Prueba
         Me.panelDatosPodio.Controls.Add(Me.comboStatus)
         Me.panelDatosPodio.Controls.Add(Me.Label27)
         Me.panelDatosPodio.Controls.Add(Me.Label31)
-        Me.panelDatosPodio.Location = New System.Drawing.Point(531, 21)
+        Me.panelDatosPodio.Location = New System.Drawing.Point(923, 12)
         Me.panelDatosPodio.Name = "panelDatosPodio"
         Me.panelDatosPodio.Size = New System.Drawing.Size(877, 713)
         Me.panelDatosPodio.TabIndex = 127
@@ -1327,9 +1327,9 @@ Partial Class Prueba
         Me.PanelAsistentes.Controls.Add(Me.Label34)
         Me.PanelAsistentes.Controls.Add(Me.Label35)
         Me.PanelAsistentes.Controls.Add(Me.Label36)
-        Me.PanelAsistentes.Location = New System.Drawing.Point(411, 823)
+        Me.PanelAsistentes.Location = New System.Drawing.Point(20, 564)
         Me.PanelAsistentes.Name = "PanelAsistentes"
-        Me.PanelAsistentes.Size = New System.Drawing.Size(473, 450)
+        Me.PanelAsistentes.Size = New System.Drawing.Size(670, 450)
         Me.PanelAsistentes.TabIndex = 123
         '
         'pictureEliminarAsignados
@@ -1339,7 +1339,7 @@ Partial Class Prueba
         Me.pictureEliminarAsignados.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.pictureEliminarAsignados.IconColor = System.Drawing.Color.Red
         Me.pictureEliminarAsignados.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.pictureEliminarAsignados.Location = New System.Drawing.Point(422, 296)
+        Me.pictureEliminarAsignados.Location = New System.Drawing.Point(616, 296)
         Me.pictureEliminarAsignados.Name = "pictureEliminarAsignados"
         Me.pictureEliminarAsignados.Size = New System.Drawing.Size(32, 32)
         Me.pictureEliminarAsignados.TabIndex = 130
@@ -1352,7 +1352,7 @@ Partial Class Prueba
         Me.pictureEliminarAutorizantes.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.pictureEliminarAutorizantes.IconColor = System.Drawing.Color.Red
         Me.pictureEliminarAutorizantes.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.pictureEliminarAutorizantes.Location = New System.Drawing.Point(422, 193)
+        Me.pictureEliminarAutorizantes.Location = New System.Drawing.Point(616, 193)
         Me.pictureEliminarAutorizantes.Name = "pictureEliminarAutorizantes"
         Me.pictureEliminarAutorizantes.Size = New System.Drawing.Size(32, 32)
         Me.pictureEliminarAutorizantes.TabIndex = 129
@@ -1362,7 +1362,7 @@ Partial Class Prueba
         '
         Me.Label38.AutoSize = True
         Me.Label38.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label38.Location = New System.Drawing.Point(234, 263)
+        Me.Label38.Location = New System.Drawing.Point(349, 257)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(148, 18)
         Me.Label38.TabIndex = 128
@@ -1372,7 +1372,7 @@ Partial Class Prueba
         '
         Me.Label37.AutoSize = True
         Me.Label37.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label37.Location = New System.Drawing.Point(234, 163)
+        Me.Label37.Location = New System.Drawing.Point(349, 163)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(174, 18)
         Me.Label37.TabIndex = 127
@@ -1383,9 +1383,9 @@ Partial Class Prueba
         Me.comboAsignados.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.comboAsignados.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.comboAsignados.FormattingEnabled = True
-        Me.comboAsignados.Location = New System.Drawing.Point(237, 300)
+        Me.comboAsignados.Location = New System.Drawing.Point(352, 296)
         Me.comboAsignados.Name = "comboAsignados"
-        Me.comboAsignados.Size = New System.Drawing.Size(179, 28)
+        Me.comboAsignados.Size = New System.Drawing.Size(258, 28)
         Me.comboAsignados.TabIndex = 126
         '
         'comboAtorizantes
@@ -1393,16 +1393,16 @@ Partial Class Prueba
         Me.comboAtorizantes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.comboAtorizantes.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.comboAtorizantes.FormattingEnabled = True
-        Me.comboAtorizantes.Location = New System.Drawing.Point(237, 197)
+        Me.comboAtorizantes.Location = New System.Drawing.Point(352, 197)
         Me.comboAtorizantes.Name = "comboAtorizantes"
-        Me.comboAtorizantes.Size = New System.Drawing.Size(179, 28)
+        Me.comboAtorizantes.Size = New System.Drawing.Size(258, 28)
         Me.comboAtorizantes.TabIndex = 125
         '
         'Label26
         '
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label26.Location = New System.Drawing.Point(234, 69)
+        Me.Label26.Location = New System.Drawing.Point(349, 69)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(155, 18)
         Me.Label26.TabIndex = 124
@@ -1413,9 +1413,9 @@ Partial Class Prueba
         Me.comboSolicitantes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.comboSolicitantes.Font = New System.Drawing.Font("Century Gothic", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.comboSolicitantes.FormattingEnabled = True
-        Me.comboSolicitantes.Location = New System.Drawing.Point(237, 106)
+        Me.comboSolicitantes.Location = New System.Drawing.Point(352, 106)
         Me.comboSolicitantes.Name = "comboSolicitantes"
-        Me.comboSolicitantes.Size = New System.Drawing.Size(179, 28)
+        Me.comboSolicitantes.Size = New System.Drawing.Size(258, 28)
         Me.comboSolicitantes.TabIndex = 123
         '
         'comboAsignadoA
@@ -1425,7 +1425,7 @@ Partial Class Prueba
         Me.comboAsignadoA.FormattingEnabled = True
         Me.comboAsignadoA.Location = New System.Drawing.Point(31, 300)
         Me.comboAsignadoA.Name = "comboAsignadoA"
-        Me.comboAsignadoA.Size = New System.Drawing.Size(179, 28)
+        Me.comboAsignadoA.Size = New System.Drawing.Size(287, 28)
         Me.comboAsignadoA.TabIndex = 122
         '
         'btnContinuar
@@ -1440,7 +1440,7 @@ Partial Class Prueba
         Me.btnContinuar.IconColor = System.Drawing.Color.Black
         Me.btnContinuar.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnContinuar.IconSize = 16
-        Me.btnContinuar.Location = New System.Drawing.Point(155, 374)
+        Me.btnContinuar.Location = New System.Drawing.Point(270, 372)
         Me.btnContinuar.Name = "btnContinuar"
         Me.btnContinuar.Size = New System.Drawing.Size(163, 42)
         Me.btnContinuar.TabIndex = 114
@@ -1454,7 +1454,7 @@ Partial Class Prueba
         Me.pictureEliminarSolicitante.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.pictureEliminarSolicitante.IconColor = System.Drawing.Color.Red
         Me.pictureEliminarSolicitante.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.pictureEliminarSolicitante.Location = New System.Drawing.Point(422, 106)
+        Me.pictureEliminarSolicitante.Location = New System.Drawing.Point(616, 106)
         Me.pictureEliminarSolicitante.Name = "pictureEliminarSolicitante"
         Me.pictureEliminarSolicitante.Size = New System.Drawing.Size(32, 32)
         Me.pictureEliminarSolicitante.TabIndex = 120
@@ -1467,7 +1467,7 @@ Partial Class Prueba
         Me.comboAutoriza.FormattingEnabled = True
         Me.comboAutoriza.Location = New System.Drawing.Point(30, 197)
         Me.comboAutoriza.Name = "comboAutoriza"
-        Me.comboAutoriza.Size = New System.Drawing.Size(178, 28)
+        Me.comboAutoriza.Size = New System.Drawing.Size(288, 28)
         Me.comboAutoriza.TabIndex = 119
         '
         'comboSolicitante
@@ -1477,7 +1477,7 @@ Partial Class Prueba
         Me.comboSolicitante.FormattingEnabled = True
         Me.comboSolicitante.Location = New System.Drawing.Point(30, 106)
         Me.comboSolicitante.Name = "comboSolicitante"
-        Me.comboSolicitante.Size = New System.Drawing.Size(179, 28)
+        Me.comboSolicitante.Size = New System.Drawing.Size(288, 28)
         Me.comboSolicitante.TabIndex = 117
         '
         'Panel4
@@ -1487,7 +1487,7 @@ Partial Class Prueba
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(473, 50)
+        Me.Panel4.Size = New System.Drawing.Size(670, 50)
         Me.Panel4.TabIndex = 0
         '
         'IconPictureBox2
@@ -1499,7 +1499,7 @@ Partial Class Prueba
         Me.IconPictureBox2.IconChar = FontAwesome.Sharp.IconChar.TimesCircle
         Me.IconPictureBox2.IconColor = System.Drawing.Color.FromArgb(CType(CType(126, Byte), Integer), CType(CType(146, Byte), Integer), CType(CType(162, Byte), Integer))
         Me.IconPictureBox2.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.IconPictureBox2.Location = New System.Drawing.Point(407, 15)
+        Me.IconPictureBox2.Location = New System.Drawing.Point(604, 15)
         Me.IconPictureBox2.Name = "IconPictureBox2"
         Me.IconPictureBox2.Size = New System.Drawing.Size(32, 32)
         Me.IconPictureBox2.TabIndex = 1
@@ -1562,7 +1562,7 @@ Partial Class Prueba
         Me.PanelDatosRecurrencia.Controls.Add(Me.Label10)
         Me.PanelDatosRecurrencia.Controls.Add(Me.Label21)
         Me.PanelDatosRecurrencia.Controls.Add(Me.Label22)
-        Me.PanelDatosRecurrencia.Location = New System.Drawing.Point(32, 458)
+        Me.PanelDatosRecurrencia.Location = New System.Drawing.Point(544, 27)
         Me.PanelDatosRecurrencia.Name = "PanelDatosRecurrencia"
         Me.PanelDatosRecurrencia.Size = New System.Drawing.Size(373, 476)
         Me.PanelDatosRecurrencia.TabIndex = 121

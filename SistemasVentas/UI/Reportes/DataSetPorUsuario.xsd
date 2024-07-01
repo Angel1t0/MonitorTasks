@@ -4,12 +4,12 @@
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
-          <Connection AppSettingsObjectName="MySettings" AppSettingsPropertyName="BaseSistemasVentasConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="BaseSistemasVentasConnectionString (MySettings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.SistemasVentas.My.MySettings.GlobalReference.Default.BaseSistemasVentasConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="MySettings" AppSettingsPropertyName="BaseMonitorTasksConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="BaseMonitorTasksConnectionString (MySettings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.MonitorTasks.My.MySettings.GlobalReference.Default.BaseMonitorTasksConnectionString" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="obtenerItemsPorUsuarioTableAdapter" GeneratorDataComponentClassName="obtenerItemsPorUsuarioTableAdapter" Name="obtenerItemsPorUsuario" UserDataComponentName="obtenerItemsPorUsuarioTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="BaseSistemasVentasConnectionString (MySettings)" DbObjectName="BaseSistemasVentas.dbo.obtenerItemsPorUsuario" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Fill" GenerateShortCommands="false" GeneratorSourceName="Fill" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="BaseMonitorTasksConnectionString (MySettings)" DbObjectName="BaseMonitorTasks.dbo.obtenerItemsPorUsuario" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Fill" GenerateShortCommands="false" GeneratorSourceName="Fill" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.obtenerItemsPorUsuario</CommandText>
@@ -71,7 +71,7 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CreatedOn" msprop:Generator_UserColumnName="CreatedOn" msprop:Generator_ColumnPropNameInTable="CreatedOnColumn" msprop:Generator_ColumnPropNameInRow="CreatedOn" msprop:Generator_ColumnVarNameInTable="columnCreatedOn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CreatedOn" msprop:Generator_ColumnPropNameInTable="CreatedOnColumn" msprop:Generator_ColumnPropNameInRow="CreatedOn" msprop:Generator_UserColumnName="CreatedOn" msprop:Generator_ColumnVarNameInTable="columnCreatedOn" type="xs:dateTime" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

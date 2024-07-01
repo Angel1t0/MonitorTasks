@@ -23,7 +23,7 @@ Partial Class GestionComentarios
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.btnComentar = New FontAwesome.Sharp.IconButton()
-        Me.txtComentario = New SistemasVentas.ControlTextBox()
+        Me.txtComentario = New MonitorTasks.ControlTextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnRefrescarComentarios = New FontAwesome.Sharp.IconButton()
         Me.rtbComentarios = New System.Windows.Forms.RichTextBox()

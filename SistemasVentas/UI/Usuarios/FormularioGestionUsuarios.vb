@@ -1,6 +1,8 @@
 ﻿Imports System.Data.SqlClient
 Public Class FormularioGestionUsuarios
     Private rutaArchivo As String
+    Private usuarioData As New UsuarioData()
+    Private controlador As New ControladorEvento()
 
     ' --- Manejadores de Eventos de UI ---
     Private Sub FormularioGestionUsuarios_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -41,13 +43,18 @@ Public Class FormularioGestionUsuarios
 
     ' --- Operaciones CRUD ---
     Private Sub MostrarUsuarios()
-        Dim usuarioData As New UsuarioData()
         dgvDataUsuario.DataSource = usuarioData.MostrarUsuarios()
         EstilizarTabla()
     End Sub
 
     Private Sub GuardarUsuario()
-        If Not ValidarEntradasUsuario(txtName.Text, txtUser.Text, txtPass.Text, txtEmail.Text, txtTelefono.Text) Then
+        If Not ValidarEntradasUsuario(txtName.Text, txtUser.Text, txtPass.Text, txtEmail.Text, txtTelefono.Text, comboRol.SelectedItem.ToString()) Then
+            Return
+        End If
+
+        Dim tupleUserIDyProfileID = ObtenerUserIDyProfileID()
+        If tupleUserIDyProfileID.Item1 = 0 Then
+            MessageBox.Show("Revisar Sintaxis y existencia de Correo", "Usuario no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -57,10 +64,22 @@ Public Class FormularioGestionUsuarios
             .Pass = txtPass.Text,
             .Correo = txtEmail.Text,
             .Telefono = txtTelefono.Text,
-            .Estado = "Activo"
+            .Estado = "Activo",
+            .Rol = comboRol.SelectedItem.ToString(),
+            .PodioUserID = tupleUserIDyProfileID.Item1,
+            .PodioProfileID = tupleUserIDyProfileID.Item2
         }
 
-        Dim usuarioData As New UsuarioData()
+        If comboJefe.SelectedIndex = -1 Then
+            usuario.JefeDirectoID = Nothing
+        Else
+            If comboJefe.SelectedItem.ToString() = "Soy Jefe de Departamento" Then
+                usuario.JefeDirectoID = 0
+            Else
+                usuario.JefeDirectoID = usuarioData.BuscarUserIDPorCorreo(comboJefe.SelectedItem.ToString())
+            End If
+        End If
+
         usuarioData.InsertarUsuario(usuario)
 
         MostrarUsuarios()
@@ -68,7 +87,13 @@ Public Class FormularioGestionUsuarios
     End Sub
 
     Private Sub ActualizarUsuario()
-        If Not ValidarEntradasUsuario(txtName.Text, txtUser.Text, txtPass.Text, txtEmail.Text, txtTelefono.Text) Then
+        If Not ValidarEntradasUsuario(txtName.Text, txtUser.Text, txtPass.Text, txtEmail.Text, txtTelefono.Text, comboJefe.SelectedItem.ToString()) Then
+            Return
+        End If
+
+        Dim tupleUserIDyProfileID = ObtenerUserIDyProfileID()
+        If tupleUserIDyProfileID.Item1 = 0 Then
+            MessageBox.Show("Revisar Sintaxis y existencia de Correo", "Usuario no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -79,10 +104,17 @@ Public Class FormularioGestionUsuarios
             .Pass = txtPass.Text,
             .Correo = txtEmail.Text,
             .Telefono = txtTelefono.Text,
-            .Estado = "Activo"
+            .Estado = "Activo",
+            .Rol = comboRol.SelectedItem.ToString(),
+            .PodioUserID = tupleUserIDyProfileID.Item1,
+            .PodioProfileID = tupleUserIDyProfileID.Item2
         }
+        If comboJefe.SelectedIndex = -1 Or comboJefe.SelectedItem.ToString() = "Soy Jefe de Departamento" Then
+            usuario.JefeDirectoID = 0
+        Else
+            usuario.JefeDirectoID = usuarioData.BuscarUserIDPorCorreo(comboJefe.SelectedItem.ToString())
+        End If
 
-        Dim usuarioData As New UsuarioData()
         usuarioData.ActualizarUsuario(usuario)
 
         OcultarPanelUsuario()
@@ -94,7 +126,6 @@ Public Class FormularioGestionUsuarios
         advertencia = MessageBox.Show("¿Estás seguro de eliminar a " & dgvDataUsuario.SelectedCells.Item(2).Value & "?", "Eliminando registros", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
         Dim idUsuario = dgvDataUsuario.SelectedCells.Item(1).Value
         If advertencia = DialogResult.OK Then
-            Dim usuarioData As New UsuarioData()
             usuarioData.EliminarUsuario(idUsuario)
             MostrarUsuarios()
         End If
@@ -103,12 +134,32 @@ Public Class FormularioGestionUsuarios
     ' --- Utilidades ---
     Private Sub PrepararActualizarUsuario()
         Try
+            comboJefe.Items.Clear()
             txtPass.Enabled = True
             txtName.Text = dgvDataUsuario.SelectedCells.Item(2).Value
             txtUser.Text = dgvDataUsuario.SelectedCells.Item(3).Value
             txtPass.Text = dgvDataUsuario.SelectedCells.Item(4).Value
             txtEmail.Text = dgvDataUsuario.SelectedCells.Item(5).Value
             txtTelefono.Text = dgvDataUsuario.SelectedCells.Item(6).Value
+            comboRol.SelectedItem = dgvDataUsuario.SelectedCells.Item(8).Value
+
+            ' Agregar correos de jefe a comboBox
+            comboJefe.Items.Add("Soy Jefe de Departamento")
+            For Each correo As String In usuarioData.ObtenerCorreosJefes()
+                comboJefe.Items.Add(correo)
+            Next
+
+            ' Seleccionar al jefe del usuario si existe
+            If dgvDataUsuario.SelectedCells.Item(9).Value = 0 Then
+                If comboRol.SelectedItem.ToString() = "Administrador" Then
+                    comboJefe.SelectedItem = "Soy Jefe de Departamento"
+                Else
+                    comboJefe.SelectedIndex = -1
+                End If
+            Else
+                    comboJefe.SelectedItem = (usuarioData.BuscarCorreoPorUserID(dgvDataUsuario.SelectedCells.Item(9).Value))
+            End If
+
 
             btnGuardar.Visible = False
             btnActualizar.Visible = True
@@ -119,11 +170,22 @@ Public Class FormularioGestionUsuarios
     End Sub
 
     Private Sub PrepararNuevoUsuario()
+        ' Limpiar los campos y mostrar el panel
+        comboJefe.Items.Clear()
         txtName.Text = ""
         txtUser.Text = ""
         txtPass.Text = ""
         txtEmail.Text = ""
         txtTelefono.Text = ""
+        comboRol.Text = ""
+        comboRol.SelectedIndex = 0
+
+        ' Agregar correos de jefe a comboBox
+        comboJefe.Items.Add("Soy Jefe de Departamento")
+        For Each correo As String In usuarioData.ObtenerCorreosJefes()
+            comboJefe.Items.Add(correo)
+        Next
+
         btnActualizar.Visible = False
         btnGuardar.Visible = True
         Panel4.Visible = True
@@ -134,6 +196,7 @@ Public Class FormularioGestionUsuarios
     End Sub
 
     Private Sub EstilizarTabla()
+        ' Agregamos un tamaño a las columnas y ocultamos las que no se deben mostrar
         Try
             dgvDataUsuario.Columns(0).Width = 40
             dgvDataUsuario.Columns(2).Width = 200
@@ -144,6 +207,7 @@ Public Class FormularioGestionUsuarios
             dgvDataUsuario.Columns(4).Visible = False
             dgvDataUsuario.Columns(7).Visible = False
 
+            ' Establecemos un estilo para las cabeceras
             dgvDataUsuario.EnableHeadersVisualStyles = False
             Dim styleCabeceras As New DataGridViewCellStyle()
             styleCabeceras.BackColor = Color.White
@@ -154,4 +218,33 @@ Public Class FormularioGestionUsuarios
             MsgBox(ex.Message)
         End Try
     End Sub
+
+    Private Sub LimpiarCombos()
+        comboJefe.Items.Clear()
+        comboJefe.SelectedIndex = -1
+    End Sub
+
+    Private Sub comboRol_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboRol.SelectedIndexChanged
+        If comboRol.SelectedItem.ToString() = "Jefe de Departamento" Then
+            comboJefe.Enabled = False
+            comboJefe.SelectedIndex = -1
+            Label8.Enabled = False
+        Else
+            comboJefe.Enabled = True
+            Label8.Enabled = True
+        End If
+    End Sub
+
+    Private Function ObtenerUserIDyProfileID() As Tuple(Of Long, Long)
+        Dim userID As Long = 0
+        Dim profileID As Long = 0
+        Try
+            Dim tuple = controlador.ObtenerProfileIDyUserID(txtEmail.Text)
+            userID = tuple.Result.Item1
+            profileID = tuple.Result.Item2
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+        Return Tuple.Create(userID, profileID)
+    End Function
 End Class

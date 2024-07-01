@@ -4,10 +4,10 @@ Module ValidadorFormularios
 
     ' --- FORMULARIO GESTION USUARIOS ---
     Public Function ValidarCorreo(correo As String) As Boolean
-        Return Regex.IsMatch(correo, "[0-9a-zA-Z]([-.w]*[0-9a-zA-Z_+]) *@([0-9a-zA-Z][-w]*[0-9a-zA-Z].)+[a-zA-Z]{2,9}$")
+        Return Regex.IsMatch(correo, "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
     End Function
 
-    Public Function ValidarEntradasUsuario(name As String, user As String, pass As String, login As String, cel As String) As Boolean
+    Public Function ValidarEntradasUsuario(name As String, user As String, pass As String, login As String, cel As String, jefe As String) As Boolean
         If name = "" OrElse user = "" OrElse pass = "" Then
             MessageBox.Show("Los campos de texto no pueden estar vacios", "Campos de entrada", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
@@ -26,6 +26,11 @@ Module ValidadorFormularios
         ' comprobar si cel es menor a 10 digitos y si no son numeros
         If cel.Length < 10 OrElse Not IsNumeric(cel) Then
             MessageBox.Show("El campo de celular debe tener 10 digitos y ser numerico", "Celular", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
+        End If
+
+        If jefe = login Then
+            MessageBox.Show("El usuario no puede ser jefe de si mismo", "Jefe de departamento", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         Return True

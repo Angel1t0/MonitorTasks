@@ -24,7 +24,8 @@ Partial Class FormularioPrincipal
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.PanelMenu = New System.Windows.Forms.Panel()
-        Me.BtnConfiguracion = New FontAwesome.Sharp.IconButton()
+        Me.BtnCerrarSesion = New FontAwesome.Sharp.IconButton()
+        Me.BtnArranque = New FontAwesome.Sharp.IconButton()
         Me.BtnNotificaciones = New FontAwesome.Sharp.IconButton()
         Me.BtnImportar = New FontAwesome.Sharp.IconButton()
         Me.BtnEventos = New FontAwesome.Sharp.IconButton()
@@ -57,7 +58,8 @@ Partial Class FormularioPrincipal
         'PanelMenu
         '
         Me.PanelMenu.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.PanelMenu.Controls.Add(Me.BtnConfiguracion)
+        Me.PanelMenu.Controls.Add(Me.BtnCerrarSesion)
+        Me.PanelMenu.Controls.Add(Me.BtnArranque)
         Me.PanelMenu.Controls.Add(Me.BtnNotificaciones)
         Me.PanelMenu.Controls.Add(Me.BtnImportar)
         Me.PanelMenu.Controls.Add(Me.BtnEventos)
@@ -70,27 +72,49 @@ Partial Class FormularioPrincipal
         Me.PanelMenu.Size = New System.Drawing.Size(262, 773)
         Me.PanelMenu.TabIndex = 0
         '
-        'BtnConfiguracion
+        'BtnCerrarSesion
         '
-        Me.BtnConfiguracion.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnConfiguracion.FlatAppearance.BorderSize = 0
-        Me.BtnConfiguracion.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.BtnConfiguracion.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnConfiguracion.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
-        Me.BtnConfiguracion.IconChar = FontAwesome.Sharp.IconChar.DoorOpen
-        Me.BtnConfiguracion.IconColor = System.Drawing.Color.FromArgb(CType(CType(236, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(232, Byte), Integer))
-        Me.BtnConfiguracion.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.BtnConfiguracion.IconSize = 32
-        Me.BtnConfiguracion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnConfiguracion.Location = New System.Drawing.Point(0, 425)
-        Me.BtnConfiguracion.Name = "BtnConfiguracion"
-        Me.BtnConfiguracion.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
-        Me.BtnConfiguracion.Size = New System.Drawing.Size(262, 60)
-        Me.BtnConfiguracion.TabIndex = 8
-        Me.BtnConfiguracion.Text = "Cerrar Sesión"
-        Me.BtnConfiguracion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnConfiguracion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.BtnConfiguracion.UseVisualStyleBackColor = True
+        Me.BtnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnCerrarSesion.FlatAppearance.BorderSize = 0
+        Me.BtnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.BtnCerrarSesion.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.BtnCerrarSesion.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.BtnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.DoorOpen
+        Me.BtnCerrarSesion.IconColor = System.Drawing.Color.FromArgb(CType(CType(236, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(232, Byte), Integer))
+        Me.BtnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.BtnCerrarSesion.IconSize = 32
+        Me.BtnCerrarSesion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.BtnCerrarSesion.Location = New System.Drawing.Point(0, 485)
+        Me.BtnCerrarSesion.Name = "BtnCerrarSesion"
+        Me.BtnCerrarSesion.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
+        Me.BtnCerrarSesion.Size = New System.Drawing.Size(262, 60)
+        Me.BtnCerrarSesion.TabIndex = 9
+        Me.BtnCerrarSesion.Text = "Cerrar Sesión"
+        Me.BtnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.BtnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.BtnCerrarSesion.UseVisualStyleBackColor = True
+        '
+        'BtnArranque
+        '
+        Me.BtnArranque.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnArranque.FlatAppearance.BorderSize = 0
+        Me.BtnArranque.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.BtnArranque.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.BtnArranque.ForeColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
+        Me.BtnArranque.IconChar = FontAwesome.Sharp.IconChar.Wrench
+        Me.BtnArranque.IconColor = System.Drawing.Color.FromArgb(CType(CType(236, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(232, Byte), Integer))
+        Me.BtnArranque.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.BtnArranque.IconSize = 32
+        Me.BtnArranque.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.BtnArranque.Location = New System.Drawing.Point(0, 425)
+        Me.BtnArranque.Name = "BtnArranque"
+        Me.BtnArranque.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
+        Me.BtnArranque.Size = New System.Drawing.Size(262, 60)
+        Me.BtnArranque.TabIndex = 8
+        Me.BtnArranque.Text = "Configurar Arranque"
+        Me.BtnArranque.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.BtnArranque.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.BtnArranque.UseVisualStyleBackColor = True
         '
         'BtnNotificaciones
         '
@@ -153,7 +177,7 @@ Partial Class FormularioPrincipal
         Me.BtnEventos.Padding = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BtnEventos.Size = New System.Drawing.Size(262, 60)
         Me.BtnEventos.TabIndex = 5
-        Me.BtnEventos.Text = "Calendario de Eventos"
+        Me.BtnEventos.Text = "Gestión de Actividades"
         Me.BtnEventos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.BtnEventos.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.BtnEventos.UseVisualStyleBackColor = True
@@ -390,7 +414,7 @@ Partial Class FormularioPrincipal
     Friend WithEvents LbLogo As Label
     Friend WithEvents Panel3 As Panel
     Friend WithEvents BtnDash As FontAwesome.Sharp.IconButton
-    Friend WithEvents BtnConfiguracion As FontAwesome.Sharp.IconButton
+    Friend WithEvents BtnArranque As FontAwesome.Sharp.IconButton
     Friend WithEvents BtnNotificaciones As FontAwesome.Sharp.IconButton
     Friend WithEvents BtnImportar As FontAwesome.Sharp.IconButton
     Friend WithEvents BtnEventos As FontAwesome.Sharp.IconButton
@@ -406,4 +430,5 @@ Partial Class FormularioPrincipal
     Friend WithEvents BtnMinimizar As FontAwesome.Sharp.IconPictureBox
     Friend WithEvents notifyIcon As NotifyIcon
     Friend WithEvents menuStripItems As ContextMenuStrip
+    Friend WithEvents BtnCerrarSesion As FontAwesome.Sharp.IconButton
 End Class

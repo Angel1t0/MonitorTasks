@@ -9,8 +9,8 @@ Public Class DeterminarRecurrencia
         Dim listaOcurriencias As New List(Of Occurrence)
         Try
             Dim calendarEvent = New CalendarEvent With {
-                .Start = New CalDateTime(mensaje.StartDateTime),
-                .End = New CalDateTime(mensaje.EndDateTime)
+                .Start = New CalDateTime(mensaje.FechaInicio),
+                .End = New CalDateTime(mensaje.FechaFin)
             }
 
             If Not String.IsNullOrEmpty(mensaje.RRULE) Then
@@ -19,12 +19,12 @@ Public Class DeterminarRecurrencia
                 calendarEvent.RecurrenceRules.Add(recurrencePattern)
             End If
 
-            Dim occurrences = calendarEvent.GetOccurrences(mensaje.StartDateTime, mensaje.EndDateTime)
+            Dim ocurrencias = calendarEvent.GetOccurrences(mensaje.FechaInicio, mensaje.FechaFin)
 
-            For Each occurrence In occurrences
+            For Each ocurrencia In ocurrencias
                 ' Aquí tendrías que programar el envío del correo para cada fecha de ocurrencia
-                Dim fechaDeEnvio = occurrence.Period.StartTime.AsSystemLocal
-                listaOcurriencias.Add(occurrence)
+                Dim fechaDeEnvio = ocurrencia.Period.StartTime.AsSystemLocal
+                listaOcurriencias.Add(ocurrencia)
             Next
         Catch ex As Exception
             Console.WriteLine("Error al parsear la recurrencia: " & ex.Message)

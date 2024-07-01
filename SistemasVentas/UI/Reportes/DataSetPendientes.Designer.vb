@@ -868,7 +868,7 @@ Namespace DataSetPendientesTableAdapters
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")>  _
         Private Sub InitConnection()
             Me._connection = New Global.System.Data.SqlClient.SqlConnection()
-            Me._connection.ConnectionString = Global.SistemasVentas.My.MySettings.Default.BaseSistemasVentasConnectionString
+            Me._connection.ConnectionString = Global.MonitorTasks.My.MySettings.Default.BaseMonitorTasksConnectionString
         End Sub
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _

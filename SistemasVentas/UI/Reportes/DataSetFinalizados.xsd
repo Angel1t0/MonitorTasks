@@ -4,12 +4,12 @@
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
-          <Connection AppSettingsObjectName="MySettings" AppSettingsPropertyName="BaseSistemasVentasConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="BaseSistemasVentasConnectionString (MySettings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.SistemasVentas.My.MySettings.GlobalReference.Default.BaseSistemasVentasConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="MySettings" AppSettingsPropertyName="BaseMonitorTasksConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="BaseMonitorTasksConnectionString (MySettings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.MonitorTasks.My.MySettings.GlobalReference.Default.BaseMonitorTasksConnectionString" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="obtenerItemsFinalizadosTableAdapter" GeneratorDataComponentClassName="obtenerItemsFinalizadosTableAdapter" Name="obtenerItemsFinalizados" UserDataComponentName="obtenerItemsFinalizadosTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="BaseSistemasVentasConnectionString (MySettings)" DbObjectName="BaseSistemasVentas.dbo.obtenerItemsFinalizados" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Fill" GenerateShortCommands="false" GeneratorSourceName="Fill" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="BaseMonitorTasksConnectionString (MySettings)" DbObjectName="BaseMonitorTasks.dbo.obtenerItemsFinalizados" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Fill" GenerateShortCommands="false" GeneratorSourceName="Fill" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.obtenerItemsFinalizados</CommandText>
@@ -37,32 +37,32 @@
   <xs:element name="DataSetFinalizados" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="DataSetFinalizados" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DataSetFinalizados">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="obtenerItemsFinalizados" msprop:Generator_RowClassName="obtenerItemsFinalizadosRow" msprop:Generator_RowEvHandlerName="obtenerItemsFinalizadosRowChangeEventHandler" msprop:Generator_RowDeletedName="obtenerItemsFinalizadosRowDeleted" msprop:Generator_RowDeletingName="obtenerItemsFinalizadosRowDeleting" msprop:Generator_RowEvArgName="obtenerItemsFinalizadosRowChangeEvent" msprop:Generator_TablePropName="obtenerItemsFinalizados" msprop:Generator_RowChangedName="obtenerItemsFinalizadosRowChanged" msprop:Generator_UserTableName="obtenerItemsFinalizados" msprop:Generator_RowChangingName="obtenerItemsFinalizadosRowChanging" msprop:Generator_TableClassName="obtenerItemsFinalizadosDataTable" msprop:Generator_TableVarName="tableobtenerItemsFinalizados">
+        <xs:element name="obtenerItemsFinalizados" msprop:Generator_RowEvHandlerName="obtenerItemsFinalizadosRowChangeEventHandler" msprop:Generator_RowDeletedName="obtenerItemsFinalizadosRowDeleted" msprop:Generator_RowDeletingName="obtenerItemsFinalizadosRowDeleting" msprop:Generator_RowEvArgName="obtenerItemsFinalizadosRowChangeEvent" msprop:Generator_TablePropName="obtenerItemsFinalizados" msprop:Generator_RowChangedName="obtenerItemsFinalizadosRowChanged" msprop:Generator_UserTableName="obtenerItemsFinalizados" msprop:Generator_RowChangingName="obtenerItemsFinalizadosRowChanging" msprop:Generator_RowClassName="obtenerItemsFinalizadosRow" msprop:Generator_TableClassName="obtenerItemsFinalizadosDataTable" msprop:Generator_TableVarName="tableobtenerItemsFinalizados">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Title" msprop:Generator_UserColumnName="Title" msprop:Generator_ColumnPropNameInTable="TitleColumn" msprop:Generator_ColumnPropNameInRow="Title" msprop:Generator_ColumnVarNameInTable="columnTitle">
+              <xs:element name="Title" msprop:Generator_ColumnPropNameInTable="TitleColumn" msprop:Generator_ColumnPropNameInRow="Title" msprop:Generator_UserColumnName="Title" msprop:Generator_ColumnVarNameInTable="columnTitle">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="255" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Department" msprop:Generator_UserColumnName="Department" msprop:Generator_ColumnPropNameInTable="DepartmentColumn" msprop:Generator_ColumnPropNameInRow="Department" msprop:Generator_ColumnVarNameInTable="columnDepartment">
+              <xs:element name="Department" msprop:Generator_ColumnPropNameInTable="DepartmentColumn" msprop:Generator_ColumnPropNameInRow="Department" msprop:Generator_UserColumnName="Department" msprop:Generator_ColumnVarNameInTable="columnDepartment">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="255" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="SystemArea" msprop:Generator_UserColumnName="SystemArea" msprop:Generator_ColumnPropNameInTable="SystemAreaColumn" msprop:Generator_ColumnPropNameInRow="SystemArea" msprop:Generator_ColumnVarNameInTable="columnSystemArea">
+              <xs:element name="SystemArea" msprop:Generator_ColumnPropNameInTable="SystemAreaColumn" msprop:Generator_ColumnPropNameInRow="SystemArea" msprop:Generator_UserColumnName="SystemArea" msprop:Generator_ColumnVarNameInTable="columnSystemArea">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="255" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Column1" msdata:ReadOnly="true" msprop:Generator_UserColumnName="Column1" msprop:Generator_ColumnPropNameInTable="Column1Column" msprop:Generator_ColumnPropNameInRow="Column1" msprop:Generator_ColumnVarNameInTable="columnColumn1" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="CreatedOn" msprop:Generator_ColumnPropNameInRow="CreatedOn" msprop:Generator_ColumnPropNameInTable="CreatedOnColumn" msprop:Generator_ColumnVarNameInTable="columnCreatedOn" msprop:Generator_UserColumnName="CreatedOn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Column1" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="Column1Column" msprop:Generator_ColumnPropNameInRow="Column1" msprop:Generator_UserColumnName="Column1" msprop:Generator_ColumnVarNameInTable="columnColumn1" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CreatedOn" msprop:Generator_UserColumnName="CreatedOn" msprop:Generator_ColumnPropNameInTable="CreatedOnColumn" msprop:Generator_ColumnPropNameInRow="CreatedOn" msprop:Generator_ColumnVarNameInTable="columnCreatedOn" type="xs:dateTime" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -11,26 +11,31 @@ Imports System.Text
 Imports System.Threading.Tasks
 Imports HtmlAgilityPack
 Imports Twilio.Rest.FlexApi.V1
+Imports System.IO
+Imports System.Net
+Imports Twilio.Jwt
 
-Public Class PodioService
+Public Class ServicioPodio
     Private httpClient As New HttpClient()
-    Private _controlador As EventoControlador
+    Private _controlador As ControladorEvento
 
     'Variable de entorno
-    Dim podioClientID As String = Environment.GetEnvironmentVariable("PODIO_CLIENT_ID")
-    Dim podioClientSecret As String = Environment.GetEnvironmentVariable("PODIO_CLIENT_SECRET")
-    Dim podioAppID As String = Environment.GetEnvironmentVariable("PODIO_APP_ID")
-    Dim podioAppToken As String = Environment.GetEnvironmentVariable("PODIO_APP_TOKEN")
-
-    Public Sub New(controlador As EventoControlador)
+    Dim podioClientID As String = "adminpodiooe"
+    Dim podioClientSecret As String = "3254RYRRcW7o9bqewB9oTxBa4PCfBW8LsrFm9ONKNONcnqITy3ckSh9fwK999c70"
+    Dim podioAppID As String = "1350510"
+    Dim podioAppToken As String = "81d61abc64048bd1930873c6d9406819ab102807d36f5c6d228492eedcbc3de09ae2d8c42f752099ddbd051e60c67ed4a6eb703c7494ee40b100b0ef0cbde470"
+    Private username As String = "podio@orderexpress.com"
+    Private password As String = "Podio&Admin#24"
+    Private redirectUri As String = "https://podio.com/oauth/authorize?client_id=adminpodiooe"
+    Public Sub New(controlador As ControladorEvento)
         _controlador = controlador
     End Sub
 
     Public Sub New()
-
     End Sub
 
     Private Async Function Authenticate() As Threading.Tasks.Task
+        ' Crea el contenido de la solicitud para obtener el token de acceso
         Dim requestContent As New StringContent($"grant_type=app&app_id={podioAppID}&app_token={podioAppToken}&client_id={podioClientID}&client_secret={podioClientSecret}", Encoding.UTF8, "application/x-www-form-urlencoded")
         Try
             Dim response = Await httpClient.PostAsync("https://api.podio.com/oauth/token", requestContent).ConfigureAwait(False)
@@ -42,7 +47,30 @@ Public Class PodioService
             Else
                 Dim errorContent = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
                 Console.WriteLine($"Authentication failed: {response.StatusCode}, {errorContent}")
-                'Throw New Exception("Failed to authenticate with Podio API.")
+            End If
+        Catch ex As HttpRequestException
+            Console.WriteLine($"HTTP Request Error: {ex.Message}")
+            Throw
+        Catch ex As Exception
+            Console.WriteLine($"General Error: {ex.Message}")
+            Throw
+        End Try
+    End Function
+    ' Autenticación con usuario y contraseña
+    Private Async Function AuthenticateWithPassword(username As String, password As String) As Threading.Tasks.Task
+        ' Crea el contenido de la solicitud para obtener el token de acceso usando username y password
+        Dim requestBody As String = $"{{ ""grant_type"": ""password"", ""username"": ""{username}"", ""password"": ""{password}"", ""client_id"": ""{podioClientID}"", ""client_secret"": ""{podioClientSecret}"" }}"
+        Dim requestContent As New StringContent(requestBody, Encoding.UTF8, "application/json")
+        Try
+            Dim response = Await httpClient.PostAsync("https://api.podio.com/oauth/token/v2", requestContent).ConfigureAwait(False)
+            If response.IsSuccessStatusCode Then
+                Dim content = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                Dim tokenObj = JObject.Parse(content)
+                Dim accessToken = tokenObj("access_token").ToString()
+                httpClient.DefaultRequestHeaders.Authorization = New System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken)
+            Else
+                Dim errorContent = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                Console.WriteLine($"Authentication with password failed: {response.StatusCode}, {errorContent}")
             End If
         Catch ex As HttpRequestException
             Console.WriteLine($"HTTP Request Error: {ex.Message}")
@@ -53,75 +81,79 @@ Public Class PodioService
         End Try
     End Function
 
-
-    Private Async Function EnsureAuthenticated() As Threading.Tasks.Task
+    ' Este metodo se encarga de asegurar que el cliente este autenticado antes de realizar cualquier solicitud
+    Private Async Function EnsureAuthenticated(isWithPassword As Boolean) As Threading.Tasks.Task
         If httpClient.DefaultRequestHeaders.Authorization Is Nothing Then
-            Await Authenticate().ConfigureAwait(False)
+            If isWithPassword Then
+                Await AuthenticateWithPassword(username, password).ConfigureAwait(False)
+            Else
+                Await Authenticate().ConfigureAwait(False)
+            End If
         End If
     End Function
 
-    Public Async Function CreateItem(podioItem As PodioItem) As Task(Of Long)
+    Public Async Function CrearItem(podioItem As PodioItem) As Task(Of Long)
         Try
-            Await EnsureAuthenticated().ConfigureAwait(False)  ' Asegura autenticación
+            Await EnsureAuthenticated(False).ConfigureAwait(False)  ' Asegura autenticación
 
             ' Crea el objeto JSON para los campos
             Dim itemFields As New JObject()
 
-            itemFields.Add("10086319", podioItem.Title) ' Título
-            itemFields.Add("50907911", podioItem.Description) ' Descripción
-            itemFields.Add("50907912", New JArray(podioItem.Company.Select(Function(company) New JObject From {{"value", Integer.Parse(company)}}))) ' Empresa
-            itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Department)}}) ' Departamento
-            itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.SystemArea)}}) ' Área de sistemas
-            itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categories)}}) ' Categoría
-            itemFields.Add("50907913", New JArray(podioItem.RequestorContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Solicitante
-            itemFields.Add("50907915", New JArray(podioItem.AssignedToContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Asignado a
-            itemFields.Add("50907916", New JObject From {{"value", Integer.Parse(podioItem.Priority)}}) ' Prioridad
+            itemFields.Add("10086319", podioItem.Titulo) ' Título
+            itemFields.Add("50907911", podioItem.Descripcion) ' Descripción
+            itemFields.Add("50907912", New JArray(podioItem.Empresa.Select(Function(company) New JObject From {{"value", Integer.Parse(company)}}))) ' Empresa
+            itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Departamento)}}) ' Departamento
+            itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.AreaSistemas)}}) ' Área de sistemas
+            itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categorias)}}) ' Categoría
+            itemFields.Add("50907913", New JArray(podioItem.ContactosSolicitantes.Select(Function(id) New JObject From {{"value", id}}))) ' Solicitante
+            itemFields.Add("50907915", New JArray(podioItem.ContactosAsigandoA.Select(Function(id) New JObject From {{"value", id}}))) ' Asignado a
+            itemFields.Add("50907916", New JObject From {{"value", Integer.Parse(podioItem.Prioridad)}}) ' Prioridad
             itemFields.Add("50908150", New JObject From {{"value", Integer.Parse(podioItem.Status)}}) ' Estado
 
 
             ' Condiciones para saber si esta vacio o es nulo, ya que no acepta valores nulos
-            If podioItem.DepartmentPriority <> Nothing Then
-                itemFields.Add("191362674", New JObject From {{"value", podioItem.DepartmentPriority}}) ' Orden de prioridad por departamento
+            If podioItem.PrioridadDepartamento <> Nothing Then
+                itemFields.Add("191362674", New JObject From {{"value", podioItem.PrioridadDepartamento}}) ' Orden de prioridad por departamento
             End If
 
-            If podioItem.AuthorizerContacts IsNot Nothing Then
-                itemFields.Add("50907914", New JArray(podioItem.AuthorizerContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Autorizante
+            If podioItem.ContactosAutorizantes IsNot Nothing Then
+                itemFields.Add("50907914", New JArray(podioItem.ContactosAutorizantes.Select(Function(id) New JObject From {{"value", id}}))) ' Autorizante
             End If
 
-            If podioItem.SystemPriority <> Nothing Then
-                itemFields.Add("189076789", New JObject From {{"value", podioItem.SystemPriority}}) ' Orden de prioridad de sistemas
+            If podioItem.PrioridadSistemas <> Nothing Then
+                itemFields.Add("189076789", New JObject From {{"value", podioItem.PrioridadSistemas}}) ' Orden de prioridad de sistemas
             End If
 
-            If podioItem.StartDate <> Nothing Then
-                itemFields.Add("10086320", New JObject From {{"start", podioItem.StartDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de inicio
+            If podioItem.FechaInicio <> Nothing Then
+                itemFields.Add("10086320", New JObject From {{"start", podioItem.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de inicio
             End If
 
-            If podioItem.EndDate <> Nothing Then
-                itemFields.Add("50907917", New JObject From {{"start", podioItem.EndDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de fin
+            If podioItem.FechaFin <> Nothing Then
+                itemFields.Add("50907917", New JObject From {{"start", podioItem.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de fin
             End If
 
-            If Not String.IsNullOrWhiteSpace(podioItem.WorkPlan) Then
-                itemFields.Add("75115253", podioItem.WorkPlan) ' Plan de trabajo
+            If Not String.IsNullOrWhiteSpace(podioItem.PlanTrabajo) Then
+                itemFields.Add("75115253", podioItem.PlanTrabajo) ' Plan de trabajo
             End If
 
-            If podioItem.Progress <> Nothing Then
-                itemFields.Add("50907918", New JObject From {{"value", podioItem.Progress}}) ' Progreso
+            If podioItem.Progreso <> Nothing Then
+                itemFields.Add("50907918", New JObject From {{"value", podioItem.Progreso}}) ' Progreso
             End If
 
-            If podioItem.SystemProject IsNot Nothing Then
-                itemFields.Add("50907910", New JArray(podioItem.SystemProject.Select(Function(project) New JObject From {{"value", Long.Parse(project)}}))) ' Proyecto de sistemas
+            If podioItem.ProyectoSistemas IsNot Nothing Then
+                itemFields.Add("50907910", New JArray(podioItem.ProyectoSistemas.Select(Function(project) New JObject From {{"value", Long.Parse(project)}}))) ' Proyecto de sistemas
             End If
 
-            If podioItem.GeneralProject <> Nothing Then
-                itemFields.Add("104722848", New JObject From {{"value", Long.Parse(podioItem.GeneralProject)}}) ' Proyecto general
+            If podioItem.ProyectoGeneral <> Nothing Then
+                itemFields.Add("104722848", New JObject From {{"value", Long.Parse(podioItem.ProyectoGeneral)}}) ' Proyecto general
             End If
 
-            If podioItem.HoursAccumulated <> Nothing Then
-                itemFields.Add("50907919", New JObject From {{"value", podioItem.HoursAccumulated}}) ' Horas acumuladas
+            If podioItem.HorasAcumuladas <> Nothing Then
+                itemFields.Add("50907919", New JObject From {{"value", podioItem.HorasAcumuladas}}) ' Horas acumuladas
             End If
 
-            If podioItem.ExtraHours <> Nothing Then
-                itemFields.Add("51007152", New JObject From {{"value", podioItem.ExtraHours}}) ' Horas extras
+            If podioItem.HorasExtras <> Nothing Then
+                itemFields.Add("51007152", New JObject From {{"value", podioItem.HorasExtras}}) ' Horas extras
             End If
 
             ' Preparar el objeto JSON final para la solicitud
@@ -156,71 +188,71 @@ Public Class PodioService
         End Try
     End Function
 
-    Public Async Function UpdatePodioItem(podioItem As PodioItem) As Threading.Tasks.Task
+    Public Async Function ActualizarPodioItem(podioItem As PodioItem) As Threading.Tasks.Task
         Try
-            Await EnsureAuthenticated().ConfigureAwait(False)  ' Asegura autenticación
+            Await EnsureAuthenticated(False).ConfigureAwait(False)  ' Asegura autenticación
 
             ' Crea el objeto JSON para los campos
             Dim itemFields As New JObject()
 
-            itemFields.Add("10086319", podioItem.Title) ' Título
-            itemFields.Add("50907911", podioItem.Description) ' Descripción
-            itemFields.Add("50907912", New JArray(podioItem.Company.Select(Function(company) New JObject From {{"value", Integer.Parse(company)}}))) ' Empresa
-            itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Department)}}) ' Departamento
-            itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.SystemArea)}}) ' Área de sistemas
-            itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categories)}}) ' Categoría
-            itemFields.Add("50907913", New JArray(podioItem.RequestorContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Solicitante
-            itemFields.Add("50907915", New JArray(podioItem.AssignedToContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Asignado a
-            itemFields.Add("50907916", New JObject From {{"value", Integer.Parse(podioItem.Priority)}}) ' Prioridad
+            itemFields.Add("10086319", podioItem.Titulo) ' Título
+            itemFields.Add("50907911", podioItem.Descripcion) ' Descripción
+            itemFields.Add("50907912", New JArray(podioItem.Empresa.Select(Function(company) New JObject From {{"value", Integer.Parse(company)}}))) ' Empresa
+            itemFields.Add("191364514", New JObject From {{"value", Integer.Parse(podioItem.Departamento)}}) ' Departamento
+            itemFields.Add("203943021", New JObject From {{"value", Integer.Parse(podioItem.AreaSistemas)}}) ' Área de sistemas
+            itemFields.Add("57128977", New JObject From {{"value", Integer.Parse(podioItem.Categorias)}}) ' Categoría
+            itemFields.Add("50907913", New JArray(podioItem.ContactosSolicitantes.Select(Function(id) New JObject From {{"value", id}}))) ' Solicitante
+            itemFields.Add("50907915", New JArray(podioItem.ContactosAsigandoA.Select(Function(id) New JObject From {{"value", id}}))) ' Asignado a
+            itemFields.Add("50907916", New JObject From {{"value", Integer.Parse(podioItem.Prioridad)}}) ' Prioridad
             itemFields.Add("50908150", New JObject From {{"value", Integer.Parse(podioItem.Status)}}) ' Estado
 
 
             ' Condiciones para saber si esta vacio o es nulo, ya que no acepta valores nulos
-            If podioItem.DepartmentPriority <> Nothing Then
-                itemFields.Add("191362674", New JObject From {{"value", podioItem.DepartmentPriority}}) ' Orden de prioridad por departamento
+            If podioItem.PrioridadDepartamento <> Nothing Then
+                itemFields.Add("191362674", New JObject From {{"value", podioItem.PrioridadDepartamento}}) ' Orden de prioridad por departamento
             End If
 
-            If podioItem.AuthorizerContacts.Count > 0 Then
-                itemFields.Add("50907914", New JArray(podioItem.AuthorizerContacts.Select(Function(id) New JObject From {{"value", id}}))) ' Autorizante
+            If podioItem.ContactosAutorizantes.Count > 0 Then
+                itemFields.Add("50907914", New JArray(podioItem.ContactosAutorizantes.Select(Function(id) New JObject From {{"value", id}}))) ' Autorizante
             End If
 
-            If podioItem.SystemPriority <> Nothing Then
-                itemFields.Add("189076789", New JObject From {{"value", podioItem.SystemPriority}}) ' Orden de prioridad de sistemas
+            If podioItem.PrioridadSistemas <> Nothing Then
+                itemFields.Add("189076789", New JObject From {{"value", podioItem.PrioridadSistemas}}) ' Orden de prioridad de sistemas
             End If
 
-            If podioItem.StartDate <> Nothing Then
-                itemFields.Add("10086320", New JObject From {{"start", podioItem.StartDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de inicio
+            If podioItem.FechaInicio <> Nothing Then
+                itemFields.Add("10086320", New JObject From {{"start", podioItem.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de inicio
             End If
 
-            If podioItem.EndDate <> Nothing Then
-                itemFields.Add("50907917", New JObject From {{"start", podioItem.EndDate.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de fin
+            If podioItem.FechaFin <> Nothing Then
+                itemFields.Add("50907917", New JObject From {{"start", podioItem.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")}}) ' Fecha de fin
             End If
 
-            If podioItem.WorkPlan <> Nothing Then
-                itemFields.Add("75115253", podioItem.WorkPlan) ' Plan de trabajo
+            If podioItem.PlanTrabajo <> Nothing Then
+                itemFields.Add("75115253", podioItem.PlanTrabajo) ' Plan de trabajo
             End If
 
-            If podioItem.Progress <> Nothing Then
-                itemFields.Add("50907918", New JObject From {{"value", podioItem.Progress}}) ' Progreso
+            If podioItem.Progreso <> Nothing Then
+                itemFields.Add("50907918", New JObject From {{"value", podioItem.Progreso}}) ' Progreso
             End If
 
-            If podioItem.SystemProject IsNot Nothing Then
-                itemFields.Add("50907910", New JArray(podioItem.SystemProject.Select(Function(project) New JObject From {{"value", Long.Parse(project)}}))) ' Proyecto de sistemas
+            If podioItem.ProyectoSistemas IsNot Nothing Then
+                itemFields.Add("50907910", New JArray(podioItem.ProyectoSistemas.Select(Function(project) New JObject From {{"value", Long.Parse(project)}}))) ' Proyecto de sistemas
             Else
                 'Eliminar campo de proyecto de sistemas 50907910
                 itemFields.Add("50907910", New JArray()) ' Proyecto de sistemas
             End If
 
-            If podioItem.GeneralProject <> Nothing Then
-                itemFields.Add("104722848", New JObject From {{"value", Long.Parse(podioItem.GeneralProject)}}) ' Proyecto general
+            If podioItem.ProyectoGeneral <> Nothing Then
+                itemFields.Add("104722848", New JObject From {{"value", Long.Parse(podioItem.ProyectoGeneral)}}) ' Proyecto general
             End If
 
-            If podioItem.HoursAccumulated <> Nothing Then
-                itemFields.Add("50907919", New JObject From {{"value", podioItem.HoursAccumulated}}) ' Horas acumuladas
+            If podioItem.HorasAcumuladas <> Nothing Then
+                itemFields.Add("50907919", New JObject From {{"value", podioItem.HorasAcumuladas}}) ' Horas acumuladas
             End If
 
-            If podioItem.ExtraHours <> Nothing Then
-                itemFields.Add("51007152", New JObject From {{"value", podioItem.ExtraHours}}) ' Horas extras
+            If podioItem.HorasExtras <> Nothing Then
+                itemFields.Add("51007152", New JObject From {{"value", podioItem.HorasExtras}}) ' Horas extras
             End If
 
             ' Preparar el objeto JSON final para la solicitud
@@ -246,8 +278,10 @@ Public Class PodioService
         End Try
     End Function
 
-    Public Async Function SearchAppByQuery(query As String, limit As Integer) As Task(Of JArray)
-        Await EnsureAuthenticated().ConfigureAwait(False)
+    ' Buscar los proyectos de sistemas en Podio que coincidan con los parametros de busqueda
+    Public Async Function BuscarAppPorQuery(query As String, limit As Integer) As Task(Of JArray)
+        ' Asegura autenticación
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
         Dim content As New StringContent(JsonConvert.SerializeObject(New With {Key .query = query, Key .limit = limit}), Encoding.UTF8, "application/json")
         Dim response = Await httpClient.PostAsync("https://api.podio.com/search/app/6552674", content).ConfigureAwait(False)
 
@@ -259,8 +293,8 @@ Public Class PodioService
         End If
     End Function
 
-    Public Async Function DeletePodioItem(itemId As Long) As Threading.Tasks.Task
-        Await EnsureAuthenticated().ConfigureAwait(False)
+    Public Async Function EliminarPodioItem(itemId As Long) As Threading.Tasks.Task
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
         Dim response = Await httpClient.DeleteAsync($"https://api.podio.com/item/{itemId}").ConfigureAwait(False)
         If response.IsSuccessStatusCode Then
             Console.WriteLine("Item eliminado correctamente")
@@ -271,8 +305,8 @@ Public Class PodioService
         End If
     End Function
 
-    Public Async Function GetCommentsByItem(itemId As Long) As Task(Of JArray)
-        Await EnsureAuthenticated().ConfigureAwait(False)
+    Public Async Function ObtenerComentariosPorItem(itemId As Long) As Task(Of JArray)
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
         Dim response = Await httpClient.GetAsync($"https://api.podio.com/comment/item/{itemId}/").ConfigureAwait(False)
         If response.IsSuccessStatusCode Then
             Dim result = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
@@ -282,8 +316,8 @@ Public Class PodioService
         End If
     End Function
 
-    Public Async Function AddCommentByItem(itemId As Long, comment As String) As Threading.Tasks.Task
-        Await EnsureAuthenticated().ConfigureAwait(False)
+    Public Async Function AgregarComentariosPorItem(itemId As Long, comment As String) As Threading.Tasks.Task
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
         Dim commentObject As New JObject From {{"value", comment}}
         Dim content As New StringContent(commentObject.ToString(), Encoding.UTF8, "application/json")
         Dim response = Await httpClient.PostAsync($"https://api.podio.com/comment/item/{itemId}/", content).ConfigureAwait(False)
@@ -297,7 +331,7 @@ Public Class PodioService
     End Function
 
     Public Async Function ClonarPodioItem(podioAppItemID As Long) As Threading.Tasks.Task(Of Long)
-        Await EnsureAuthenticated().ConfigureAwait(False)
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
         Dim response = Await httpClient.PostAsync($"https://api.podio.com/item/{podioAppItemID}/clone", Nothing).ConfigureAwait(False)
         If response.IsSuccessStatusCode Then
             Dim resultString = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
@@ -313,13 +347,20 @@ Public Class PodioService
     End Function
 
     ' El creador es el mismo administrador de las actividades de sistemas (tipo de usuario: app)
-    Public Async Function ObtenerItemsByUser() As Task(Of JArray)
-        Await EnsureAuthenticated().ConfigureAwait(False)
+    Public Async Function ObtenerTodosLosItemsByUsuario() As Task(Of JArray)
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
+        Dim allItems As New JArray()
+        Dim offset As Integer = 0
+        Dim limit As Integer = 30 ' Límite por solicitud
+
         Try
-            Dim url As String = $"https://api.podio.com/item/app/{podioAppID}/filter/"
-            Dim filterContent = New With {
+            Do
+                Dim url As String = $"https://api.podio.com/item/app/{podioAppID}/filter/"
+                Dim filterContent = New With {
                 Key .sort_by = "created_on",
                 Key .sort_desc = True,
+                Key .limit = limit,
+                Key .offset = offset,
                 Key .filters = New With {
                     Key .created_by = New With {
                         Key .type = "app",
@@ -327,27 +368,42 @@ Public Class PodioService
                     }
                 }
             }
-            Dim jsonContent As String = JsonConvert.SerializeObject(filterContent)
-            Console.WriteLine("JSON enviado: " & jsonContent) ' Log para verificar el contenido del JSON
 
-            Dim content As New StringContent(jsonContent, Encoding.UTF8, "application/json")
+                Dim jsonContent As String = JsonConvert.SerializeObject(filterContent)
+                Console.WriteLine("JSON enviado: " & jsonContent) ' Log para verificar el contenido del JSON
 
-            Dim response = Await httpClient.PostAsync(url, content).ConfigureAwait(False)
+                Dim content As New StringContent(jsonContent, Encoding.UTF8, "application/json")
 
-            If response.IsSuccessStatusCode Then
-                Dim result = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
-                Dim jsonResult As JObject = JObject.Parse(result)
-                Return jsonResult("items").Value(Of JArray)()
-            Else
-                Throw New Exception($"Error al obtener ítems desde Podio: {response.StatusCode} - {response.ReasonPhrase}")
-            End If
+                Dim response = Await httpClient.PostAsync(url, content).ConfigureAwait(False)
+
+                If response.IsSuccessStatusCode Then
+                    Dim result = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                    Dim jsonResult As JObject = JObject.Parse(result)
+                    Dim items As JArray = jsonResult("items").Value(Of JArray)()
+
+                    ' Añadir los ítems obtenidos a la colección total
+                    allItems.Merge(items)
+
+                    ' Actualizar el offset para la siguiente solicitud
+                    offset += limit
+
+                    ' Verificar si hay más ítems para solicitar
+                    If items.Count < limit Then
+                        Exit Do ' No hay más ítems para solicitar
+                    End If
+                Else
+                    Throw New Exception($"Error al obtener ítems desde Podio: {response.StatusCode} - {response.ReasonPhrase}")
+                End If
+            Loop
         Catch ex As Exception
             Console.WriteLine("Error general al intentar obtener los ítems en Podio. Detalles: " & ex.Message)
             Return Nothing
         End Try
+
+        Return allItems
     End Function
 
-    Public Async Function SincronizarItems(itemsPodio As JArray, itemsLocales As DataTable) As Threading.Tasks.Task
+    Public Async Function SincronizarItems(itemsPodio As JArray, itemsLocales As DataTable, calendarioID As String) As Threading.Tasks.Task
         ' Crear un diccionario para acceder rápidamente a los ítems locales por su PodioItemID
         Dim itemsLocalesDict As New Dictionary(Of Long, DataRow)
         For Each filaLocal As DataRow In itemsLocales.Rows
@@ -383,57 +439,59 @@ Public Class PodioService
                         Dim item As New PodioItem()
                         item.PodioItemID = CInt(filaLocal("PodioItemID"))
                         item.PodioAppID = CInt(filaLocal("PodioAppID"))
-                        item.EventID = filaLocal("ID Evento")
+                        item.EventoID = filaLocal("ID Evento")
                         item.PodioAppItemID = podioAppItemId
-                        item.Title = itemPodio("title").Value(Of String)()
+                        item.Titulo = itemPodio("title").Value(Of String)()
                         Dim descripcionHtml As String = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "descripcion")("values")(0)("value").Value(Of String)()
-                        item.Description = QuitarEtiquetasHtml(descripcionHtml)
-                        item.Company = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "empresa")("values").Select(Function(v) v("value")("id").Value(Of Integer).ToString()).ToList()
-                        item.Department = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "departamentoarea-solicitante")("values")(0)("value")("id").Value(Of Integer).ToString()
-                        item.SystemArea = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "area-de-sistemas-solicitante")("values")(0)("value")("id").Value(Of Integer).ToString()
-                        item.Categories = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "categorias")("values")(0)("value")("id").Value(Of Integer).ToString()
-                        item.Priority = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "prioridad")("values")(0)("value")("id").Value(Of Integer).ToString()
+                        item.Descripcion = QuitarEtiquetasHtml(descripcionHtml)
+                        item.Empresa = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "empresa")("values").Select(Function(v) v("value")("id").Value(Of Integer).ToString()).ToList()
+                        item.Departamento = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "departamentoarea-solicitante")("values")(0)("value")("id").Value(Of Integer).ToString()
+                        item.AreaSistemas = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "area-de-sistemas-solicitante")("values")(0)("value")("id").Value(Of Integer).ToString()
+                        item.Categorias = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "categorias")("values")(0)("value")("id").Value(Of Integer).ToString()
+                        item.Prioridad = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "prioridad")("values")(0)("value")("id").Value(Of Integer).ToString()
                         item.Status = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "status")("values")(0)("value")("id").Value(Of Integer)().ToString()
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "orden-de-prioridad-del-dpto-solicitante") IsNot Nothing Then
-                            item.DepartmentPriority = Integer.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "orden-de-prioridad-del-dpto-solicitante")("values")(0)("value").Value(Of Double)())
+                            item.PrioridadDepartamento = Integer.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "orden-de-prioridad-del-dpto-solicitante")("values")(0)("value").Value(Of Double)())
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "orden-de-prioridad-2") IsNot Nothing Then
-                            item.SystemPriority = Integer.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "orden-de-prioridad-2")("values")(0)("value").Value(Of Double)())
+                            item.PrioridadSistemas = Integer.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "orden-de-prioridad-2")("values")(0)("value").Value(Of Double)())
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "inicio") IsNot Nothing Then
-                            item.StartDate = DateTime.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "inicio")("values")(0)("start").Value(Of String)())
+                            item.FechaInicio = DateTime.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "inicio")("values")(0)("start").Value(Of String)())
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "finalizacion") IsNot Nothing Then
-                            item.EndDate = DateTime.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "finalizacion")("values")(0)("start").Value(Of String)())
+                            item.FechaFin = DateTime.Parse(itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "finalizacion")("values")(0)("start").Value(Of String)())
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "plan-de-trabajo-sistemas") IsNot Nothing Then
                             Dim workPlanHtml As String = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "plan-de-trabajo-sistemas")("values")(0)("value").Value(Of String)()
-                            item.WorkPlan = QuitarEtiquetasHtml(workPlanHtml)
+                            item.PlanTrabajo = QuitarEtiquetasHtml(workPlanHtml)
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "barra-de-progreso") IsNot Nothing Then
-                            item.Progress = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "barra-de-progreso")("values")(0)("value").Value(Of Integer)()
+                            item.Progreso = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "barra-de-progreso")("values")(0)("value").Value(Of Integer)()
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "horas-acumuladas") IsNot Nothing Then
-                            item.HoursAccumulated = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "horas-acumuladas")("values")(0)("value").Value(Of Integer)()
+                            item.HorasAcumuladas = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "horas-acumuladas")("values")(0)("value").Value(Of Integer)()
                         End If
 
                         If itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "horas-extras") IsNot Nothing Then
-                            item.ExtraHours = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "horas-extras")("values")(0)("value").Value(Of Integer)()
+                            item.HorasExtras = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "horas-extras")("values")(0)("value").Value(Of Integer)()
                         End If
 
                         Dim evento As New Evento() With {
-                            .EventID = item.EventID,
-                            .Summary = item.Title,
-                            .Description = item.Description,
-                            .StartDateTime = item.StartDate,
-                            .EndDateTime = item.EndDate,
+                            .CalendarioID = calendarioID,
+                            .EventoID = item.EventoID,
+                            .Titulo = item.Titulo,
+                            .Descripcion = item.Descripcion,
+                            .FechaInicio = item.FechaInicio,
+                            .FechaFin = item.FechaFin,
+                            .Status = item.ObtenerNombreSeleccionado((item.Status), item.statusOpcionesInvertidas),
                             .RRULE = filaLocal("Recurrencia")
                         }
 
@@ -441,39 +499,41 @@ Public Class PodioService
                         _controlador.ActualizarYCompararEmpresas(item)
 
                         ' Actualizar asistentes
-                        Dim asistentesPodio As List(Of Integer) = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "asignado-a")("values").Select(Function(v) v("value")("profile_id").Value(Of Integer)).ToList()
-                        Dim asistenesParaAgregar = asistentesPodio.Except(asistentesLocal.Select(Function(a) _controlador.ObtenerPodioUserIDPorCorreo(a.Email))).ToList()
-                        Dim asistentesParaEliminar = asistentesLocal.Select(Function(a) _controlador.ObtenerPodioUserIDPorCorreo(a.Email)).Except(asistentesPodio.Select(Function(a) a)).ToList()
+                        Dim asistentesPodio As List(Of Integer) = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "asignado-a")("values").Select(Function(v) v("value")("profile_id").Value(Of Integer)).ToList() ' Todos los asignados/asistentes
+                        Dim asistenesParaAgregar = asistentesPodio.Except(asistentesLocal.Select(Function(a) _controlador.ObtenerPodioUserIDPorCorreo(a.Email))).ToList() ' Asistentes que se van a agregar si no se encuentran en la base de datos local pero si en Podio
+                        Dim asistentesParaEliminar = asistentesLocal.Select(Function(a) _controlador.ObtenerPodioUserIDPorCorreo(a.Email)).Except(asistentesPodio.Select(Function(a) a)).ToList() ' Asistentes que se van a eliminar si no se encuentran en Podio pero si en la base de datos local
 
                         For Each asistente In asistentesPodio
-                            evento.Attendees.Add(New Asistente() With {
-                                .EventID = filaLocal("ID Evento"),
+                            evento.Asistentes.Add(New Asistente() With {
+                                .EventoID = filaLocal("ID Evento"),
                                 .Email = _controlador.ObtenerCorreoPorProfileID(asistente),
                                 .PodioItemID = item.PodioItemID
                             })
                         Next
 
+                        ' Por cada asistente que se va a agregar, se crea un mensaje correspondiente
                         Dim mensaje As New Mensaje()
                         For Each asistente As String In asistenesParaAgregar
-                            mensaje.Attendees.Add(New Asistente() With {
-                           .EventID = filaLocal("ID Evento"),
+                            mensaje.Destinatarios.Add(New Asistente() With {
+                           .EventoID = filaLocal("ID Evento"),
                            .Email = _controlador.ObtenerCorreoPorProfileID(asistente),
                            .PodioItemID = item.PodioItemID
                        })
                         Next
 
-                        If mensaje.Attendees.Count > 0 Then
-                            mensaje.EventID = filaLocal("ID Evento")
-                            mensaje.Title = item.Title
-                            mensaje.Description = item.Description
+                        ' Si hay destinatarios, se insertan en la base de datos
+                        If mensaje.Destinatarios.Count > 0 Then
+                            mensaje.EventoID = filaLocal("ID Evento")
+                            mensaje.Titulo = item.Titulo
+                            mensaje.Descripcion = item.Descripcion
                             mensaje.RRULE = filaLocal("Recurrencia")
                             _controlador.InsertarAsistente(mensaje, item.PodioItemID)
-                            evento.Attendees = mensaje.Attendees
+                            evento.Asistentes = mensaje.Destinatarios
                         End If
 
                         For Each asistente As String In asistentesParaEliminar
                             _controlador.EliminarAsistente(New Asistente() With {
-                            .EventID = filaLocal("ID Evento"),
+                            .EventoID = filaLocal("ID Evento"),
                             .Email = _controlador.ObtenerCorreoPorProfileID(asistente)})
                         Next
 
@@ -488,9 +548,9 @@ Public Class PodioService
                      }
 
                         For Each solicitante In solicitantesParaAgregar
-                            podioItemAux.RequestorContacts.Add(solicitante)
+                            podioItemAux.ContactosSolicitantes.Add(solicitante)
                         Next
-                        If podioItemAux.RequestorContacts.Count > 0 Then
+                        If podioItemAux.ContactosSolicitantes.Count > 0 Then
                             _controlador.InsertarSolicitante(podioItemAux)
                         End If
 
@@ -507,9 +567,9 @@ Public Class PodioService
                         Dim autorizantesParaEliminar = autorizantesLocal.Select(Function(a) _controlador.ObtenerPodioUserIDPorCorreo(a)).Except(autorizantesPodio.Select(Function(a) a)).ToList()
 
                         For Each autorizante In autorizantesParaAgregar
-                            podioItemAux.AuthorizerContacts.Add(autorizante)
+                            podioItemAux.ContactosAutorizantes.Add(autorizante)
                         Next
-                        If podioItemAux.AuthorizerContacts.Count > 0 Then
+                        If podioItemAux.ContactosAutorizantes.Count > 0 Then
                             _controlador.InsertarAutorizante(podioItemAux)
                         End If
 
@@ -521,9 +581,9 @@ Public Class PodioService
                         Dim campoProyectos = itemPodio("fields").FirstOrDefault(Function(f) f("external_id").ToString() = "proyectos")
                         Dim proyectosSistemasPodio As Dictionary(Of String, String) = If(campoProyectos IsNot Nothing AndAlso campoProyectos("values") IsNot Nothing,
                             campoProyectos("values").ToDictionary(Function(v) v("value")("item_id").Value(Of String), Function(v) v("value")("title").Value(Of String)),
-                            New Dictionary(Of String, String))
-                        Dim proyectosSistemasParaAgregar = proyectosSistemasPodio.Except(proyectosSistemasLocal).ToDictionary(Function(p) p.Key, Function(p) p.Value)
-                        Dim proyectosSistemasParaEliminar = proyectosSistemasLocal.Except(proyectosSistemasPodio).ToDictionary(Function(p) p.Key, Function(p) p.Value)
+                            New Dictionary(Of String, String)) ' Si el campo de proyectos sistemas no esta vacio, se obtienen los proyectos de sistemas en un diccionario
+                        Dim proyectosSistemasParaAgregar = proyectosSistemasPodio.Except(proyectosSistemasLocal).ToDictionary(Function(p) p.Key, Function(p) p.Value) ' Proyectos que se van a agregar si no se encuentran en la base de datos local pero si en Podio
+                        Dim proyectosSistemasParaEliminar = proyectosSistemasLocal.Except(proyectosSistemasPodio).ToDictionary(Function(p) p.Key, Function(p) p.Value) ' Proyectos que se van a eliminar si no se encuentran en Podio pero si en la base de datos local
 
                         For Each proyecto In proyectosSistemasParaAgregar
                             _controlador.InsertarPodioProyectoSistemas(item.PodioItemID, proyecto.Key, proyecto.Value)
@@ -533,10 +593,21 @@ Public Class PodioService
                             _controlador.EliminarProyectoSistemas(proyecto.Key, item.PodioItemID)
                         Next
 
+                        Dim statusItem = item.ObtenerNombreSeleccionado((item.Status), item.statusOpcionesInvertidas)
+                        If statusItem = "Finalizada" And filaLocal("Estatus").ToString() <> "Finalizada" Then
+                            evento.FechaFin = DateTime.Now
+                            evento.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.ToString("yyyyMMdd") & "T090000Z"
+                            _controlador.ActualizarStatusEvento(evento)
+                        ElseIf filaLocal("Estatus").ToString() = "Finalizada" And item.Status <> "Finalizada" Then
+                            evento.FechaFin = item.FechaFin
+                            evento.RRULE = "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & item.FechaFin.ToString("yyyyMMdd") & "T090000Z"
+                            _controlador.ActualizarStatusEvento(evento)
+                        End If
 
-                        ' Actualizar el item local
+                        ' Actualizar el item/evento local
                         _controlador.CrearPodioItem(item)
                         _controlador.ActualizarEvento(evento)
+                        _controlador.CrearEvento(evento, False)
                     End If
                 End If
             End If
@@ -551,14 +622,40 @@ Public Class PodioService
         Next
     End Function
 
+    ' Este metodo elimina las etiquetas HTML de los campos de Podio (Descripcion y plan de trabajo)
     Public Function QuitarEtiquetasHtml(html As String) As String
         Dim doc As New HtmlDocument()
         doc.LoadHtml(html)
         Return doc.DocumentNode.InnerText
     End Function
 
+    ' Método para buscar y obtener el ProfileID y UserID de un usuario en Podio
+    Public Async Function ObtenerProfileIDyUserID(correo As String) As Task(Of Tuple(Of Long, Long))
+        Await EnsureAuthenticated(True).ConfigureAwait(False)
+        Dim response = Await httpClient.GetAsync($"https://api.podio.com/contact/?mail={correo}").ConfigureAwait(False)
+        If response.IsSuccessStatusCode Then
+            Dim result = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+            Dim jsonResult As JToken = JToken.Parse(result)
+            ' Check if the result is an array and take the first element if it is
+            Dim contact As JToken
+            If jsonResult.Type = JTokenType.Array Then
+                contact = jsonResult.First
+            Else
+                contact = jsonResult
+            End If
+
+            Dim profileID As Integer = If(contact IsNot Nothing, contact("profile_id").Value(Of Long)(), 0)
+            Dim userID As Integer = If(contact IsNot Nothing, contact("user_id").Value(Of Long)(), 0)
+
+            Return New Tuple(Of Long, Long)(profileID, userID)
+        Else
+            Throw New Exception($"Error al obtener ProfileID y UserID de Podio: {response.StatusCode}")
+        End If
+    End Function
+
+    ' POSIBLE A ELIMINAR
     Public Async Function ObtenerTareasPendientes(limite As Integer, intervaloInicio As DateTime?, intervaloFin As DateTime?) As Task(Of DataTable)
-        Await EnsureAuthenticated().ConfigureAwait(False)
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
 
         ' Crear el contenido de la solicitud con filtros condicionales
         Dim filters As New JObject()
@@ -590,14 +687,15 @@ Public Class PodioService
         If response.IsSuccessStatusCode Then
             Dim result = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
             Dim jsonResult As JObject = JObject.Parse(result)
-            Return ConvertToDataTable(jsonResult("items"))
+            Return ConvertirADataTable(jsonResult("items"))
         Else
             Throw New Exception($"Error al obtener ítems desde Podio: {response.StatusCode}")
         End If
     End Function
 
+    ' POSIBLE A ELIMINAR TAMBIEN
     Public Async Function ObtenerViewID(nombreVista As String) As Task(Of String)
-        Await EnsureAuthenticated().ConfigureAwait(False)
+        Await EnsureAuthenticated(False).ConfigureAwait(False)
         Dim url As String = $"https://api.podio.com/view/app/{podioAppID}/"
 
         Dim response = Await httpClient.GetAsync(url).ConfigureAwait(False)
@@ -617,7 +715,8 @@ Public Class PodioService
         End If
     End Function
 
-    Private Function ConvertToDataTable(items As JArray) As DataTable
+    ' POSIBLE A ELIMINAR
+    Private Function ConvertirADataTable(items As JArray) As DataTable
         Dim dt As New DataTable()
 
         dt.Columns.Add("Titulo")

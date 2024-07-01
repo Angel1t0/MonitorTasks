@@ -1,9 +1,9 @@
 ﻿Public Class Asistente
-    Public Property AttendeeID As Integer
-    Public Property EventID As String
+    Public Property AsistenteID As Integer
+    Public Property EventoID As String
     Public Property Email As String
-    Public Property PhoneNumber As String
-    Public Property DisplayName As String = "Invitado"
+    Public Property Telefono As String
+    Public Property Nombre As String = "Invitado"
     Public Property Status As String = "needsAction"
     Public Property PodioItemID As Integer
 End Class

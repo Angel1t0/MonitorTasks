@@ -55,6 +55,7 @@ Partial Class Login
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.checkRecordarUsuario = New System.Windows.Forms.CheckBox()
         Me.PanelTitulo.SuspendLayout()
         CType(Me.BtnCerrar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BtnMaximizar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -138,6 +139,7 @@ Partial Class Login
         '
         'Panel3
         '
+        Me.Panel3.Controls.Add(Me.checkRecordarUsuario)
         Me.Panel3.Controls.Add(Me.lbOlvidar)
         Me.Panel3.Controls.Add(Me.btnLogin)
         Me.Panel3.Controls.Add(Me.Panel5)
@@ -196,7 +198,6 @@ Partial Class Login
         Me.txtPass.Font = New System.Drawing.Font("Arial", 13.0!)
         Me.txtPass.Location = New System.Drawing.Point(32, 182)
         Me.txtPass.Name = "txtPass"
-        Me.txtPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPass.Size = New System.Drawing.Size(366, 25)
         Me.txtPass.TabIndex = 5
         '
@@ -272,6 +273,7 @@ Partial Class Login
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.panelRecuperar)
         Me.Panel2.Controls.Add(Me.Label1)
         Me.Panel2.Controls.Add(Me.dgvRevisar)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
@@ -338,7 +340,7 @@ Partial Class Login
         Me.panelRecuperar.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.panelRecuperar.Controls.Add(Me.Panel7)
         Me.panelRecuperar.Controls.Add(Me.Panel10)
-        Me.panelRecuperar.Location = New System.Drawing.Point(10, 136)
+        Me.panelRecuperar.Location = New System.Drawing.Point(518, 47)
         Me.panelRecuperar.Name = "panelRecuperar"
         Me.panelRecuperar.Size = New System.Drawing.Size(540, 405)
         Me.panelRecuperar.TabIndex = 2
@@ -448,13 +450,24 @@ Partial Class Login
         Me.Label8.Text = "RECUPERACIÓN"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
+        'checkRecordarUsuario
+        '
+        Me.checkRecordarUsuario.AutoSize = True
+        Me.checkRecordarUsuario.Font = New System.Drawing.Font("Arial", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.checkRecordarUsuario.ForeColor = System.Drawing.Color.DimGray
+        Me.checkRecordarUsuario.Location = New System.Drawing.Point(31, 229)
+        Me.checkRecordarUsuario.Name = "checkRecordarUsuario"
+        Me.checkRecordarUsuario.Size = New System.Drawing.Size(129, 20)
+        Me.checkRecordarUsuario.TabIndex = 10
+        Me.checkRecordarUsuario.Text = "Recordar Usuario"
+        Me.checkRecordarUsuario.UseVisualStyleBackColor = True
+        '
         'Login
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(562, 633)
-        Me.Controls.Add(Me.panelRecuperar)
         Me.Controls.Add(Me.panelLogin)
         Me.Controls.Add(Me.PanelTitulo)
         Me.MinimumSize = New System.Drawing.Size(580, 680)
@@ -511,4 +524,5 @@ Partial Class Login
     Friend WithEvents Label6 As Label
     Friend WithEvents Panel10 As Panel
     Friend WithEvents Label8 As Label
+    Friend WithEvents checkRecordarUsuario As CheckBox
 End Class

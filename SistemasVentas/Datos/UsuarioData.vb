@@ -12,7 +12,10 @@ Public Class UsuarioData
                 comando.Parameters.AddWithValue("@Correo", usuario.Correo)
                 comando.Parameters.AddWithValue("@Telefono", usuario.Telefono)
                 comando.Parameters.AddWithValue("@Estado", usuario.Estado)
-
+                comando.Parameters.AddWithValue("@PodioUserID", usuario.PodioUserID)
+                comando.Parameters.AddWithValue("@PodioProfileID", usuario.PodioProfileID)
+                comando.Parameters.AddWithValue("@Rol", usuario.Rol)
+                comando.Parameters.AddWithValue("@JefeDirectoID", usuario.JefeDirectoID)
                 conexion.Open()
                 comando.ExecuteNonQuery()
             End Using
@@ -30,7 +33,7 @@ Public Class UsuarioData
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 conexion.Open()
-                Dim comando As New SqlCommand("Select IdUsuario As 'ID', NombreApellidos AS 'Nombre y Apellidos', Login AS 'Usuario', Pass AS 'Contraseña', Correo, Telefono, Estado FROM Usuario2 WHERE Estado <> 'Eliminado'", conexion)
+                Dim comando As New SqlCommand("Select IdUsuario As 'ID', NombreApellidos AS 'Nombre y Apellidos', Login AS 'Usuario', Pass AS 'Contraseña', Correo, Telefono, Estado, Rol, JefeDirectoID FROM Usuario2 WHERE Estado <> 'Eliminado'", conexion)
                 Dim sqlAdaptador As New SqlDataAdapter(comando)
 
                 sqlAdaptador.Fill(dataTable)
@@ -56,7 +59,10 @@ Public Class UsuarioData
                 comando.Parameters.AddWithValue("@Correo", usuario.Correo)
                 comando.Parameters.AddWithValue("Telefono", usuario.Telefono)
                 comando.Parameters.AddWithValue("@Estado", usuario.Estado)
-
+                comando.Parameters.AddWithValue("@PodioUserID", usuario.PodioUserID)
+                comando.Parameters.AddWithValue("@PodioProfileID", usuario.PodioProfileID)
+                comando.Parameters.AddWithValue("@Rol", usuario.Rol)
+                comando.Parameters.AddWithValue("@JefeDirectoID", usuario.JefeDirectoID)
                 conexion.Open()
                 comando.ExecuteNonQuery()
             End Using
@@ -108,7 +114,7 @@ Public Class UsuarioData
         Return dataTable
     End Function
 
-    Public Function buscarCorreo(correo As String) As String
+    Public Function BuscarCorreo(correo As String) As String
         Try
             Using conexion As SqlConnection = CrearConexionSQL()
                 Dim comando As New SqlCommand("buscarUsuarioCorreo", conexion)
@@ -122,5 +128,57 @@ Public Class UsuarioData
         Catch ex As Exception
             Throw New ApplicationException("Error inesperado.", ex)
         End Try
+    End Function
+
+    Public Function BuscarUserIDPorCorreo(correo As String) As Integer
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("buscarUserIDPorCorreo", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@Email", correo)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al buscar el ID del usuario.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al buscar el ID del usuario.", ex)
+        End Try
+    End Function
+
+    Public Function BuscarCorreoPorUserID(userID As Integer) As String
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerCorreoUsuario", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                comando.Parameters.AddWithValue("@UsuarioID", userID)
+                Return comando.ExecuteScalar()
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener el correo del usuario.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener el correo del usuario.", ex)
+        End Try
+    End Function
+
+    Public Function ObtenerCorreosJefes() As List(Of String)
+        Dim listaCorreos As New List(Of String)
+        Try
+            Using conexion As SqlConnection = CrearConexionSQL()
+                conexion.Open()
+                Dim comando As New SqlCommand("obtenerCorreosJefes", conexion)
+                comando.CommandType = CommandType.StoredProcedure
+                Dim lector As SqlDataReader = comando.ExecuteReader()
+                While lector.Read()
+                    listaCorreos.Add(lector("Correo"))
+                End While
+            End Using
+        Catch ex As SqlException
+            Throw New ApplicationException("Error al obtener los correos de los jefes.", ex)
+        Catch ex As Exception
+            Throw New ApplicationException("Error inesperado al obtener los correos de los jefes.", ex)
+        End Try
+        Return listaCorreos
     End Function
 End Class

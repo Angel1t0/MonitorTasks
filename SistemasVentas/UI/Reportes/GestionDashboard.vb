@@ -2,7 +2,7 @@
 
 Public Class GestionDashboard
     Private currentChildForm As Form
-    Private _controlador As EventoControlador = New EventoControlador()
+    Private _controlador As ControladorEvento = New ControladorEvento()
     Private totalItems As Integer
     Public Enum TipoReporte
         TareasPendientes
@@ -14,8 +14,13 @@ Public Class GestionDashboard
     Private Sub GestionDashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LlenarGraficoCircular()
         LlenarGraficoBarras()
+
+        Dim dt As DataTable = _controlador.ObtenerTareasCreadas()
+        totalItems = dt.Rows.Count
+        Label2.Text = totalItems.ToString()
     End Sub
 
+    ' Método para abrir un formulario hijo en el panel principal
     Private Sub OpenChildForm(childForm As Form)
         If currentChildForm IsNot Nothing Then
             currentChildForm.Close()
@@ -50,11 +55,10 @@ Public Class GestionDashboard
         OpenChildForm(New GestionReportes(TipoReporte.TareasPorUsuario, False))
     End Sub
 
+    ' Método para llenar el gráfico circular con la cantidad de items por estado
     Private Sub LlenarGraficoCircular()
         Try
             Dim dt As DataTable = _controlador.ObtenerCantidadItemsPorEstado()
-            totalItems = dt.Rows.Count
-            Label2.Text = totalItems.ToString()
 
             ' Limpiar el gráfico antes de llenarlo
             chartItemPorStatus.Series.Clear()

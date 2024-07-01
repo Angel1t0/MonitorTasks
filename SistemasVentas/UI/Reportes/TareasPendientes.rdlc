@@ -321,7 +321,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -516,6 +515,13 @@
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
       <rd:DataSourceID>b94b53d1-5865-47d8-b6f3-2ce60e07773b</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="DataSetPendientes">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>e7281fc6-43d0-4584-9e49-9bd07197ac7f</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>

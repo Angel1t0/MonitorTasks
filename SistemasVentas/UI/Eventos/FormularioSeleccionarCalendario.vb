@@ -2,13 +2,14 @@
 Imports System.Threading.Tasks
 
 Public Class FormularioSeleccionarCalendario
-    Private _controlador As New EventoControlador()
-    Private _googleServicesAuthenticator As New GoogleServicesAuthenticator()
+    Private _controlador As New ControladorEvento()
+    Private _googleServicesAuthenticator As New AutenticadorServiciosGoogle()
     Public Property CalendarioID As String
     Public Property UsuarioID As String = Login.idUsuario
 
     Private calendariosID As New List(Of String)
 
+    ' Cargar calendarios locales
     Private Function CargarCalendarios() As List(Of String)
         Dim calendarios As List(Of Calendario) = _controlador.ObtenerCalendariosLocales()
         AgregarCalendariosACombo(calendarios)
@@ -31,18 +32,20 @@ Public Class FormularioSeleccionarCalendario
 
     Private Sub AgregarCalendariosACombo(calendarios As List(Of Calendario))
         For Each calendario In calendarios
-            ComboCalendario.Items.Add(calendario.CalendarName)
+            ComboCalendario.Items.Add(calendario.CalendarioNombre)
         Next
     End Sub
 
     Private Sub BtnSeleccionarCalendario_Click_1(sender As Object, e As EventArgs) Handles BtnSeleccionarCalendario.Click
         SeleccionarCalendario()
         guardarCalendarioID(calendariosID)
+
         ' Mostrar formulario de gestión de eventos y cerrar este formulario
         Dim formularioPrincipal As New FormularioPrincipal()
         formularioPrincipal._CalendarioID = CalendarioID
         formularioPrincipal._UsuarioID = UsuarioID
         formularioPrincipal.Show()
+        Login.Hide()
         Me.Close()
     End Sub
 
@@ -56,7 +59,7 @@ Public Class FormularioSeleccionarCalendario
     End Sub
 
 
-
+    ' Funciones para mover la ventana
     <DllImport("user32.DLL", EntryPoint:="ReleaseCapture")>
     Private Shared Sub ReleaseCapture()
     End Sub
@@ -93,7 +96,7 @@ Public Class FormularioSeleccionarCalendario
     Private Sub FormularioSeleccionarCalendario_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         While True
             Try
-                _googleServicesAuthenticator.AuthenticateGoogleServices(Login.idUsuario)
+                _googleServicesAuthenticator.AuthenticateGoogleServices()
                 ' Si la autenticación es exitosa, proceder con la carga normal de la aplicación.
                 CargarCalendarios()
                 If ComboCalendario.Items.Count = 0 Then
@@ -114,6 +117,7 @@ Public Class FormularioSeleccionarCalendario
     End Sub
 
     Private Sub btnSincronizar_Click(sender As Object, e As EventArgs) Handles btnSincronizar.Click
+        ' Sincronizar calendarios con Google Calendar
         _controlador.SincronizarCalendarios()
     End Sub
 End Class

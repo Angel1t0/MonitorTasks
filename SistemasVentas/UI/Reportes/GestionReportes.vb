@@ -1,8 +1,9 @@
-﻿Imports Microsoft.Reporting.WinForms
+﻿Imports System.IO
+Imports Microsoft.Reporting.WinForms
 Imports Windows.Phone.Notification.Management
 
 Public Class GestionReportes
-    Private _controlador As EventoControlador
+    Private _controlador As ControladorEvento
     Private _tipoReporte As TipoReporte
     Private _IsPodio As Boolean
     Private limite As Integer = 0
@@ -33,7 +34,7 @@ Public Class GestionReportes
 
 
     Public Sub New(tipoReporte As TipoReporte, isPodio As Boolean)
-        _controlador = New EventoControlador()
+        _controlador = New ControladorEvento()
         _tipoReporte = tipoReporte
         _IsPodio = isPodio
     End Sub
@@ -48,7 +49,12 @@ Public Class GestionReportes
 
                 ReportViewer1.LocalReport.DataSources.Clear()
                 ReportViewer1.LocalReport.DataSources.Add(reportDataSource)
-                ReportViewer1.LocalReport.ReportPath = "..\..\UI\Reportes\TareasPendientes.rdlc"
+
+                ' Obtener la ruta absoluta del archivo de reporte
+                Dim appPath As String = Application.StartupPath
+                Dim reportPath As String = Path.Combine(appPath, "UI", "Reportes", "TareasPendientes.rdlc")
+
+                ReportViewer1.LocalReport.ReportPath = reportPath
                 ReportViewer1.RefreshReport()
             End If
         Catch ex As Exception
@@ -64,7 +70,12 @@ Public Class GestionReportes
 
             ReportViewer1.LocalReport.DataSources.Clear()
             ReportViewer1.LocalReport.DataSources.Add(reportDataSource)
-            ReportViewer1.LocalReport.ReportPath = "..\..\UI\Reportes\TareasFinalizadas.rdlc"
+
+            ' Obtener la ruta absoluta del archivo de reporte
+            Dim appPath As String = Application.StartupPath
+            Dim reportPath As String = Path.Combine(appPath, "UI", "Reportes", "TareasFinalizadas.rdlc")
+
+            ReportViewer1.LocalReport.ReportPath = reportPath
             ReportViewer1.RefreshReport()
         Catch ex As Exception
             Console.WriteLine(ex.Message)
@@ -79,7 +90,12 @@ Public Class GestionReportes
 
             ReportViewer1.LocalReport.DataSources.Clear()
             ReportViewer1.LocalReport.DataSources.Add(reportDataSource)
-            ReportViewer1.LocalReport.ReportPath = "..\..\UI\Reportes\TareasCreadas.rdlc"
+
+            ' Obtener la ruta absoluta del archivo de reporte
+            Dim appPath As String = Application.StartupPath
+            Dim reportPath As String = Path.Combine(appPath, "UI", "Reportes", "TareasCreadas.rdlc")
+
+            ReportViewer1.LocalReport.ReportPath = reportPath
             ReportViewer1.RefreshReport()
         Catch ex As Exception
             Console.WriteLine(ex.Message)
@@ -87,20 +103,26 @@ Public Class GestionReportes
         End Try
     End Sub
 
-    Private Sub LlenarReporteTareasPorUsuario(correo)
+    Private Sub LlenarReporteTareasPorUsuario(correo As String)
         Try
             Dim dt As DataTable = _controlador.ObtenerTareasPorUsuario(correo)
             Dim reportDataSource As New ReportDataSource("DataSetPorUsuario", dt)
 
             ReportViewer1.LocalReport.DataSources.Clear()
             ReportViewer1.LocalReport.DataSources.Add(reportDataSource)
-            ReportViewer1.LocalReport.ReportPath = "..\..\UI\Reportes\TareasPorUsuario.rdlc"
+
+            ' Obtener la ruta absoluta del archivo de reporte
+            Dim appPath As String = Application.StartupPath
+            Dim reportPath As String = Path.Combine(appPath, "UI", "Reportes", "TareasPorUsuario.rdlc")
+
+            ReportViewer1.LocalReport.ReportPath = reportPath
             ReportViewer1.RefreshReport()
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             MsgBox(ex.Message)
         End Try
     End Sub
+
 
     Private Sub ObtenerCorreo()
         emailUsers = _controlador.ObtenerCorreos()

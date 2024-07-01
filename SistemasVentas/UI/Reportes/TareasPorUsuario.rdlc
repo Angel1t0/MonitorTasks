@@ -44,7 +44,7 @@
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSetPorUsuario</rd:DataSetName>
-        <rd:SchemaPath>D:\angel\Documentos\Residencias\SistemasVentas\SistemasVentas\UI\Reportes\DataSetPorUsuario.xsd</rd:SchemaPath>
+        <rd:SchemaPath>D:\angel\Documentos\Residencias\MonitorTasks\MonitorTasks\UI\Reportes\DataSetPorUsuario.xsd</rd:SchemaPath>
         <rd:TableName>obtenerItemsPorUsuario</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod />

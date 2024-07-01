@@ -23,7 +23,7 @@ Partial Class FormularioGestionUsuarios
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormularioGestionUsuarios))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnCerrar = New System.Windows.Forms.Button()
@@ -33,6 +33,13 @@ Partial Class FormularioGestionUsuarios
         Me.Eli = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.comboJefe = New System.Windows.Forms.ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.comboRol = New System.Windows.Forms.ComboBox()
+        Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.txtTelefono = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.btnActualizar = New System.Windows.Forms.Button()
         Me.Panel9 = New System.Windows.Forms.Panel()
         Me.Panel8 = New System.Windows.Forms.Panel()
@@ -48,9 +55,6 @@ Partial Class FormularioGestionUsuarios
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Panel10 = New System.Windows.Forms.Panel()
-        Me.txtTelefono = New System.Windows.Forms.TextBox()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
         CType(Me.pbInsertarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -124,17 +128,18 @@ Partial Class FormularioGestionUsuarios
         Me.dgvDataUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvDataUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDataUsuario.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Eli})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.Padding = New System.Windows.Forms.Padding(1)
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDataUsuario.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.Padding = New System.Windows.Forms.Padding(1)
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDataUsuario.DefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvDataUsuario.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDataUsuario.EnableHeadersVisualStyles = False
-        Me.dgvDataUsuario.Location = New System.Drawing.Point(184, 106)
+        Me.dgvDataUsuario.Location = New System.Drawing.Point(10, 51)
         Me.dgvDataUsuario.Margin = New System.Windows.Forms.Padding(10)
         Me.dgvDataUsuario.Name = "dgvDataUsuario"
         Me.dgvDataUsuario.ReadOnly = True
@@ -142,7 +147,7 @@ Partial Class FormularioGestionUsuarios
         Me.dgvDataUsuario.RowHeadersWidth = 51
         Me.dgvDataUsuario.RowTemplate.Height = 30
         Me.dgvDataUsuario.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDataUsuario.Size = New System.Drawing.Size(619, 492)
+        Me.dgvDataUsuario.Size = New System.Drawing.Size(944, 633)
         Me.dgvDataUsuario.TabIndex = 3
         '
         'Eli
@@ -159,13 +164,17 @@ Partial Class FormularioGestionUsuarios
         '
         Me.Panel4.Controls.Add(Me.Panel5)
         Me.Panel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Panel4.Location = New System.Drawing.Point(0, 64)
+        Me.Panel4.Location = New System.Drawing.Point(0, 54)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(1156, 612)
         Me.Panel4.TabIndex = 4
         '
         'Panel5
         '
+        Me.Panel5.Controls.Add(Me.comboJefe)
+        Me.Panel5.Controls.Add(Me.Label8)
+        Me.Panel5.Controls.Add(Me.Label7)
+        Me.Panel5.Controls.Add(Me.comboRol)
         Me.Panel5.Controls.Add(Me.Panel10)
         Me.Panel5.Controls.Add(Me.txtTelefono)
         Me.Panel5.Controls.Add(Me.Label6)
@@ -184,10 +193,73 @@ Partial Class FormularioGestionUsuarios
         Me.Panel5.Controls.Add(Me.Label4)
         Me.Panel5.Controls.Add(Me.Label3)
         Me.Panel5.Controls.Add(Me.Label2)
-        Me.Panel5.Location = New System.Drawing.Point(223, 92)
+        Me.Panel5.Location = New System.Drawing.Point(225, 65)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(723, 414)
+        Me.Panel5.Size = New System.Drawing.Size(723, 509)
         Me.Panel5.TabIndex = 0
+        '
+        'comboJefe
+        '
+        Me.comboJefe.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.comboJefe.FormattingEnabled = True
+        Me.comboJefe.Location = New System.Drawing.Point(239, 334)
+        Me.comboJefe.Name = "comboJefe"
+        Me.comboJefe.Size = New System.Drawing.Size(344, 33)
+        Me.comboJefe.TabIndex = 25
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(104, 342)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(122, 25)
+        Me.Label8.TabIndex = 24
+        Me.Label8.Text = "Jefe Directo:"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(180, 286)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(46, 25)
+        Me.Label7.TabIndex = 23
+        Me.Label7.Text = "Rol:"
+        '
+        'comboRol
+        '
+        Me.comboRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.comboRol.FormattingEnabled = True
+        Me.comboRol.Items.AddRange(New Object() {"Usuario", "Administrador", "Jefe de Departamento"})
+        Me.comboRol.Location = New System.Drawing.Point(238, 278)
+        Me.comboRol.Name = "comboRol"
+        Me.comboRol.Size = New System.Drawing.Size(345, 33)
+        Me.comboRol.TabIndex = 22
+        '
+        'Panel10
+        '
+        Me.Panel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel10.Location = New System.Drawing.Point(239, 252)
+        Me.Panel10.Name = "Panel10"
+        Me.Panel10.Size = New System.Drawing.Size(345, 2)
+        Me.Panel10.TabIndex = 21
+        '
+        'txtTelefono
+        '
+        Me.txtTelefono.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTelefono.Location = New System.Drawing.Point(239, 229)
+        Me.txtTelefono.MaxLength = 10
+        Me.txtTelefono.Name = "txtTelefono"
+        Me.txtTelefono.Size = New System.Drawing.Size(345, 23)
+        Me.txtTelefono.TabIndex = 20
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(131, 234)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(95, 25)
+        Me.Label6.TabIndex = 19
+        Me.Label6.Text = "Teléfono:"
         '
         'btnActualizar
         '
@@ -197,7 +269,7 @@ Partial Class FormularioGestionUsuarios
         Me.btnActualizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnActualizar.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnActualizar.ForeColor = System.Drawing.Color.Black
-        Me.btnActualizar.Location = New System.Drawing.Point(221, 296)
+        Me.btnActualizar.Location = New System.Drawing.Point(220, 395)
         Me.btnActualizar.Name = "btnActualizar"
         Me.btnActualizar.Size = New System.Drawing.Size(182, 61)
         Me.btnActualizar.TabIndex = 18
@@ -243,7 +315,7 @@ Partial Class FormularioGestionUsuarios
         Me.btnVolver.FlatAppearance.BorderSize = 0
         Me.btnVolver.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnVolver.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnVolver.Location = New System.Drawing.Point(597, 342)
+        Me.btnVolver.Location = New System.Drawing.Point(596, 441)
         Me.btnVolver.Name = "btnVolver"
         Me.btnVolver.Size = New System.Drawing.Size(99, 51)
         Me.btnVolver.TabIndex = 11
@@ -258,7 +330,7 @@ Partial Class FormularioGestionUsuarios
         Me.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnGuardar.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnGuardar.ForeColor = System.Drawing.Color.Black
-        Me.btnGuardar.Location = New System.Drawing.Point(399, 296)
+        Me.btnGuardar.Location = New System.Drawing.Point(398, 395)
         Me.btnGuardar.Name = "btnGuardar"
         Me.btnGuardar.Size = New System.Drawing.Size(166, 61)
         Me.btnGuardar.TabIndex = 10
@@ -333,32 +405,6 @@ Partial Class FormularioGestionUsuarios
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Nombre completo:"
         '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(131, 234)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(95, 25)
-        Me.Label6.TabIndex = 19
-        Me.Label6.Text = "Teléfono:"
-        '
-        'Panel10
-        '
-        Me.Panel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel10.Location = New System.Drawing.Point(239, 257)
-        Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(345, 2)
-        Me.Panel10.TabIndex = 21
-        '
-        'txtTelefono
-        '
-        Me.txtTelefono.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtTelefono.Location = New System.Drawing.Point(239, 234)
-        Me.txtTelefono.MaxLength = 10
-        Me.txtTelefono.Name = "txtTelefono"
-        Me.txtTelefono.Size = New System.Drawing.Size(345, 23)
-        Me.txtTelefono.TabIndex = 20
-        '
         'FormularioGestionUsuarios
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -411,4 +457,8 @@ Partial Class FormularioGestionUsuarios
     Friend WithEvents Panel10 As Panel
     Friend WithEvents txtTelefono As TextBox
     Friend WithEvents Label6 As Label
+    Friend WithEvents comboRol As ComboBox
+    Friend WithEvents Label7 As Label
+    Friend WithEvents comboJefe As ComboBox
+    Friend WithEvents Label8 As Label
 End Class

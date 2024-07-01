@@ -1,4 +1,7 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.IO
+Imports System.Runtime.InteropServices
+Imports System.Threading
+Imports System.Diagnostics
 
 Public Class Login
     Public Property idUsuario As String
@@ -10,13 +13,33 @@ Public Class Login
         Me.ControlBox = False
         Me.DoubleBuffered = True
         Me.MaximizedBounds = Screen.PrimaryScreen.WorkingArea
+        Me.StartPosition = FormStartPosition.CenterScreen
+        Me.WindowState = FormWindowState.Normal
     End Sub
+
+    ' --- COMPROBAR QUE APPGATE ESTÁ CORRIENDO ---
+    Public Shared Sub EsperarPorAppGate()
+        While Not VerificarAppGate()
+            Console.WriteLine("Esperando que AppGate se inicie...")
+            Thread.Sleep(10000) ' Esperar 10 segundos antes de verificar nuevamente
+        End While
+        Console.WriteLine("AppGate está en ejecución. Continuando con la aplicación.")
+    End Sub
+
+    Private Shared Function VerificarAppGate() As Boolean
+        Dim processes() As Process = Process.GetProcessesByName("Appgate SDP") ' Sustituye "AppGate" por el nombre real del proceso de AppGate
+        Return processes.Length > 0
+    End Function
 
     ' --- MANEJADORES DE EVENTOS UI ---
     Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MostrarPanelLogin(True)
         CentrarPanel(panelLogin)
+        EsperarPorAppGate()
+        AutoLogin()
     End Sub
+
+
 
     Private Sub btnVer_Click(sender As Object, e As EventArgs) Handles btnVer.Click
         CambiarVisibilidad(True)
@@ -43,20 +66,50 @@ Public Class Login
         RecuperarPass()
     End Sub
 
-    ' --- OPERACIONES SQL ---
     Private Sub ValidarLogin()
-        If Not ValidarEntradasLogin(txtLogin.Text, txtPass.Text) Then
+        If Not ValidarEntradasLogin(txtLogin.Text, txtPass.Text) Then ' Validar que los campos no estén vacíos
             Return
         End If
 
         Dim usuarioData As New UsuarioData()
         dgvRevisar.DataSource = usuarioData.ValidarLogin(txtLogin.Text, txtPass.Text)
 
-        If Not dgvRevisar.Rows.Count > 0 Then
+        If Not dgvRevisar.Rows.Count > 0 Then ' Si el data grid view no tiene filas porque no encontró el usuario y contraseña, entonces es incorrecto
             MessageBox.Show("Usuario o contraseña incorrecta", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
+        ' Revizar si el usuario quiere que se recuerde su usuario
+        If checkRecordarUsuario.Checked Then
+            GuardarInicioSesion(txtLogin.Text, txtPass.Text)
+        End If
         IniciarSesion()
+    End Sub
+
+    ' --- OPERACIONES DE ARCHIVOS ---
+    Private Sub GuardarInicioSesion(usuario As String, pass As String)
+        Dim credentials As String = $"{usuario},{pass}"
+        Dim filePath As String = Path.Combine(Application.StartupPath, "credenciales_user.txt")
+        File.WriteAllText(filePath, credentials)
+    End Sub
+
+    Private Function CargarInicioSesion() As Boolean
+        Dim filePath As String = Path.Combine(Application.StartupPath, "credenciales_user.txt")
+        If Not File.Exists(filePath) OrElse String.IsNullOrWhiteSpace(File.ReadAllText(filePath)) Then
+            Return False
+        End If
+
+        Dim credentials As String = File.ReadAllText(filePath)
+        Dim credArray As String() = credentials.Split(",")
+        txtLogin.Text = credArray(0)
+        txtPass.Text = credArray(1)
+        CambiarVisibilidad(False)
+        Return True
+    End Function
+
+    Private Sub AutoLogin()
+        If CargarInicioSesion() Then
+            ValidarLogin()
+        End If
     End Sub
 
     Private Sub RecuperarPass()
@@ -65,7 +118,7 @@ Public Class Login
         End If
 
         Dim usuarioData As New UsuarioData()
-        Dim pass As String = usuarioData.buscarCorreo(txtRecuperacion.Text)
+        Dim pass As String = usuarioData.BuscarCorreo(txtRecuperacion.Text)
         If pass = Nothing Then
             MessageBox.Show("Correo no registrado", "Correo", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
@@ -75,11 +128,13 @@ Public Class Login
 
     ' --- UTILIDADES ---
     Private Sub IniciarSesion()
+        ' Guardar el ID del usuario y abrir el formulario de selección de calendario
         idUsuario = dgvRevisar.SelectedCells.Item(1).Value
         ' Abrir formulario de selección de calendario y cerrar este formulario
         Dim seleccionarCalendario As New FormularioSeleccionarCalendario()
         seleccionarCalendario.UsuarioID = idUsuario
         seleccionarCalendario.Show()
+        Me.WindowState = FormWindowState.Minimized
         Me.Hide()
     End Sub
 
@@ -98,6 +153,7 @@ Public Class Login
         btnVer.Visible = Not isVisible
     End Sub
 
+    ' la dll de user32 para mover el formulario sin bordes
     <DllImport("user32.DLL", EntryPoint:="ReleaseCapture")>
     Private Shared Sub ReleaseCapture()
     End Sub

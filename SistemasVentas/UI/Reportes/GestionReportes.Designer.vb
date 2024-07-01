@@ -24,22 +24,22 @@ Partial Class GestionReportes
     Private Sub InitializeComponent()
         Me.ReportViewer1 = New Microsoft.Reporting.WinForms.ReportViewer()
         Me.btnVolverDash = New FontAwesome.Sharp.IconPictureBox()
-        Me.panelFiltros = New SistemasVentas.ControlPanel()
+        Me.panelFiltros = New MonitorTasks.ControlPanel()
         Me.dateLimiteFinal = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.checkIntervalo = New System.Windows.Forms.CheckBox()
-        Me.txtLimite = New SistemasVentas.ControlTextBox()
+        Me.txtLimite = New MonitorTasks.ControlTextBox()
         Me.btnCancelarReporte = New System.Windows.Forms.Button()
         Me.btnListoFiltros = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.dateLimiteInicio = New System.Windows.Forms.DateTimePicker()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.panelCorreo = New SistemasVentas.ControlPanel()
+        Me.panelCorreo = New MonitorTasks.ControlPanel()
         Me.btnCancelarBuscarCorreo = New System.Windows.Forms.Button()
         Me.cbUsuarios = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.txtEmail = New SistemasVentas.ControlTextBox()
+        Me.txtEmail = New MonitorTasks.ControlTextBox()
         Me.btnBuscar = New FontAwesome.Sharp.IconButton()
         CType(Me.btnVolverDash, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelFiltros.SuspendLayout()
@@ -51,7 +51,7 @@ Partial Class GestionReportes
         Me.ReportViewer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ReportViewer1.Font = New System.Drawing.Font("Century Gothic", 10.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ReportViewer1.IsDocumentMapWidthFixed = True
-        Me.ReportViewer1.LocalReport.ReportEmbeddedResource = "SistemasVentas.TareasPendientes.rdlc"
+        Me.ReportViewer1.LocalReport.ReportEmbeddedResource = "MonitorTasks.TareasPendientes.rdlc"
         Me.ReportViewer1.Location = New System.Drawing.Point(0, 0)
         Me.ReportViewer1.Name = "ReportViewer1"
         Me.ReportViewer1.PromptAreaCollapsed = True

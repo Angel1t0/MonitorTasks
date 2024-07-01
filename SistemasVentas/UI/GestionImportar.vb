@@ -4,12 +4,9 @@ Imports System.IO
 
 Public Class GestionImportar
 
-    Private _controlador As New EventoControlador()
+    Private _controlador As New ControladorEvento()
     Public Property CalendarioID As String
     Public Property UsuarioID As String
-    Private Sub GestionImportar_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
 
     Private Sub btnImportar_Click(sender As Object, e As EventArgs) Handles btnImportar.Click
         ' Configurar OpenFileDialog
@@ -52,14 +49,15 @@ Public Class GestionImportar
     End Function
 
     Private Sub btnProcesar_Click(sender As Object, e As EventArgs) Handles btnProcesar.Click
+        Dim currentRow As Integer = 1
         Try
             ' Validar que se haya importado un archivo
             If dgvDataExcel.Rows.Count = 0 Then
                 MessageBox.Show("Primero importe un archivo de Excel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return
             End If
-
             For Each row As DataGridViewRow In dgvDataExcel.Rows
+                currentRow += 1
                 If Not row.IsNewRow Then
                     ' Validar correos de asistentes
                     Dim asistentesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(18).Value?.ToString()), Nothing, row.Cells(18).Value.ToString().Trim().Split(",").ToList())
@@ -87,141 +85,180 @@ Public Class GestionImportar
                     Dim autorizantesEmail As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(20).Value.ToString()), New List(Of String)(), row.Cells(20).Value.ToString().Trim().Split(",").ToList())
                     Dim proyectosSistemas As List(Of String) = If(String.IsNullOrWhiteSpace(row.Cells(22).Value.ToString()), New List(Of String)(), row.Cells(22).Value.ToString().Trim().Split(",").ToList())
 
+                    Dim fechaInicio As DateTime
+                    If DateTime.TryParse(row.Cells(3).Value?.ToString(), fechaInicio) Then
+                        ' Si solo se proporciona la fecha, establecer la hora a las 12:00 PM
+                        If fechaInicio.TimeOfDay = TimeSpan.Zero Then
+                            fechaInicio = fechaInicio.Date.AddHours(12)
+                        End If
+                    Else
+                        ' Si la fecha no es válida, establecer la fecha actual a las 12:00 PM
+                        fechaInicio = DateTime.Now.Date.AddHours(12)
+                    End If
+
+                    Dim fechaFin As DateTime
+                    If DateTime.TryParse(row.Cells(4).Value?.ToString(), fechaFin) Then
+                        ' Si solo se proporciona la fecha, establecer la hora a las 12:00 PM
+                        If fechaFin.TimeOfDay = TimeSpan.Zero Then
+                            fechaFin = fechaFin.Date.AddHours(12)
+                        End If
+                    Else
+                        ' Si la fecha no es válida, establecer el fin de año actual a las 12:00 PM
+                        fechaFin = New DateTime(DateTime.Now.Year, 12, 31, 12, 0, 0)
+                    End If
+
                     ' Crear el evento
                     Dim evento As New Evento() With {
-                    .CalendarID = CalendarioID,
-                    .Summary = If(String.IsNullOrWhiteSpace(row.Cells(0).Value?.ToString()), "Sin titulo", row.Cells(0).Value.ToString()),
-                    .Location = If(String.IsNullOrWhiteSpace(row.Cells(1).Value?.ToString()), "", row.Cells(1).Value.ToString().Trim()),
-                    .Description = If(String.IsNullOrWhiteSpace(row.Cells(2).Value?.ToString()), "Sin descripcion", row.Cells(2).Value.ToString()),
-                    .StartDateTime = If(DateTime.TryParse(row.Cells(3).Value?.ToString(), Nothing), DateTime.Parse(row.Cells(3).Value.ToString().Trim()), DateTime.Now),
-                    .EndDateTime = If(DateTime.TryParse(row.Cells(4).Value?.ToString(), Nothing), DateTime.Parse(row.Cells(4).Value.ToString().Trim()), New DateTime(DateTime.Now.Year, 12, 31)),
-                    .RRULE = If(String.IsNullOrWhiteSpace(row.Cells(5).Value?.ToString()), "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z", "RRULE:" & row.Cells(5).Value.ToString())
+                    .CalendarioID = CalendarioID,
+                    .Titulo = If(String.IsNullOrWhiteSpace(row.Cells(0).Value?.ToString()), "Sin titulo", row.Cells(0).Value.ToString()),
+                    .Ubicacion = If(String.IsNullOrWhiteSpace(row.Cells(1).Value?.ToString()), "", row.Cells(1).Value.ToString().Trim()),
+                    .Descripcion = If(String.IsNullOrWhiteSpace(row.Cells(2).Value?.ToString()), "Sin descripcion", row.Cells(2).Value.ToString()),
+                    .FechaInicio = fechaInicio,
+                    .FechaFin = fechaFin,
+                    .RRULE = If(String.IsNullOrWhiteSpace(row.Cells(5).Value?.ToString()), "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.Year.ToString() & "1231T120000Z", "RRULE:" & row.Cells(5).Value.ToString())
                 }
 
                     Dim eventoID As String = _controlador.EnviarEventoAGoogleCalendar(evento)
-                    evento.EventID = eventoID
+                    evento.EventoID = eventoID
                     evento.UserID = UsuarioID
                     _controlador.CrearEvento(evento, True)
 
                     ' Crear el item en Podio
                     Dim podioItem As New PodioItem()
-                    podioItem.EventID = eventoID
-                    podioItem.Title = evento.Summary
-                    podioItem.Description = evento.Description
+                    podioItem.EventoID = eventoID
+                    podioItem.Titulo = evento.Titulo
+                    podioItem.Descripcion = evento.Descripcion
 
                     ' Validación para Department (obligatorio)
                     Dim departmentValue = row.Cells(7).Value?.ToString().Trim()
-                    podioItem.Department = If(String.IsNullOrWhiteSpace(departmentValue), podioItem.GetSelectedOptionId("Sistemas", podioItem.departmentOptions), podioItem.GetSelectedOptionId(departmentValue, podioItem.departmentOptions))
+                    podioItem.Departamento = If(String.IsNullOrWhiteSpace(departmentValue), podioItem.ObtenerIDSeleccionado("Sistemas", podioItem.departamentoOpciones), podioItem.ObtenerIDSeleccionado(departmentValue, podioItem.departamentoOpciones))
 
                     ' Validación para DepartmentPriority (obligatorio)
                     Dim departmentPriorityValue = row.Cells(8).Value?.ToString().Trim()
-                    podioItem.DepartmentPriority = If(String.IsNullOrWhiteSpace(departmentPriorityValue), 0, Integer.Parse(departmentPriorityValue))
+                    podioItem.PrioridadDepartamento = If(String.IsNullOrWhiteSpace(departmentPriorityValue), 0, Integer.Parse(departmentPriorityValue))
 
                     ' Validación para SystemArea (obligatorio)
                     Dim systemAreaValue = row.Cells(9).Value?.ToString().Trim()
-                    podioItem.SystemArea = If(String.IsNullOrWhiteSpace(systemAreaValue), podioItem.GetSelectedOptionId("Desarrollo", podioItem.systemAreaOptions), podioItem.GetSelectedOptionId(systemAreaValue, podioItem.systemAreaOptions))
+                    podioItem.AreaSistemas = If(String.IsNullOrWhiteSpace(systemAreaValue), podioItem.ObtenerIDSeleccionado("Desarrollo", podioItem.areaSistemasOpciones), podioItem.ObtenerIDSeleccionado(systemAreaValue, podioItem.areaSistemasOpciones))
 
                     ' Validación para Categories (obligatorio)
                     Dim categoryValue = row.Cells(10).Value?.ToString().Trim()
-                    podioItem.Categories = If(String.IsNullOrWhiteSpace(categoryValue), podioItem.GetSelectedOptionId("[DESARROLLO] Desarrollo General", podioItem.categoryOptions), podioItem.GetSelectedOptionId(categoryValue, podioItem.categoryOptions))
+                    podioItem.Categorias = If(String.IsNullOrWhiteSpace(categoryValue), podioItem.ObtenerIDSeleccionado("[DESARROLLO] Desarrollo General", podioItem.categoriaOpciones), podioItem.ObtenerIDSeleccionado(categoryValue, podioItem.categoriaOpciones))
 
                     ' Validación para SystemPriority (obligatorio)
                     Dim systemPriorityValue = row.Cells(11).Value?.ToString().Trim()
-                    podioItem.SystemPriority = If(String.IsNullOrWhiteSpace(systemPriorityValue), 0, Integer.Parse(systemPriorityValue))
+                    podioItem.PrioridadSistemas = If(String.IsNullOrWhiteSpace(systemPriorityValue), 0, Integer.Parse(systemPriorityValue))
 
                     ' Validación para Priority (opcional)
                     Dim priorityValue = row.Cells(12).Value?.ToString().Trim()
-                    podioItem.Priority = If(String.IsNullOrWhiteSpace(priorityValue), podioItem.GetSelectedOptionId("De Acuerdo a Fecha de Entrega", podioItem.priorityOptions), podioItem.GetSelectedOptionId(priorityValue, podioItem.priorityOptions))
+                    podioItem.Prioridad = If(String.IsNullOrWhiteSpace(priorityValue), podioItem.ObtenerIDSeleccionado("De Acuerdo a Fecha de Entrega", podioItem.prioridadOpciones), podioItem.ObtenerIDSeleccionado(priorityValue, podioItem.prioridadOpciones))
 
                     ' StartDate y EndDate (obligatorios)
-                    podioItem.StartDate = If(evento.StartDateTime = DateTime.MinValue, DateTime.Now, evento.StartDateTime)
-                    podioItem.EndDate = If(evento.EndDateTime = DateTime.MinValue, DateTime.Now, evento.EndDateTime)
+                    podioItem.FechaInicio = If(evento.FechaInicio = DateTime.MinValue, DateTime.Now, evento.FechaInicio)
+                    podioItem.FechaFin = If(evento.FechaFin = DateTime.MinValue, DateTime.Now, evento.FechaFin)
 
                     ' Validación para WorkPlan (opcional)
                     Dim workPlanValue = row.Cells(13).Value?.ToString()
-                    podioItem.WorkPlan = If(String.IsNullOrWhiteSpace(workPlanValue), "", workPlanValue)
+                    podioItem.PlanTrabajo = If(String.IsNullOrWhiteSpace(workPlanValue), "", workPlanValue)
 
                     ' Validación para Status (obligatorio)
                     Dim statusValue = row.Cells(17).Value?.ToString().Trim()
-                    podioItem.Status = If(String.IsNullOrWhiteSpace(statusValue), podioItem.GetSelectedOptionId("No comenzada / Pendiente", podioItem.statusOptions), podioItem.GetSelectedOptionId(statusValue, podioItem.statusOptions))
+                    podioItem.Status = If(String.IsNullOrWhiteSpace(statusValue), podioItem.ObtenerIDSeleccionado("No comenzada / Pendiente", podioItem.statusOpciones), podioItem.ObtenerIDSeleccionado(statusValue, podioItem.statusOpciones))
 
                     ' Validación para Progress (opcional)
                     Dim progressValue = row.Cells(14).Value?.ToString().Trim()
-                    podioItem.Progress = If(String.IsNullOrWhiteSpace(progressValue), 0, Integer.Parse(progressValue))
+                    podioItem.Progreso = If(String.IsNullOrWhiteSpace(progressValue), 0, Integer.Parse(progressValue))
 
                     ' Validación para HoursAccumulated (opcional)
                     Dim hoursAccumulatedValue = row.Cells(15).Value?.ToString().Trim()
-                    podioItem.HoursAccumulated = If(String.IsNullOrWhiteSpace(hoursAccumulatedValue), Nothing, Integer.Parse(hoursAccumulatedValue))
+                    podioItem.HorasAcumuladas = If(String.IsNullOrWhiteSpace(hoursAccumulatedValue), Nothing, Integer.Parse(hoursAccumulatedValue))
 
                     ' Validación para ExtraHours (opcional)
                     Dim extraHoursValue = row.Cells(16).Value?.ToString().Trim()
-                    podioItem.ExtraHours = If(String.IsNullOrWhiteSpace(extraHoursValue), Nothing, Integer.Parse(extraHoursValue))
+                    podioItem.HorasExtras = If(String.IsNullOrWhiteSpace(extraHoursValue), Nothing, Integer.Parse(extraHoursValue))
 
 
                     Dim podioItemID As Integer = _controlador.CrearPodioItem(podioItem)
                     podioItem.PodioItemID = podioItemID
 
+                    Dim mensaje As New Mensaje()
                     ' Creal el mensaje a enviar a cada asistente
                     For Each email As String In asistentesEmail
-                        podioItem.AssignedToContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
-                        Dim mensaje As New Mensaje() With {
-                        .EventID = eventoID,
-                        .UserID = _controlador.BuscarUserID(email.Trim()),
-                        .MessageType = If(String.IsNullOrWhiteSpace(row.Cells(6).Value?.ToString()), "Nuevo Evento", row.Cells(6).Value.ToString().Trim()),
-                        .RRULE = evento.RRULE
-                        }
+                        podioItem.ContactosAsigandoA.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
+
+                        mensaje.EventoID = eventoID
+                        mensaje.UserID = _controlador.BuscarUserID(email.Trim())
+                        mensaje.TipoMensaje = If(String.IsNullOrWhiteSpace(row.Cells(6).Value?.ToString()), "Nueva Actividad", row.Cells(6).Value.ToString().Trim())
+                        mensaje.RRULE = evento.RRULE
 
                         Dim asistente As New Asistente() With {
-                        .EventID = eventoID,
+                        .EventoID = eventoID,
                         .Email = email.Trim(),
+                        .Telefono = _controlador.ObtenerTelefonoAsistente(email.Trim()),
                         .PodioItemID = podioItem.PodioItemID
                         }
 
-                        mensaje.Attendees.Add(asistente)
+                        evento.Asistentes.Add(asistente)
+                        mensaje.Destinatarios.Add(asistente)
                         _controlador.InsertarAsistente(mensaje, podioItemID)
                     Next
 
                     ' Crear a los solicitantes
                     For Each email As String In solicitantesEmail
-                        podioItem.RequestorContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
+                        podioItem.ContactosSolicitantes.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
                     Next
                     _controlador.InsertarSolicitante(podioItem)
 
                     ' Crear a los autorizantes
                     For Each email As String In autorizantesEmail
-                        podioItem.AuthorizerContacts.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
+                        podioItem.ContactosAutorizantes.Add(_controlador.ObtenerPodioUserIDPorCorreo(email.Trim()))
                     Next
                     _controlador.InsertarAutorizante(podioItem)
 
                     ' Crear a las empresas
                     For Each empresa As String In empresas
-                        Dim empresaID = podioItem.GetSelectedOptionId(empresa.Trim(), podioItem.companyOptions).ToString()
-                        podioItem.Company.Add(empresaID)
+                        Dim empresaID = podioItem.ObtenerIDSeleccionado(empresa.Trim(), podioItem.empresaOpciones).ToString()
+                        podioItem.Empresa.Add(empresaID)
                         ' Insertar empresa en BD
                         _controlador.InsertarPodioEmpresa(podioItem, empresaID)
                     Next
 
                     For Each proyecto As String In proyectosSistemas
-                        Dim proyectoID As JArray = SearchItemPodio(proyecto.Trim()).Result
+                        Dim proyectoID As JArray = SearchItemPodio(proyecto.Trim()).Result ' Buscar el proyecto en Podio y obtiene su ID
                         If proyectoID.Count > 0 Then
-                            podioItem.SystemProject.Add(proyectoID(0)("id").ToString())
-                            _controlador.InsertarPodioProyectoSistemas(podioItemID, proyectoID(0)("id").ToString(), proyecto)
+                            podioItem.ProyectoSistemas.Add(proyectoID(0)("id").ToString()) ' Agregar el proyecto a la lista de proyectos
+                            _controlador.InsertarPodioProyectoSistemas(podioItemID, proyectoID(0)("id").ToString(), proyecto) ' Insertar el proyecto en la BD
                         End If
                     Next
 
+                    ' Actualizar el evento con los asistentes
+                    _controlador.ActualizarEvento(evento)
+
                     Dim podioAppItemID As Long = _controlador.EnviarItemAPodio(podioItem)
                     _controlador.ActualizarPodioAppItemID(podioItemID, podioAppItemID)
+
+                    ' Enviar mensaje a todos los asignados
+                    mensaje.PodioAppItemID = podioAppItemID
+                    mensaje.Titulo = evento.Titulo
+                    mensaje.Descripcion = evento.Descripcion
+                    mensaje.FechaInicio = evento.FechaInicio
+                    mensaje.FechaFin = evento.FechaFin
+
+                    ' Enviar mensajes a los asistentes/asignados
+                    _controlador.EnviarEmail(mensaje)
+                    _controlador.EnviarWhatsApp(mensaje)
                 End If
             Next
             MessageBox.Show("La importación se realizó con éxito", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
-            MessageBox.Show("Ocurrió un error al procesar los datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ' Notificar en que fila o que parte provocó el error
+            MessageBox.Show("Ocurrió un error en la fila: " & currentRow & " al procesar los datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     ' Función para obtener el item de podio
     Public Async Function SearchItemPodio(proyecto As String) As Threading.Tasks.Task(Of JArray)
-        Dim podioService As New PodioService()
+        Dim podioService As New ServicioPodio()
         Dim itemID As JArray = Await _controlador.SearchItemPodio(proyecto, 1).ConfigureAwait(False)
         Return itemID
     End Function
@@ -240,6 +277,7 @@ Public Class GestionImportar
         End If
     End Sub
 
+    ' Crear un formato de Excel de ejemplo con sus columnas y una fila de ejemplo
     Public Sub CrearFormatoExcel(rutaArchivo As String)
         Dim dt As New DataTable()
         dt.Columns.AddRange(New DataColumn() {
@@ -276,7 +314,7 @@ Public Class GestionImportar
         exampleRow("Fecha de inicio") = "27/05/2024"
         exampleRow("Fecha de fin") = "31/12/2024"
         exampleRow("Recurrencia") = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=" & DateTime.Now.Year.ToString() & "1231T000000Z"
-        exampleRow("Tipo de mensaje") = "Nuevo Evento"
+        exampleRow("Tipo de mensaje") = "Nueva Actividad"
         exampleRow("Departamento") = "Sistemas"
         exampleRow("Prioridad de departamento") = "1"
         exampleRow("Área de sistemas") = "Desarrollo"
@@ -296,7 +334,7 @@ Public Class GestionImportar
 
         dt.Rows.Add(exampleRow)
 
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial ' Establecer la licencia para uso no comercial y poder usar la libreria EPPlus
         Using package As New ExcelPackage()
             Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets.Add("Formato")
             worksheet.Cells("A1").LoadFromDataTable(dt, True)

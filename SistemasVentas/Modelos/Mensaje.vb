@@ -1,18 +1,19 @@
 ﻿Public Class Mensaje
-    Public Property MessageID As Integer
-    Public Property EventID As String
+    Public Property MensajeID As Integer
+    Public Property EventoID As String
+    Public Property PodioAppItemID As Long = 0 ' ID del item en Podio
     Public Property UserID As Integer
-    Public Property Title As String
-    Public Property Description As String
-    Public Property StartDateTime As DateTime
-    Public Property EndDateTime As DateTime
-    Public Property EmailSent As Boolean = 0
-    Public Property WhatsAppSent As Boolean = 0
-    Public Property DesktopSent As Boolean = 0
-    Public Property SentTime As DateTime
+    Public Property Titulo As String
+    Public Property Descripcion As String
+    Public Property FechaInicio As DateTime
+    Public Property FechaFin As DateTime
+    Public Property EmailSilenciado As Boolean = 0
+    Public Property WhatsAppSilenciado As Boolean = 0
+    Public Property DesktopSilenciado As Boolean = 0
+    Public Property FechaEnviado As DateTime
     Public Property Status As String = "Activo"
-    Public Property MessageType As String = "Recordatorio"
+    Public Property TipoMensaje As String = "Recordatorio"
     Public Property RRULE As String = String.Empty
-    Public Property Attendees As New List(Of Asistente)
-    Public Property Creator As String
+    Public Property Destinatarios As New List(Of Asistente)
+    Public Property Creador As String
 End Class

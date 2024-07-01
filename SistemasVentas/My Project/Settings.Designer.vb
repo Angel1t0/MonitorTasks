@@ -57,11 +57,11 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=SISTEMASRESIDEN;Initial Catalog=BaseSistemasVentas;Integrated Securit"& _ 
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=SISTEMASRESIDEN;Initial Catalog=BaseMonitorTasks;Integrated Securit"& _ 
             "y=True;Encrypt=False;TrustServerCertificate=True")>  _
-        Public ReadOnly Property BaseSistemasVentasConnectionString() As String
+        Public ReadOnly Property BaseMonitorTasksConnectionString() As String
             Get
-                Return CType(Me("BaseSistemasVentasConnectionString"),String)
+                Return CType(Me("BaseMonitorTasksConnectionString"),String)
             End Get
         End Property
     End Class
@@ -75,9 +75,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.SistemasVentas.My.MySettings
+        Friend ReadOnly Property Settings() As Global.MonitorTasks.My.MySettings
             Get
-                Return Global.SistemasVentas.My.MySettings.Default
+                Return Global.MonitorTasks.My.MySettings.Default
             End Get
         End Property
     End Module

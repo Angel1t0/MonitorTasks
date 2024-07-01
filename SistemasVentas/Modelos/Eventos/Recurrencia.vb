@@ -6,7 +6,7 @@
     Public Property FechaFinal As DateTime?
     Public Property RRULE As String = String.Empty ' La regla de recurrencia generada
 
-    Public Function GenerarRRULE() As String
+    Public Function GenerarRRULE() As String ' De acuerdo a los valores de las propiedades de la clase genera la regla de recurrencia
         Dim rrule As String = $"RRULE:FREQ={Frecuencia}"
 
         If TipoFinalizacion = "Ocurrencias" AndAlso NumeroOcurrencias.HasValue Then

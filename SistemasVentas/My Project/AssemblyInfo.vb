@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Revisar los valores de los atributos del ensamblado
 
-<Assembly: AssemblyTitle("SistemasVentas")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("SistemasVentas")>
-<Assembly: AssemblyCopyright("Copyright ©  2024")>
+<Assembly: AssemblyTitle("MonitorTasks")>
+<Assembly: AssemblyDescription("Monitor Tasks")>
+<Assembly: AssemblyCompany("OrderExpress")>
+<Assembly: AssemblyProduct("MonitorTasks")>
+<Assembly: AssemblyCopyright("Copyright ©  OrderExpress 2024")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' mediante el carácter '*', como se muestra a continuación:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.0.0.0")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("1.0.1.1")>
+<Assembly: AssemblyFileVersion("1.0.1.1")>

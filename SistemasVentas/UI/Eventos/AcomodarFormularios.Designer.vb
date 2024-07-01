@@ -22,7 +22,7 @@ Partial Class AcomodarFormularios
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.PanelAsistentes = New SistemasVentas.ControlPanel()
+        Me.PanelAsistentes = New MonitorTasks.ControlPanel()
         Me.btnAgregarAsistentes = New FontAwesome.Sharp.IconButton()
         Me.btnContinuar = New FontAwesome.Sharp.IconButton()
         Me.btnEliminarAsistentes = New FontAwesome.Sharp.IconPictureBox()

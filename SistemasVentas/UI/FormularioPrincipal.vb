@@ -1,5 +1,7 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.IO
+Imports System.Runtime.InteropServices
 Imports FontAwesome.Sharp
+Imports Microsoft.Win32
 Public Class FormularioPrincipal
     ' Aqui se declaran los campos que vamos a utilizar para el manejo de los botones del menu
     Private currentBtn As IconButton
@@ -23,19 +25,27 @@ Public Class FormularioPrincipal
     End Sub
 
     Private Sub FormularioPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Minimizar el formulario apenas se inicie
+        WindowState = FormWindowState.Minimized
+
+        ' Iniciar el servicio de recurrencia de mensajes
         Dim gestionRecurrenciaMensajes As New GestionRecurrenciaMensajes(_CalendarioID)
-        Dim podioService As New PodioService
+        Dim podioService As New ServicioPodio
         gestionRecurrenciaMensajes.Iniciar()
 
+        ' Obtener la ruta absoluta del icono del notifyIcon
+        Dim appPath As String = Application.StartupPath
+        Dim iconPath As String = Path.Combine(appPath, "archivos", "iconoNotify.ico")
+
         ' Configurar NotifyIcon
-        notifyIcon.Icon = New Drawing.Icon("../../Recursos/iconoNotify.ico")
+        notifyIcon.Icon = New Drawing.Icon(iconPath) ' Agregar el icono del notifyIcon
         notifyIcon.Text = "MWT"
         notifyIcon.Visible = True
 
         ' Configurar ContextMenuStrip
         Dim contextMenu As New ContextMenuStrip()
         contextMenu.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular)
-        contextMenu.Items.Add("Crear ítem", Nothing, AddressOf CrearItem)
+        contextMenu.Items.Add("Crear Actividad", Nothing, AddressOf CrearItem)
         contextMenu.Items.Add("Ver Dashboard", Nothing, AddressOf VerDashboard)
         contextMenu.Items.Add("Ver Notificaciones", Nothing, AddressOf VerNotificaciones)
         contextMenu.Items.Add("Salir", Nothing, AddressOf Salir)
@@ -163,9 +173,31 @@ Public Class FormularioPrincipal
         ActivateButton(sender, Color.FromArgb(193, 110, 153))
         OpenChildForm(New GestionMensajes(_CalendarioID))
     End Sub
-    Private Sub BtnConfiguracion_Click(sender As Object, e As EventArgs) Handles BtnConfiguracion.Click
+    Private Sub BtnArranque_Click(sender As Object, e As EventArgs) Handles BtnArranque.Click
+        If currentChildForm IsNot Nothing Then
+            currentChildForm.Close()
+        End If
+        If VerificarArranque() Then
+            ' La aplicación está en el inicio de Windows, ofrecer opción para removerla
+            Dim result As DialogResult = MessageBox.Show("La aplicación está configurada para iniciarse con Windows. ¿Desea removerla del arranque?", "Remover del inicio", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If result = DialogResult.Yes Then
+                RemoverArranque()
+            End If
+        Else
+            ' La aplicación no está en el inicio de Windows, ofrecer opción para agregarla
+            Dim result As DialogResult = MessageBox.Show("La aplicación no está configurada para iniciarse con Windows. ¿Desea agregarla al arranque?", "Agregar al inicio", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If result = DialogResult.Yes Then
+                AgregarArranque()
+            End If
+
+        End If
+    End Sub
+    Private Sub BtnCerrarSesion_Click(sender As Object, e As EventArgs) Handles BtnCerrarSesion.Click
         ActivateButton(sender, Color.FromArgb(157, 173, 173))
         ' Cerrar Sesión
+        Dim credentials As String = ""
+        Dim filePath As String = Path.Combine(Application.StartupPath, "credenciales_user.txt")
+        File.WriteAllText(filePath, credentials)
         Application.Restart()
     End Sub
 
@@ -176,6 +208,7 @@ Public Class FormularioPrincipal
         Reset()
     End Sub
 
+    ' Al presionar el logo cierra el formulario actual
     Private Sub Reset()
         DisableButton()
         leftBorderBtn.Visible = False
@@ -183,6 +216,36 @@ Public Class FormularioPrincipal
         IconFormActual.IconColor = Color.Coral
         LbTituloForm.Text = "Inicio"
     End Sub
+
+    ' Añadir registro para el inicio de windows
+    Public Sub AgregarArranque()
+        Try
+            Dim key As RegistryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True)
+            key.SetValue("MonitorTasks", Application.ExecutablePath)
+            MessageBox.Show("La aplicación se ha configurado para iniciarse con Windows.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show("Error al intentar agregar la aplicación al inicio de Windows: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Public Sub RemoverArranque()
+        Try
+            Dim key As RegistryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True)
+            key.DeleteValue("MonitorTasks", False)
+            MessageBox.Show("La aplicación ya no se iniciará con Windows.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show("Error al intentar remover la aplicación del inicio de Windows: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Public Function VerificarArranque() As Boolean
+        Dim key As RegistryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True)
+        Dim value As Object = key.GetValue("MonitorTasks")
+        If value IsNot Nothing Then
+            Return True
+        End If
+        Return False
+    End Function
 
     ' Mover el formulario
     <DllImport("user32.DLL", EntryPoint:="ReleaseCapture")>

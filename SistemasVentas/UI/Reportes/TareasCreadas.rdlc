@@ -533,7 +533,7 @@
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSetCreados</rd:DataSetName>
-        <rd:SchemaPath>D:\angel\Documentos\Residencias\SistemasVentas\SistemasVentas\UI\Reportes\DataSetCreados.xsd</rd:SchemaPath>
+        <rd:SchemaPath>D:\angel\Documentos\Residencias\MonitorTasks\MonitorTasks\UI\Reportes\DataSetCreados.xsd</rd:SchemaPath>
         <rd:TableName>obtenerItemsCreados</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod />
