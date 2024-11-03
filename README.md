@@ -43,8 +43,30 @@ La implementación de Monitor Work Time - Task mejoró considerablemente la prod
 ## 📷 Imágenes del Proyecto
 
 A continuación se muestran algunas imágenes del sistema desarrollado, donde se ilustran las principales funcionalidades:
+####	Ventana de acceso al sistema
+![image](https://github.com/user-attachments/assets/1327f1a0-4479-4044-aa8b-f0da37fcbb14)
 
-(Espacio para las imágenes)
+#### Ventana de selección de calendario
+![image](https://github.com/user-attachments/assets/b6b0209d-9496-4078-b7d6-0845ddddc8b8)
+
+####	Ventana de interfaz principal
+![image](https://github.com/user-attachments/assets/8a971be9-63cb-420e-8d97-9444ce437131)
+
+####	Ventana de la sección Dashboard
+![image](https://github.com/user-attachments/assets/063cc5d8-ba8a-4371-a962-341cdd632e9f)
+
+####	Ventana de la sección de Gestión de Actividades
+![image](https://github.com/user-attachments/assets/70370fb3-23a7-445d-8f8b-c402cd20da06)
+
+####	Ventana para ingresar los datos básicos
+![image](https://github.com/user-attachments/assets/b7c5a747-3670-4497-a695-3aa9f62ab911)
+
+####	Ventana para ingresar a los usuarios que intervengan en la actividad
+![image](https://github.com/user-attachments/assets/9de2f9eb-38f4-4b92-bbdb-bf2aed8063eb)
+
+####	Ventana de la sección de importación de las actividades desde Excel
+![image](https://github.com/user-attachments/assets/4a58c3d5-9231-4902-8104-6ec00aebf201)
+
 
 ## 💡 Aprendizajes y Competencias Desarrolladas
 
